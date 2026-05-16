@@ -7,54 +7,56 @@ use App\Models\Todo;
 
 class TodoController extends Controller
 {
-        public function store(Request $request)
-        {
-            $request->validate([
+    // DASHBOARD
+    public function index()
+    {
+        $todos = Todo::where('user_id', auth()->id())
+            ->latest()
+            ->get();
 
-                'title' => 'required',
+        $xp = $todos->where('completed', true)->sum('xp');
 
-                'priority' => 'required',
+        $level = floor($xp / 100) + 1;
 
-            ]);
+        return view('dashboard', compact(
+            'todos',
+            'xp',
+            'level'
+        ));
+    }
 
-            // DEBUG
-            // dd($request->all());
+    // TAMBAH TODO
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'priority' => 'required',
+        ]);
 
-            $xp = 10;
+        $xp = 10;
 
-            if ($request->priority == 'medium') {
-
-                $xp = 20;
-
-            }
-
-            if ($request->priority == 'high') {
-
-                $xp = 30;
-
-            }
-
-            Todo::create([
-
-                'user_id' => auth()->id(),
-
-                'title' => $request->title,
-
-                'description' => $request->description,
-
-                'deadline' => $request->deadline,
-
-                'priority' => $request->priority,
-
-                'xp' => $xp,
-
-                'completed' => false,
-
-            ]);
-
-            return back();
+        if ($request->priority == 'medium') {
+            $xp = 20;
         }
-        
+
+        if ($request->priority == 'high') {
+            $xp = 30;
+        }
+
+        Todo::create([
+            'user_id' => auth()->id(),
+            'title' => $request->title,
+            'description' => $request->description,
+            'deadline' => $request->deadline,
+            'priority' => $request->priority,
+            'xp' => $xp,
+            'completed' => false,
+        ]);
+
+        return back();
+    }
+
+    // CHECKLIST
     public function update($id)
     {
         $todo = Todo::findOrFail($id);
@@ -63,12 +65,12 @@ class TodoController extends Controller
 
         $todo->save();
 
-        return back();
-    }
-
+        return back
     public function destroy($id)
     {
-        Todo::destroy($id);
+        $todo = Todo::findOrFail($id);
+
+        $todo->delete();
 
         return back();
     }
