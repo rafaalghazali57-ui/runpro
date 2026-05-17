@@ -22,6 +22,18 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/todo/update/{id}', [TodoController::class, 'update']);
 
     Route::delete('/todo/delete/{id}', [TodoController::class, 'destroy']);
+
+    Route::get('/completed', function () {
+        return view('completed');
+    })->middleware(['auth']);
+
+    Route::get('/profile', function () {
+        return view('profile');
+    })->middleware(['auth']);
+
+    Route::get('/streak', function () {
+        return view('streak');
+    })->middleware(['auth']);
 });
 
 require __DIR__.'/auth.php';

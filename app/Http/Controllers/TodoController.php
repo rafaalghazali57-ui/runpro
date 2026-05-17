@@ -65,7 +65,10 @@ class TodoController extends Controller
 
         $todo->save();
 
-        return back
+        return back();
+    }
+
+    // HAPUS TODO
     public function destroy($id)
     {
         $todo = Todo::findOrFail($id);
