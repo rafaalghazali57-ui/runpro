@@ -3,41 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Run-pro | Tugas Selesai</title>
+    <title>Run-pro | Statistik</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        body{
-            font-family: sans-serif;
-        }
-    </style>
 </head>
 
 <body class="bg-[#58cc02] min-h-screen">
 
-<!-- NAVBAR -->
+<!-- HEADER -->
 <div class="bg-white shadow-lg p-5">
 
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="max-w-7xl mx-auto flex items-center gap-4">
 
-        <div class="flex items-center gap-4">
+        <!-- BUTTON MENU -->
+        <button onclick="toggleMenu()"
+            class="bg-green-500 text-white w-14 h-14 rounded-2xl text-3xl font-black">
+            ☰
+        </button>
 
-            <!-- MENU BUTTON -->
-            <button onclick="toggleMenu()"
-                class="bg-green-500 text-white w-14 h-14 rounded-2xl text-3xl font-black">
-                ☰
-            </button>
+        <div>
 
-            <div>
-                <h1 class="text-4xl font-black text-yellow-500">
-                    Tugas Selesai ✅
-                </h1>
+            <h1 class="text-4xl font-black text-purple-500">
+                Statistik 📊
+            </h1>
 
-                <p class="text-gray-500">
-                    Semua misi yang berhasil kamu selesaikan
-                </p>
-            </div>
+            <p class="text-gray-500 mt-1">
+                Statistik produktivitas kamu
+            </p>
 
         </div>
 
@@ -52,6 +44,7 @@
     <div class="flex justify-between items-center mb-10">
 
         <div>
+
             <h1 class="text-3xl font-black text-green-500">
                 Run-pro 🚀
             </h1>
@@ -59,6 +52,7 @@
             <p class="text-gray-400 text-sm">
                 Productivity App
             </p>
+
         </div>
 
         <button onclick="toggleMenu()"
@@ -68,6 +62,7 @@
 
     </div>
 
+    <!-- MENU -->
     <div class="space-y-4">
 
         <a href="/dashboard"
@@ -95,35 +90,50 @@
 </div>
 
 <!-- CONTENT -->
-<div class="max-w-5xl mx-auto py-10 px-5">
+<div class="max-w-6xl mx-auto py-10 px-5">
 
-    @foreach($todos as $todo)
+    <div class="grid md:grid-cols-3 gap-6">
 
-        <div class="bg-white rounded-3xl shadow-xl p-8 mb-8">
+        <!-- XP -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl text-center">
 
-            <div class="flex justify-between items-center gap-5">
+            <h2 class="text-5xl font-black text-yellow-500">
+                {{ $xp }}
+            </h2>
 
-                <div>
-
-                    <h2 class="text-3xl font-black line-through text-gray-500">
-                        {{ $todo->title }}
-                    </h2>
-
-                    <p class="text-gray-500 mt-2">
-                        {{ $todo->description }}
-                    </p>
-
-                </div>
-
-                <div class="bg-yellow-100 px-6 py-4 rounded-2xl font-black text-yellow-700">
-                    ⭐ +{{ $todo->xp }} XP
-                </div>
-
-            </div>
+            <p class="mt-3 text-gray-500 font-bold">
+                Total XP
+            </p>
 
         </div>
 
-    @endforeach
+        <!-- LEVEL -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl text-center">
+
+            <h2 class="text-5xl font-black text-blue-500">
+                {{ $level }}
+            </h2>
+
+            <p class="mt-3 text-gray-500 font-bold">
+                Level
+            </p>
+
+        </div>
+
+        <!-- COMPLETED -->
+        <div class="bg-white rounded-3xl p-10 shadow-xl text-center">
+
+            <h2 class="text-5xl font-black text-orange-500">
+                {{ $completed }}
+            </h2>
+
+            <p class="mt-3 text-gray-500 font-bold">
+                Tugas Selesai
+            </p>
+
+        </div>
+
+    </div>
 
 </div>
 
