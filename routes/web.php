@@ -10,98 +10,123 @@ use App\Http\Controllers\TodoController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/dashboard');
 });
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD
+| AUTH REQUIRED
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', [TodoController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('dashboard');
+Route::middleware(['auth'])->group(function () {
 
-/*
-|--------------------------------------------------------------------------
-| TODO
-|--------------------------------------------------------------------------
-*/
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
+    */
 
-Route::post('/todo/store', [TodoController::class, 'store'])
-    ->middleware(['auth']);
+    Route::get('/dashboard', [TodoController::class, 'index'])
+        ->name('dashboard');
 
-Route::put('/todo/update/{id}', [TodoController::class, 'update'])
-    ->middleware(['auth']);
+    /*
+    |--------------------------------------------------------------------------
+    | TODO
+    |--------------------------------------------------------------------------
+    */
 
-Route::delete('/todo/delete/{id}', [TodoController::class, 'destroy'])
-    ->middleware(['auth']);
+    Route::post('/todo/store', [TodoController::class, 'store']);
 
-/*
-|--------------------------------------------------------------------------
-| COMPLETED
-|--------------------------------------------------------------------------
-*/
+    Route::put('/todo/update/{id}', [TodoController::class, 'update']);
 
-Route::get('/completed', function () {
+    Route::delete('/todo/delete/{id}', [TodoController::class, 'destroy']);
 
-    $todos = \App\Models\Todo::where('user_id', auth()->id())
-        ->where('completed', true)
-        ->latest()
-        ->get();
+    /*
+    |--------------------------------------------------------------------------
+    | COMPLETED TASK
+    |--------------------------------------------------------------------------
+    */
 
-    return view('completed', compact('todos'));
+    Route::get('/completed', function () {
 
-})->middleware(['auth']);
+        $todos = \App\Models\Todo::where('user_id', auth()->id())
+                    ->where('completed', true)
+                    ->latest()
+                    ->get();
 
-/*
-|--------------------------------------------------------------------------
-| PROFILE
-|--------------------------------------------------------------------------
-*/
+        $xp = $todos->sum('xp');
 
-Route::get('/profile', function () {
+        $level = floor($xp / 100) + 1;
 
-    $todos = \App\Models\Todo::where('user_id', auth()->id())->get();
+        return view('completed', compact(
+            'todos',
+            'xp',
+            'level'
+        ));
 
-    $xp = $todos->where('completed', true)->sum('xp');
+    });
 
-    $level = floor($xp / 100) + 1;
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE
+    |--------------------------------------------------------------------------
+    */
 
-    $streak = $todos->where('completed', true)->count();
+    Route::get('/profile', function () {
 
-    return view('profile', compact(
-        'xp',
-        'level',
-        'streak'
-    ));
+        $todos = \App\Models\Todo::where('user_id', auth()->id())->get();
 
-})->middleware(['auth']);
+        $completed = $todos->where('completed', true)->count();
 
-/*
-|--------------------------------------------------------------------------
-| STATISTICS
-|--------------------------------------------------------------------------
-*/
+        $pending = $todos->where('completed', false)->count();
 
-Route::get('/statistics', function () {
+        $xp = $todos->where('completed', true)->sum('xp');
 
-    $todos = \App\Models\Todo::where('user_id', auth()->id())->get();
+        $level = floor($xp / 100) + 1;
 
-    $xp = $todos->where('completed', true)->sum('xp');
+        $streak = $completed;
 
-    $level = floor($xp / 100) + 1;
+        return view('profile', compact(
+            'todos',
+            'completed',
+            'pending',
+            'xp',
+            'level',
+            'streak'
+        ));
 
-    $completed = $todos->where('completed', true)->count();
+    });
 
-    return view('statistics', compact(
-        'xp',
-        'level',
-        'completed'
-    ));
+    /*
+    |--------------------------------------------------------------------------
+    | STATISTICS
+    |--------------------------------------------------------------------------
+    */
 
-})->middleware(['auth']);
+    Route::get('/statistics', function () {
+
+        $todos = \App\Models\Todo::where('user_id', auth()->id())->get();
+
+        $completed = $todos->where('completed', true)->count();
+
+        $pending = $todos->where('completed', false)->count();
+
+        $xp = $todos->where('completed', true)->sum('xp');
+
+        $level = floor($xp / 100) + 1;
+
+        return view('statistics', compact(
+            'todos',
+            'completed',
+            'pending',
+            'xp',
+            'level'
+        ));
+
+    });
+
+});
 
 /*
 |--------------------------------------------------------------------------

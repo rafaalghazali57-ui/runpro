@@ -8,111 +8,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+
         body{
             font-family: sans-serif;
         }
 
-        .menu{
-            transition: 0.3s;
-        }
     </style>
+
 </head>
 
 <body class="bg-[#58cc02] min-h-screen">
 
-<!-- NAVBAR -->
-<div class="bg-white shadow-lg p-5 flex justify-between items-center">
-
-    <!-- LEFT -->
-    <div class="flex items-center gap-4">
-
-        <!-- HAMBURGER -->
-        <button
-            onclick="toggleMenu()"
-            class="bg-green-500 text-white p-3 rounded-xl shadow-lg"
-        >
-            ☰
-        </button>
-
-        <div>
-            <h1 class="text-3xl font-black text-green-500">
-                Run-pro 🚀
-            </h1>
-
-            <p class="text-gray-500 text-sm">
-                Rutinitas Produktif
-            </p>
-        </div>
-
-    </div>
-
-    <!-- RIGHT -->
-    <div class="flex gap-3 flex-wrap">
-
-        <div class="bg-yellow-100 px-4 py-2 rounded-2xl font-bold">
-            ⭐ XP: {{ $xp }}
-        </div>
-
-        <div class="bg-blue-100 px-4 py-2 rounded-2xl font-bold">
-            🏆 Level: {{ $level }}
-        </div>
-
-    </div>
-
-</div>
+<!-- MENU BUTTON -->
+<button
+    onclick="toggleMenu()"
+    class="fixed top-5 left-5 z-50 bg-white w-16 h-16 rounded-2xl shadow-2xl text-4xl font-black text-green-500"
+>
+    ☰
+</button>
 
 <!-- SIDEBAR -->
 <div
-    id="menu"
-    class="menu fixed top-0 left-[-300px] w-72 h-full bg-white shadow-2xl z-50 p-6"
+    id="sidebar"
+    class="fixed top-0 left-[-300px] w-72 h-full bg-white shadow-2xl p-6 flex flex-col justify-between z-40 transition-all duration-300"
 >
 
-    <!-- HEADER -->
-    <div class="flex justify-between items-center mb-10">
+    <div>
 
-        <h1 class="text-3xl font-black text-green-500">
-            Menu
-        </h1>
+        <div class="text-center mb-10 mt-10">
 
-        <button
-            onclick="toggleMenu()"
-            class="text-3xl"
-        >
-            ✖
-        </button>
+            <div class="text-7xl">
+                🚀
+            </div>
 
-    </div>
+            <h1 class="text-4xl font-black text-green-500 mt-3">
+                Run-pro
+            </h1>
 
-    <!-- MENU -->
-    <div class="space-y-4">
+            <p class="text-gray-400 mt-2">
+                Rutinitas Produktif
+            </p>
 
-        <a href="/dashboard"
-            class="block bg-green-100 hover:bg-green-200 transition p-4 rounded-2xl font-bold text-green-700">
-            🏠 Home
-        </a>
+        </div>
 
-        <a href="/completed"
-            class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
-            ✅ Tugas Selesai
-        </a>
+        <!-- MENU -->
+        <div class="space-y-4">
 
-        <a href="/profile"
-            class="block bg-blue-100 hover:bg-blue-200 transition p-4 rounded-2xl font-bold text-blue-700">
-            👤 Profil Saya
-        </a>
+            <a href="/dashboard"
+               class="block bg-green-100 hover:bg-green-200 transition p-4 rounded-2xl font-bold text-green-700">
+                🏠 Dashboard
+            </a>
 
-        <a href="/statistics"
-            class="block bg-purple-100 hover:bg-purple-200 transition p-4 rounded-2xl font-bold text-purple-700">
-            📊 Statistik
-        </a>
+            <a href="/completed"
+               class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
+                ✅ Tugas Selesai
+            </a>
+
+            <a href="/profile"
+               class="block bg-blue-100 hover:bg-blue-200 transition p-4 rounded-2xl font-bold text-blue-700">
+                👤 Profil Saya
+            </a>
+
+            <a href="/statistics"
+               class="block bg-purple-100 hover:bg-purple-200 transition p-4 rounded-2xl font-bold text-purple-700">
+                📊 Statistik
+            </a>
+
+        </div>
 
     </div>
 
     <!-- LOGOUT -->
-    <form method="POST" action="{{ route('logout') }}" class="mt-10">
+    <form action="{{ route('logout') }}" method="POST">
         @csrf
 
-        <button class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-black shadow-lg">
+        <button
+            class="w-full bg-red-500 hover:bg-red-600 transition text-white py-4 rounded-2xl font-black shadow-xl"
+        >
             Logout 🚪
         </button>
 
@@ -121,63 +93,188 @@
 </div>
 
 <!-- CONTENT -->
-<div class="max-w-5xl mx-auto p-8">
+<div class="p-10 pt-24">
 
-    <!-- WELCOME -->
-    <div class="bg-white rounded-3xl shadow-2xl p-8 mb-10">
+    <!-- HEADER -->
+    <div class="bg-white rounded-3xl shadow-xl p-8 mb-10 flex justify-between items-center flex-wrap gap-5">
 
-        <h2 class="text-4xl font-black text-green-500 mb-3">
-            Selamat Datang 👋
-        </h2>
+        <div>
 
-        <p class="text-gray-500">
-            Halo {{ auth()->user()->username }},
-            ayo selesaikan semua misi produktifmu hari ini 🚀
-        </p>
+            <h1 class="text-5xl font-black text-green-500">
+                Dashboard 🚀
+            </h1>
+
+            <p class="text-gray-500 mt-3">
+                Selamat datang,
+                {{ auth()->user()->username }}
+            </p>
+
+        </div>
+
+        <div class="flex gap-4 flex-wrap">
+
+            <div class="bg-yellow-100 px-5 py-3 rounded-2xl font-bold shadow">
+                ⭐ XP:
+                {{ $xp }}
+            </div>
+
+            <div class="bg-blue-100 px-5 py-3 rounded-2xl font-bold shadow">
+                🏆 Level:
+                {{ $level }}
+            </div>
+
+            <div class="bg-orange-100 px-5 py-3 rounded-2xl font-bold shadow">
+                🔥 Streak:
+                {{ $todos->where('completed', true)->count() }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DEBUG WAKTU -->
+    <div class="bg-black text-white p-4 rounded-2xl mb-8 font-bold shadow-xl">
+
+        🕒 WIB Sekarang:
+        {{ now()->format('d M Y H:i:s') }}
 
     </div>
 
     <!-- FORM -->
-    <div class="bg-white rounded-3xl shadow-2xl p-8 mb-10">
+    <div class="bg-white rounded-3xl shadow-xl p-8 mb-12">
 
-        <h2 class="text-3xl font-black text-green-500 mb-6">
-            Tambah Misi 🎯
+        <h2 class="text-3xl font-black text-green-500 mb-3">
+            Tambah Misi Baru 🎯
         </h2>
+
+        <p class="text-gray-500 mb-6 leading-relaxed">
+
+            Isi jadwal misi dengan benar.<br>
+
+            Misi hanya bisa diselesaikan ketika:
+            <span class="font-bold text-green-600">
+                waktu sekarang sudah masuk jam mulai
+            </span>
+
+            dan belum melewati jam selesai.
+
+        </p>
 
         <form action="/todo/store" method="POST" class="space-y-5">
             @csrf
 
+            <!-- TITLE -->
             <input
                 type="text"
                 name="title"
-                required
                 placeholder="Nama misi..."
+                required
                 class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
             >
 
+            <!-- DESCRIPTION -->
             <textarea
                 name="description"
-                placeholder="Deskripsi..."
+                placeholder="Deskripsi misi..."
                 rows="3"
                 class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
             ></textarea>
 
-            <input
-                type="datetime-local"
-                name="deadline"
-                class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
-            >
-
+            <!-- PRIORITY -->
             <select
                 name="priority"
+                required
                 class="w-full p-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
             >
-                <option value="low">🟢 Mudah</option>
-                <option value="medium">🟡 Sedang</option>
-                <option value="high">🔴 Penting</option>
+
+                <option value="low">
+                    🟢 Mudah
+                </option>
+
+                <option value="medium">
+                    🟡 Sedang
+                </option>
+
+                <option value="high">
+                    🔴 Penting
+                </option>
+
             </select>
 
-            <button class="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-black shadow-xl">
+            <!-- START -->
+            <div class="grid md:grid-cols-2 gap-5">
+
+                <div>
+
+                    <label class="font-bold text-gray-600 block mb-2">
+                        📅 Tanggal Mulai
+                    </label>
+
+                    <input
+                        type="date"
+                        name="start_date"
+                        required
+                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="font-bold text-gray-600 block mb-2">
+                        ⏰ Jam Mulai
+                    </label>
+
+                    <input
+                        type="time"
+                        name="start_time"
+                        required
+                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- END -->
+            <div class="grid md:grid-cols-2 gap-5">
+
+                <div>
+
+                    <label class="font-bold text-gray-600 block mb-2">
+                        📅 Tanggal Selesai
+                    </label>
+
+                    <input
+                        type="date"
+                        name="end_date"
+                        required
+                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label class="font-bold text-gray-600 block mb-2">
+                        ⏰ Jam Selesai
+                    </label>
+
+                    <input
+                        type="time"
+                        name="end_time"
+                        required
+                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+            <button
+                class="w-full bg-green-500 hover:bg-green-600 transition text-white py-4 rounded-2xl font-black text-lg shadow-lg"
+            >
                 Tambah Misi 🚀
             </button>
 
@@ -185,180 +282,167 @@
 
     </div>
 
-        <!-- TASK -->
-    <!-- DUOLINGO STYLE TASK -->
+    <!-- TASK -->
     <div class="relative py-10">
 
         @foreach($todos as $index => $todo)
 
-            <div class="mb-20">
+            <div class="flex mb-16
 
-                <!-- ZIGZAG POSITION -->
-                <div class="flex
+                @if($index % 2 == 0)
+                    justify-start
+                @else
+                    justify-end
+                @endif
+            ">
 
-                    @if($index % 2 == 0)
-                        justify-start
-                    @else
-                        justify-end
-                    @endif
-                ">
+                <div class="w-full max-w-xl">
 
-                    <div class="w-full max-w-2xl">
+                    <div class="flex items-center gap-5
 
-                        <div class="flex items-center gap-5
+                        @if($index % 2 != 0)
+                            flex-row-reverse
+                        @endif
+                    ">
 
-                            @if($index % 2 != 0)
-                                flex-row-reverse
-                            @endif
-                        ">
+                        <!-- COMPLETE -->
+                        <form action="/todo/update/{{ $todo->id }}" method="POST">
+                            @csrf
+                            @method('PUT')
 
-                            <!-- BUTTON NODE -->
-                            <form action="/todo/update/{{ $todo->id }}" method="POST">
-                                @csrf
-                                @method('PUT')
+                            @php
 
-                                <button
-                                    class="w-28 h-28 rounded-full shadow-2xl border-[6px] border-white
-                                    text-5xl transition duration-300 hover:scale-110
+                                $now = now();
 
-                                    {{ $todo->completed
-                                        ? 'bg-yellow-400'
-                                        : 'bg-green-400' }}"
-                                >
+                                $start = \Carbon\Carbon::parse(
+                                    $todo->start_date . ' ' . $todo->start_time
+                                );
 
-                                    {{ $todo->completed ? '⭐' : '🎯' }}
+                                $end = \Carbon\Carbon::parse(
+                                    $todo->end_date . ' ' . $todo->end_time
+                                );
 
-                                </button>
+                                $canComplete = now()->between(
+                                    $start,
+                                    $end
+                                );
 
-                            </form>
+                            @endphp
 
-                            <!-- CARD -->
-                            <div class="bg-white rounded-[35px] shadow-2xl p-7 flex-1 hover:scale-[1.02] transition duration-300">
+                            <button
+                                type="submit"
 
-                                <!-- TITLE -->
-                                <h2 class="text-3xl font-black
+                                {{ !$canComplete && !$todo->completed ? 'disabled' : '' }}
 
-                                    {{ $todo->completed
-                                        ? 'line-through text-gray-400'
-                                        : 'text-gray-700' }}
-                                ">
+                                class="w-24 h-24 rounded-full text-4xl shadow-2xl border-4 border-white transition
 
-                                    {{ $todo->title }}
+                                {{ $todo->completed
+                                    ? 'bg-yellow-400'
+                                    : ($canComplete
+                                        ? 'bg-green-400 hover:scale-110'
+                                        : 'bg-gray-400 cursor-not-allowed') }}"
+                            >
 
-                                </h2>
+                                @if($todo->completed)
 
-                                <!-- DESCRIPTION -->
-                                <p class="text-gray-500 mt-3 text-lg">
-                                    {{ $todo->description }}
-                                </p>
+                                    ⭐
 
-                                <!-- INFO -->
-                                <div class="flex flex-wrap gap-3 mt-5">
+                                @elseif($canComplete)
 
-                                    <!-- XP -->
-                                    <div class="bg-yellow-100 text-yellow-700 px-5 py-3 rounded-2xl font-black shadow">
-                                        ⭐ {{ $todo->xp }} XP
-                                    </div>
+                                    🎯
 
-                                    <!-- DEADLINE -->
-                                    <div class="bg-red-100 text-red-600 px-5 py-3 rounded-2xl font-black shadow">
-                                        ⏰ {{ $todo->deadline }}
-                                    </div>
+                                @else
 
-                                    <!-- PRIORITY -->
-                                    <div class="px-5 py-3 rounded-2xl font-black shadow
+                                    🔒
 
-                                        @if($todo->priority == 'high')
-                                            bg-red-100 text-red-600
-                                        @elseif($todo->priority == 'medium')
-                                            bg-yellow-100 text-yellow-700
-                                        @else
-                                            bg-green-100 text-green-700
-                                        @endif
-                                    ">
+                                @endif
 
-                                        @if($todo->priority == 'high')
+                            </button>
 
-                                            🔴 Penting
+                        </form>
 
-                                        @elseif($todo->priority == 'medium')
+                        <!-- CARD -->
+                        <div class="bg-white rounded-3xl shadow-2xl p-6 flex-1">
 
-                                            🟡 Sedang
+                            <!-- TITLE -->
+                            <h2 class="text-2xl font-black
 
-                                        @else
+                                {{ $todo->completed
+                                    ? 'line-through text-gray-400'
+                                    : 'text-gray-700' }}
+                            ">
 
-                                            🟢 Mudah
+                                {{ $todo->title }}
 
-                                        @endif
+                            </h2>
 
-                                    </div>
+                            <!-- DESCRIPTION -->
+                            <p class="text-gray-500 mt-2">
+                                {{ $todo->description }}
+                            </p>
 
+                            <!-- DATE -->
+                            <div class="mt-4 flex flex-wrap gap-3">
+
+                                <div class="bg-blue-100 text-blue-700 px-4 py-2 rounded-2xl text-sm font-bold">
+                                    🚀
+                                    {{ $todo->start_date }}
+                                    |
+                                    {{ $todo->start_time }}
                                 </div>
+
+                                <div class="bg-red-100 text-red-700 px-4 py-2 rounded-2xl text-sm font-bold">
+                                    🏁
+                                    {{ $todo->end_date }}
+                                    |
+                                    {{ $todo->end_time }}
+                                </div>
+
+                                <div class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-2xl text-sm font-bold">
+                                    ⭐ +{{ $todo->xp }} XP
+                                </div>
+
+                                <!-- STATUS -->
+                                @if($todo->completed)
+
+                                    <div class="bg-yellow-400 text-white px-4 py-2 rounded-2xl text-sm font-bold">
+                                        SELESAI ⭐
+                                    </div>
+
+                                @elseif($canComplete)
+
+                                    <div class="bg-green-500 text-white px-4 py-2 rounded-2xl text-sm font-bold">
+                                        BISA DIKERJAKAN 🎯
+                                    </div>
+
+                                @else
+
+                                    <div class="bg-gray-500 text-white px-4 py-2 rounded-2xl text-sm font-bold">
+                                        TERKUNCI 🔒
+                                    </div>
+
+                                @endif
 
                             </div>
 
-                            <!-- DELETE -->
-                            <form action="/todo/delete/{{ $todo->id }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    class="bg-red-500 hover:bg-red-600 transition
-                                    text-white w-16 h-16 rounded-2xl shadow-2xl text-2xl font-black"
-                                >
-                                    ✖
-                                </button>
-
-                            </form>
-
                         </div>
+
+                        <!-- DELETE -->
+                        <form action="/todo/delete/{{ $todo->id }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                class="bg-red-500 hover:bg-red-600 text-white px-5 py-4 rounded-2xl shadow-xl font-bold"
+                            >
+                                ✖
+                            </button>
+
+                        </form>
 
                     </div>
 
                 </div>
-
-                <!-- SNAKE LINE -->
-                @if(!$loop->last)
-
-                    <div class="flex justify-center -mt-2">
-
-                        @if($index % 2 == 0)
-
-                            <!-- kiri ke kanan -->
-                            <svg width="300" height="120">
-
-                                <path
-                                    d="M20 10
-                                    C20 100, 280 20, 280 110"
-                                    stroke="white"
-                                    stroke-width="14"
-                                    fill="transparent"
-                                    stroke-linecap="round"
-                                />
-
-                            </svg>
-
-                        @else
-
-                            <!-- kanan ke kiri -->
-                            <svg width="300" height="120">
-
-                                <path
-                                    d="M280 10
-                                    C280 100, 20 20, 20 110"
-                                    stroke="white"
-                                    stroke-width="14"
-                                    fill="transparent"
-                                    stroke-linecap="round"
-                                />
-
-                            </svg>
-
-                        @endif
-
-                    </div>
-
-                @endif
 
             </div>
 
@@ -366,20 +450,22 @@
 
     </div>
 
-    </div>
-
 </div>
 
 <script>
 
-function toggleMenu(){
+function toggleMenu() {
 
-    let menu = document.getElementById('menu');
+    const sidebar = document.getElementById('sidebar');
 
-    if(menu.style.left == '0px'){
-        menu.style.left = '-300px';
-    }else{
-        menu.style.left = '0px';
+    if(sidebar.style.left === '0px') {
+
+        sidebar.style.left = '-300px';
+
+    } else {
+
+        sidebar.style.left = '0px';
+
     }
 
 }

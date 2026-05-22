@@ -3,145 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Run-pro | Tugas Selesai</title>
+    <title>Tugas Selesai</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        body{
-            font-family: sans-serif;
-        }
-    </style>
 </head>
 
-<body class="bg-[#58cc02] min-h-screen">
+<body class="bg-[#58cc02] min-h-screen p-5">
 
-<!-- NAVBAR -->
-<div class="bg-white shadow-lg p-5">
-
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <!-- HEADER -->
+    <div class="bg-white rounded-3xl shadow-xl p-6 mb-10 flex justify-between items-center">
 
         <div class="flex items-center gap-4">
 
-            <!-- MENU BUTTON -->
-            <button onclick="toggleMenu()"
-                class="bg-green-500 text-white w-14 h-14 rounded-2xl text-3xl font-black">
-                ☰
-            </button>
+            <a href="/dashboard"
+                class="bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-2xl font-bold shadow-lg">
+                ← Kembali
+            </a>
 
             <div>
+
                 <h1 class="text-4xl font-black text-yellow-500">
-                    Tugas Selesai ✅
+                    ✅ Tugas Selesai
                 </h1>
 
-                <p class="text-gray-500">
+                <p class="text-gray-500 mt-1">
                     Semua misi yang berhasil kamu selesaikan
                 </p>
+
+            </div>
+
+        </div>
+
+        <div class="flex gap-4">
+
+            <div class="bg-yellow-100 px-5 py-3 rounded-2xl font-bold shadow">
+                ⭐ XP: {{ $xp }}
+            </div>
+
+            <div class="bg-blue-100 px-5 py-3 rounded-2xl font-bold shadow">
+                🏆 Level: {{ $level }}
             </div>
 
         </div>
 
     </div>
 
-</div>
+    <!-- TASK -->
+    <div class="space-y-8">
 
-<!-- SIDEBAR -->
-<div id="menu"
-    class="fixed top-0 left-[-300px] w-72 h-full bg-white shadow-2xl z-50 transition-all duration-300 p-6">
+        @forelse($todos as $todo)
 
-    <div class="flex justify-between items-center mb-10">
+            <div class="bg-white rounded-3xl shadow-2xl p-8">
 
-        <div>
-            <h1 class="text-3xl font-black text-green-500">
-                Run-pro 🚀
-            </h1>
+                <div class="flex justify-between items-center flex-wrap gap-5">
 
-            <p class="text-gray-400 text-sm">
-                Productivity App
-            </p>
-        </div>
+                    <div>
 
-        <button onclick="toggleMenu()"
-            class="text-3xl font-black text-red-500">
-            ✖
-        </button>
+                        <!-- TITLE -->
+                        <h2 class="text-3xl font-black text-gray-700 line-through">
+                            {{ $todo->title }}
+                        </h2>
 
-    </div>
+                        <!-- DESCRIPTION -->
+                        <p class="text-gray-500 mt-3">
+                            {{ $todo->description }}
+                        </p>
 
-    <div class="space-y-4">
+                        <!-- INFO -->
+                        <div class="flex flex-wrap gap-3 mt-5">
 
-        <a href="/dashboard"
-            class="block bg-green-100 hover:bg-green-200 p-4 rounded-2xl font-bold text-green-700">
-            🏠 Home
-        </a>
+                            <div class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-2xl font-bold">
+                                ⭐ +{{ $todo->xp }} XP
+                            </div>
 
-        <a href="/completed"
-            class="block bg-yellow-100 hover:bg-yellow-200 p-4 rounded-2xl font-bold text-yellow-700">
-            ✅ Tugas Selesai
-        </a>
+                            <div class="bg-red-100 text-red-600 px-4 py-2 rounded-2xl font-bold">
+                                ⏰ {{ $todo->deadline }}
+                            </div>
 
-        <a href="/profile"
-            class="block bg-blue-100 hover:bg-blue-200 p-4 rounded-2xl font-bold text-blue-700">
-            👤 Profil Saya
-        </a>
+                            <div class="
+                                px-4 py-2 rounded-2xl font-bold
 
-        <a href="/statistics"
-            class="block bg-purple-100 hover:bg-purple-200 p-4 rounded-2xl font-bold text-purple-700">
-            📊 Statistik
-        </a>
+                                @if($todo->priority == 'high')
+                                    bg-red-100 text-red-600
+                                @elseif($todo->priority == 'medium')
+                                    bg-yellow-100 text-yellow-700
+                                @else
+                                    bg-green-100 text-green-700
+                                @endif
+                            ">
 
-    </div>
+                                @if($todo->priority == 'high')
 
-</div>
+                                    🔴 Penting
 
-<!-- CONTENT -->
-<div class="max-w-5xl mx-auto py-10 px-5">
+                                @elseif($todo->priority == 'medium')
 
-    @foreach($todos as $todo)
+                                    🟡 Sedang
 
-        <div class="bg-white rounded-3xl shadow-xl p-8 mb-8">
+                                @else
 
-            <div class="flex justify-between items-center gap-5">
+                                    🟢 Mudah
 
-                <div>
+                                @endif
 
-                    <h2 class="text-3xl font-black line-through text-gray-500">
-                        {{ $todo->title }}
-                    </h2>
+                            </div>
 
-                    <p class="text-gray-500 mt-2">
-                        {{ $todo->description }}
-                    </p>
+                        </div>
 
-                </div>
+                    </div>
 
-                <div class="bg-yellow-100 px-6 py-4 rounded-2xl font-black text-yellow-700">
-                    ⭐ +{{ $todo->xp }} XP
+                    <!-- ICON -->
+                    <div class="text-7xl">
+                        ⭐
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
+        @empty
 
-    @endforeach
+            <div class="bg-white rounded-3xl shadow-2xl p-16 text-center">
 
-</div>
+                <div class="text-8xl mb-5">
+                    📭
+                </div>
 
-<script>
+                <h2 class="text-4xl font-black text-gray-700">
+                    Belum Ada Tugas Selesai
+                </h2>
 
-function toggleMenu(){
+                <p class="text-gray-500 mt-4 text-lg">
+                    Selesaikan misi pertamamu dulu 🚀
+                </p>
 
-    const menu = document.getElementById('menu');
+            </div>
 
-    if(menu.style.left == '0px'){
-        menu.style.left = '-300px';
-    }else{
-        menu.style.left = '0px';
-    }
+        @endforelse
 
-}
-
-</script>
+    </div>
 
 </body>
 </html>

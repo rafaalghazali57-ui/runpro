@@ -2,28 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Todo extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
 
         'user_id',
-
         'title',
-
         'description',
+
+        'priority',
+        'xp',
 
         'completed',
 
-        'xp',
+        'start_date',
+        'start_time',
 
-        'deadline',
-
-        'priority',
+        'end_date',
+        'end_time',
 
     ];
 }

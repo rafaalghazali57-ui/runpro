@@ -6,32 +6,37 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('todos', function (Blueprint $table) {
 
             $table->id();
 
-            $table->foreignId('user_id')
-                ->constrained()
-                ->onDelete('cascade');
+            $table->foreignId('user_id');
 
             $table->string('title');
 
             $table->text('description')->nullable();
 
-            $table->boolean('completed')->default(false);
+            $table->dateTime('deadline')->nullable();
+
+            $table->string('priority')->default('low');
 
             $table->integer('xp')->default(10);
 
-            $table->dateTime('deadline')->nullable();
-
-            $table->string('priority')->default('medium');
+            $table->boolean('completed')->default(false);
 
             $table->timestamps();
+
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('todos');
