@@ -42,6 +42,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('/todo/delete/{id}', [TodoController::class, 'destroy']);
 
+    Route::get('/todo/edit/{id}', [TodoController::class, 'edit'])->middleware('auth');
+
+    Route::put('/todo/edit/{id}', [TodoController::class, 'updateTask'])->middleware('auth');
+
     /*
     |--------------------------------------------------------------------------
     | COMPLETED TASK
@@ -125,6 +129,8 @@ Route::middleware(['auth'])->group(function () {
         ));
 
     });
+
+    
 
 });
 

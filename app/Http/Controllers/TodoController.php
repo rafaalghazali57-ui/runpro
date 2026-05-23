@@ -174,4 +174,51 @@ class TodoController extends Controller
 
     }
 
+    // HALAMAN EDIT
+public function edit($id)
+{
+
+    $todo = Todo::findOrFail($id);
+
+    return view('edit-task', compact('todo'));
+
+}
+
+// UPDATE TASK
+public function updateTask(Request $request, $id)
+{
+
+    $todo = Todo::findOrFail($id);
+
+    $xp = 10;
+
+    if($request->priority == 'medium'){
+        $xp = 20;
+    }
+
+    if($request->priority == 'high'){
+        $xp = 30;
+    }
+
+    $todo->update([
+
+        'title' => $request->title,
+        'description' => $request->description,
+
+        'priority' => $request->priority,
+        'xp' => $xp,
+
+        'start_date' => $request->start_date,
+        'start_time' => $request->start_time,
+
+        'end_date' => $request->end_date,
+        'end_time' => $request->end_time,
+
+    ]);
+
+    return redirect('/dashboard')
+        ->with('success', 'Misi berhasil diupdate 🚀');
+
+    }
+
 }

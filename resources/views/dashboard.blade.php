@@ -13,6 +13,15 @@
             font-family: sans-serif;
         }
 
+        .route-line{
+            width: 120px;
+            height: 60px;
+            border: 10px solid white;
+            border-top: none;
+            border-radius: 0 0 100px 100px;
+            margin: auto;
+        }
+
     </style>
 
 </head>
@@ -35,6 +44,7 @@
 
     <div>
 
+        <!-- LOGO -->
         <div class="text-center mb-10 mt-10">
 
             <div class="text-7xl">
@@ -132,15 +142,7 @@
 
     </div>
 
-    <!-- DEBUG WAKTU -->
-    <div class="bg-black text-white p-4 rounded-2xl mb-8 font-bold shadow-xl">
-
-        🕒 WIB Sekarang:
-        {{ now()->format('d M Y H:i:s') }}
-
-    </div>
-
-    <!-- FORM -->
+    <!-- INFO -->
     <div class="bg-white rounded-3xl shadow-xl p-8 mb-12">
 
         <h2 class="text-3xl font-black text-green-500 mb-3">
@@ -151,15 +153,30 @@
 
             Isi jadwal misi dengan benar.<br>
 
-            Misi hanya bisa diselesaikan ketika:
-            <span class="font-bold text-green-600">
-                waktu sekarang sudah masuk jam mulai
-            </span>
-
-            dan belum melewati jam selesai.
+            Misi hanya bisa diselesaikan saat sudah masuk waktu mulai
+            dan sebelum waktu selesai.
 
         </p>
 
+        <!-- SUCCESS -->
+        @if(session('success'))
+
+            <div class="bg-green-100 text-green-700 p-4 rounded-2xl mb-5 font-bold">
+                {{ session('success') }}
+            </div>
+
+        @endif
+
+        <!-- ERROR -->
+        @if(session('error'))
+
+            <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
+                {{ session('error') }}
+            </div>
+
+        @endif
+
+        <!-- FORM -->
         <form action="/todo/store" method="POST" class="space-y-5">
             @csrf
 
@@ -282,10 +299,26 @@
 
     </div>
 
-    <!-- TASK -->
+    <!-- TASK LIST -->
     <div class="relative py-10">
 
         @foreach($todos as $index => $todo)
+
+            @php
+
+                $now = now();
+
+                $start = \Carbon\Carbon::parse(
+                    $todo->start_date . ' ' . $todo->start_time
+                );
+
+                $end = \Carbon\Carbon::parse(
+                    $todo->end_date . ' ' . $todo->end_time
+                );
+
+                $canComplete = now()->between($start, $end);
+
+            @endphp
 
             <div class="flex mb-16
 
@@ -310,29 +343,10 @@
                             @csrf
                             @method('PUT')
 
-                            @php
-
-                                $now = now();
-
-                                $start = \Carbon\Carbon::parse(
-                                    $todo->start_date . ' ' . $todo->start_time
-                                );
-
-                                $end = \Carbon\Carbon::parse(
-                                    $todo->end_date . ' ' . $todo->end_time
-                                );
-
-                                $canComplete = now()->between(
-                                    $start,
-                                    $end
-                                );
-
-                            @endphp
-
                             <button
                                 type="submit"
 
-                                {{ !$canComplete && !$todo->completed ? 'disabled' : '' }}
+                                {{ (!$canComplete && !$todo->completed) ? 'disabled' : '' }}
 
                                 class="w-24 h-24 rounded-full text-4xl shadow-2xl border-4 border-white transition
 
@@ -376,12 +390,12 @@
 
                             </h2>
 
-                            <!-- DESCRIPTION -->
+                            <!-- DESC -->
                             <p class="text-gray-500 mt-2">
                                 {{ $todo->description }}
                             </p>
 
-                            <!-- DATE -->
+                            <!-- INFO -->
                             <div class="mt-4 flex flex-wrap gap-3">
 
                                 <div class="bg-blue-100 text-blue-700 px-4 py-2 rounded-2xl text-sm font-bold">
@@ -402,45 +416,77 @@
                                     ⭐ +{{ $todo->xp }} XP
                                 </div>
 
-                                <!-- STATUS -->
-                                @if($todo->completed)
+                                <!-- PRIORITY -->
+                                <div class="
+                                    px-4 py-2 rounded-2xl text-sm font-bold
 
-                                    <div class="bg-yellow-400 text-white px-4 py-2 rounded-2xl text-sm font-bold">
-                                        SELESAI ⭐
-                                    </div>
+                                    @if($todo->priority == 'high')
+                                        bg-red-100 text-red-600
+                                    @elseif($todo->priority == 'medium')
+                                        bg-yellow-100 text-yellow-700
+                                    @else
+                                        bg-green-100 text-green-700
+                                    @endif
+                                ">
 
-                                @elseif($canComplete)
+                                    @if($todo->priority == 'high')
 
-                                    <div class="bg-green-500 text-white px-4 py-2 rounded-2xl text-sm font-bold">
-                                        BISA DIKERJAKAN 🎯
-                                    </div>
+                                        🔴 Penting
 
-                                @else
+                                    @elseif($todo->priority == 'medium')
 
-                                    <div class="bg-gray-500 text-white px-4 py-2 rounded-2xl text-sm font-bold">
-                                        TERKUNCI 🔒
-                                    </div>
+                                        🟡 Sedang
 
-                                @endif
+                                    @else
+
+                                        🟢 Mudah
+
+                                    @endif
+
+                                </div>
 
                             </div>
 
                         </div>
 
-                        <!-- DELETE -->
-                        <form action="/todo/delete/{{ $todo->id }}" method="POST">
-                            @csrf
-                            @method('DELETE')
+                        <!-- ACTION -->
+                        <div class="flex flex-col gap-3">
 
-                            <button
-                                class="bg-red-500 hover:bg-red-600 text-white px-5 py-4 rounded-2xl shadow-xl font-bold"
+                            <!-- EDIT -->
+                            <a
+                                href="/todo/edit/{{ $todo->id }}"
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-4 rounded-2xl shadow-xl font-bold text-center"
                             >
-                                ✖
-                            </button>
+                                ✏️
+                            </a>
 
-                        </form>
+                            <!-- DELETE -->
+                            <form action="/todo/delete/{{ $todo->id }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    class="bg-red-500 hover:bg-red-600 text-white px-5 py-4 rounded-2xl shadow-xl font-bold"
+                                >
+                                    ✖
+                                </button>
+
+                            </form>
+
+                        </div>
 
                     </div>
+
+                    <!-- ROUTE -->
+                    @if(!$loop->last)
+
+                        <div class="flex justify-center mt-5">
+
+                            <div class="route-line"></div>
+
+                        </div>
+
+                    @endif
 
                 </div>
 
@@ -452,6 +498,7 @@
 
 </div>
 
+<!-- SCRIPT -->
 <script>
 
 function toggleMenu() {
