@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\TodoController;
 
 /*
@@ -123,6 +125,33 @@ Route::get('/profile', function () {
         'level',
         'streak'
     ));
+
+})->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| CHANGE PASSWORD
+|--------------------------------------------------------------------------
+*/
+
+Route::post('/change-password', function (Request $request) {
+
+    $request->validate([
+
+        'password' => 'required|confirmed|min:8',
+
+    ]);
+
+    $user = auth()->user();
+
+    $user->password = Hash::make($request->password);
+
+    $user->save();
+
+    return back()->with(
+        'password_success',
+        'Password berhasil diubah 🔥'
+    );
 
 })->middleware('auth');
 
