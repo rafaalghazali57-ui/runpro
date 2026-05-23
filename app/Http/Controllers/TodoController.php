@@ -2,44 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Todo;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class TodoController extends Controller
 {
-        // DASHBOARD
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
+    */
+
     public function index()
     {
+        $todos = Todo::where('user_id', auth()->id())
+            ->latest()
+            ->get();
 
-    $todos = Todo::where(
-        'user_id',
-        auth()->id()
-    )
-    ->latest()
-    ->get();
+        $xp = $todos->where('completed', true)->sum('xp');
 
-    $xp = Todo::where(
-        'user_id',
-        auth()->id()
-    )
-    ->where('completed', true)
-    ->sum('xp');
+        $level = floor($xp / 100) + 1;
 
-    $level = floor($xp / 100) + 1;
+        return view('dashboard', compact(
+            'todos',
+            'xp',
+            'level'
+        ));
+    }
 
-    return view('dashboard', compact(
-        'todos',
-        'xp',
-        'level'
-    ));
+    /*
+    |--------------------------------------------------------------------------
+    | STORE TODO
+    |--------------------------------------------------------------------------
+    */
 
-}
-
-    // TAMBAH MISI
     public function store(Request $request)
     {
-
         $request->validate([
 
             'title' => 'required',
@@ -53,14 +52,15 @@ class TodoController extends Controller
 
         ]);
 
-        // XP BERDASARKAN PRIORITAS
         $xp = 10;
 
-        if($request->priority == 'medium'){
+        if ($request->priority == 'medium') {
 
             $xp = 20;
 
-        } elseif($request->priority == 'high'){
+        }
+
+        if ($request->priority == 'high') {
 
             $xp = 30;
 
@@ -74,6 +74,7 @@ class TodoController extends Controller
             'description' => $request->description,
 
             'priority' => $request->priority,
+
             'xp' => $xp,
 
             'completed' => false,
@@ -86,139 +87,131 @@ class TodoController extends Controller
 
         ]);
 
-        return back()->with('success', 'Misi berhasil ditambahkan 🚀');
-
+        return redirect('/dashboard')
+            ->with('success', 'Misi berhasil dibuat 🚀');
     }
 
-    // SELESAIKAN MISI
-   public function update($id)
-{
+    /*
+    |--------------------------------------------------------------------------
+    | COMPLETE TODO
+    |--------------------------------------------------------------------------
+    */
 
-    $todo = Todo::findOrFail($id);
+    public function update($id)
+    {
+        $todo = Todo::findOrFail($id);
 
-    $now = \Carbon\Carbon::now();
-
-    $start = \Carbon\Carbon::parse(
-        $todo->start_date . ' ' . $todo->start_time
-    );
-
-    $end = \Carbon\Carbon::parse(
-        $todo->end_date . ' ' . $todo->end_time
-    );
-
-    // BELUM MULAI
-    if($now < $start){
-
-        return back()->with(
-            'error',
-            'Misi belum dimulai ⏰'
+        $start = Carbon::parse(
+            $todo->start_date . ' ' . $todo->start_time
         );
 
-    }
+        $end = Carbon::parse(
+            $todo->end_date . ' ' . $todo->end_time
+        );
 
-        // SUDAH HABIS
-        if($now > $end){
+        $now = Carbon::now('Asia/Jakarta');
 
-            return back()->with(
-                'error',
-                'Waktu misi habis ❌'
-            );
+        if ($now->between($start, $end)) {
+
+            $todo->completed = true;
+
+            $todo->save();
+
+            return redirect('/dashboard')
+                ->with('success', 'Misi berhasil diselesaikan 🎉');
 
         }
 
-        // COMPLETE
-        $todo->completed = true;
-
-        $todo->save();
-
-        return back()->with(
-            'success',
-            'Misi berhasil diselesaikan 🚀'
-        );
-
-
-        // JIKA SUDAH LEWAT
-        if($now > $end){
-
-            return back()->with(
-                'error',
-                'Waktu misi sudah habis ❌'
-            );
-
-        }
-
-        // SELESAIKAN MISI
-        $todo->completed = true;
-
-        $todo->save();
-
-        return back()->with(
-            'success',
-            'Misi berhasil diselesaikan 🚀'
-        );
-
+        return redirect('/dashboard')
+            ->with('error', 'Belum masuk waktu mengerjakan ⏰');
     }
 
-    // HAPUS MISI
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE TODO
+    |--------------------------------------------------------------------------
+    */
+
     public function destroy($id)
     {
-
         $todo = Todo::findOrFail($id);
 
         $todo->delete();
 
-        return back()->with(
-            'success',
-            'Misi berhasil dihapus 🗑️'
-        );
-
+        return redirect('/dashboard')
+            ->with('success', 'Misi berhasil dihapus');
     }
 
-    // HALAMAN EDIT
-public function edit($id)
-{
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT PAGE
+    |--------------------------------------------------------------------------
+    */
 
-    $todo = Todo::findOrFail($id);
+    public function edit($id)
+    {
+        $todo = Todo::findOrFail($id);
 
-    return view('edit-task', compact('todo'));
-
-}
-
-// UPDATE TASK
-public function updateTask(Request $request, $id)
-{
-
-    $todo = Todo::findOrFail($id);
-
-    $xp = 10;
-
-    if($request->priority == 'medium'){
-        $xp = 20;
+        return view('edit', compact('todo'));
     }
 
-    if($request->priority == 'high'){
-        $xp = 30;
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    public function editUpdate(Request $request, $id)
+    {
+        $todo = Todo::findOrFail($id);
+
+        $todo->update([
+
+            'title' => $request->title,
+            'description' => $request->description,
+
+            'priority' => $request->priority,
+
+            'start_date' => $request->start_date,
+            'start_time' => $request->start_time,
+
+            'end_date' => $request->end_date,
+            'end_time' => $request->end_time,
+
+        ]);
+
+        return redirect('/dashboard')
+            ->with('success', 'Misi berhasil diupdate ✏️');
     }
 
-    $todo->update([
+    /*
+    |--------------------------------------------------------------------------
+    | STATISTICS
+    |--------------------------------------------------------------------------
+    */
 
-        'title' => $request->title,
-        'description' => $request->description,
+    public function statistics()
+    {
+        $todos = Todo::where('user_id', auth()->id())->get();
 
-        'priority' => $request->priority,
-        'xp' => $xp,
+        $completed = $todos->where('completed', true)->count();
 
-        'start_date' => $request->start_date,
-        'start_time' => $request->start_time,
+        $unfinished = $todos->where('completed', false)->count();
 
-        'end_date' => $request->end_date,
-        'end_time' => $request->end_time,
+        $xp = $todos->where('completed', true)->sum('xp');
 
-    ]);
+        $level = floor($xp / 100) + 1;
 
-    return redirect('/dashboard')
-        ->with('success', 'Misi berhasil diupdate 🚀');
+        $streak = $completed;
 
+        return view('statistics', compact(
+
+            'completed',
+            'unfinished',
+            'xp',
+            'level',
+            'streak'
+
+        ));
     }
-
 }

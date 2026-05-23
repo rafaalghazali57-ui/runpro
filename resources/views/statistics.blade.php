@@ -3,133 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Run-pro | Statistik</title>
+
+    <title>Statistik Run-pro</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body class="bg-[#58cc02] min-h-screen">
 
 <!-- HEADER -->
-<div class="bg-white shadow-lg p-5">
+<div class="bg-white shadow-xl px-5 py-5 flex items-center justify-between">
 
-    <div class="max-w-7xl mx-auto flex items-center gap-4">
+    <!-- LEFT -->
+    <div class="flex items-center gap-4">
 
-        <!-- BUTTON MENU -->
-        <button onclick="toggleMenu()"
-            class="bg-green-500 text-white w-14 h-14 rounded-2xl text-3xl font-black">
+        <!-- MENU BUTTON -->
+        <button
+            onclick="toggleMenu()"
+            class="bg-green-500 hover:bg-green-600 transition w-16 h-16 rounded-2xl shadow-xl text-white text-4xl font-black"
+        >
             ☰
         </button>
 
         <div>
 
-            <h1 class="text-4xl font-black text-purple-500">
+            <h1 class="text-5xl font-black text-purple-500">
                 Statistik 📊
             </h1>
 
-            <p class="text-gray-500 mt-1">
-                Statistik produktivitas kamu
+            <p class="text-gray-500 mt-1 text-lg">
+                Statistik produktivitas akunmu
             </p>
 
         </div>
 
     </div>
+
+    <!-- DASHBOARD -->
+    <a href="/dashboard"
+       class="bg-green-500 hover:bg-green-600 transition text-white px-8 py-4 rounded-2xl font-black shadow-xl">
+        ← Dashboard
+    </a>
 
 </div>
 
 <!-- SIDEBAR -->
-<div id="menu"
-    class="fixed top-0 left-[-300px] w-72 h-full bg-white shadow-2xl z-50 transition-all duration-300 p-6">
+<div
+    id="sidebar"
+    class="fixed top-0 left-[-300px] w-72 h-full bg-white shadow-2xl p-6 flex flex-col justify-between z-50 transition-all duration-300"
+>
 
-    <div class="flex justify-between items-center mb-10">
+    <div>
 
-        <div>
+        <!-- LOGO -->
+        <div class="text-center mb-10 mt-10">
 
-            <h1 class="text-3xl font-black text-green-500">
-                Run-pro 🚀
+            <div class="text-7xl">
+                🚀
+            </div>
+
+            <h1 class="text-4xl font-black text-green-500 mt-3">
+                Run-pro
             </h1>
 
-            <p class="text-gray-400 text-sm">
-                Productivity App
+            <p class="text-gray-400 mt-2">
+                Rutinitas Produktif
             </p>
 
         </div>
 
-        <button onclick="toggleMenu()"
-            class="text-3xl font-black text-red-500">
-            ✖
+        <!-- MENU -->
+        <div class="space-y-4">
+
+            <a href="/dashboard"
+               class="block bg-green-100 hover:bg-green-200 transition p-4 rounded-2xl font-bold text-green-700">
+                🏠 Dashboard
+            </a>
+
+            <a href="/completed"
+               class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
+                ✅ Tugas Selesai
+            </a>
+
+            <a href="/profile"
+               class="block bg-blue-100 hover:bg-blue-200 transition p-4 rounded-2xl font-bold text-blue-700">
+                👤 Profil Saya
+            </a>
+
+            <a href="/statistics"
+               class="block bg-purple-100 hover:bg-purple-200 transition p-4 rounded-2xl font-bold text-purple-700">
+                📊 Statistik
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- LOGOUT -->
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+
+        <button
+            class="w-full bg-red-500 hover:bg-red-600 transition text-white py-4 rounded-2xl font-black shadow-xl"
+        >
+            Logout 🚪
         </button>
 
-    </div>
-
-    <!-- MENU -->
-    <div class="space-y-4">
-
-        <a href="/dashboard"
-            class="block bg-green-100 hover:bg-green-200 p-4 rounded-2xl font-bold text-green-700">
-            🏠 Home
-        </a>
-
-        <a href="/completed"
-            class="block bg-yellow-100 hover:bg-yellow-200 p-4 rounded-2xl font-bold text-yellow-700">
-            ✅ Tugas Selesai
-        </a>
-
-        <a href="/profile"
-            class="block bg-blue-100 hover:bg-blue-200 p-4 rounded-2xl font-bold text-blue-700">
-            👤 Profil Saya
-        </a>
-
-        <a href="/statistics"
-            class="block bg-purple-100 hover:bg-purple-200 p-4 rounded-2xl font-bold text-purple-700">
-            📊 Statistik
-        </a>
-
-    </div>
+    </form>
 
 </div>
 
 <!-- CONTENT -->
-<div class="max-w-6xl mx-auto py-10 px-5">
+<div class="p-5 md:p-10">
 
-    <div class="grid md:grid-cols-3 gap-6">
+    <!-- CARD -->
+    <div class="bg-white rounded-[40px] shadow-2xl p-8 md:p-12">
 
-        <!-- XP -->
-        <div class="bg-white rounded-3xl p-10 shadow-xl text-center">
+        <!-- TITLE -->
+        <div class="text-center mb-12">
 
-            <h2 class="text-5xl font-black text-yellow-500">
-                {{ $xp }}
-            </h2>
+            <h1 class="text-6xl font-black text-purple-500">
+                Statistik Produktivitas 🚀
+            </h1>
 
-            <p class="mt-3 text-gray-500 font-bold">
-                Total XP
+            <p class="text-gray-500 text-xl mt-4">
+                Lihat perkembangan misi dan progresmu
             </p>
 
         </div>
 
-        <!-- LEVEL -->
-        <div class="bg-white rounded-3xl p-10 shadow-xl text-center">
+        <!-- STATS -->
+        <div class="grid md:grid-cols-4 gap-6 mb-12">
 
-            <h2 class="text-5xl font-black text-blue-500">
-                {{ $level }}
-            </h2>
+            <!-- COMPLETED -->
+            <div class="bg-green-100 rounded-3xl p-8 text-center shadow-lg">
 
-            <p class="mt-3 text-gray-500 font-bold">
-                Level
-            </p>
+                <h1 class="text-6xl font-black text-green-600">
+                    {{ $completed }}
+                </h1>
+
+                <p class="text-2xl font-black text-green-700 mt-3">
+                    ✅ Selesai
+                </p>
+
+            </div>
+
+            <!-- UNFINISHED -->
+            <div class="bg-red-100 rounded-3xl p-8 text-center shadow-lg">
+
+                <h1 class="text-6xl font-black text-red-600">
+                    {{ $unfinished }}
+                </h1>
+
+                <p class="text-2xl font-black text-red-700 mt-3">
+                    ❌ Belum
+                </p>
+
+            </div>
+
+            <!-- XP -->
+            <div class="bg-yellow-100 rounded-3xl p-8 text-center shadow-lg">
+
+                <h1 class="text-6xl font-black text-yellow-600">
+                    {{ $xp }}
+                </h1>
+
+                <p class="text-2xl font-black text-yellow-700 mt-3">
+                    ⭐ XP
+                </p>
+
+            </div>
+
+            <!-- LEVEL -->
+            <div class="bg-blue-100 rounded-3xl p-8 text-center shadow-lg">
+
+                <h1 class="text-6xl font-black text-blue-600">
+                    {{ $level }}
+                </h1>
+
+                <p class="text-2xl font-black text-blue-700 mt-3">
+                    🏆 Level
+                </p>
+
+            </div>
 
         </div>
 
-        <!-- COMPLETED -->
-        <div class="bg-white rounded-3xl p-10 shadow-xl text-center">
+        <!-- CHART -->
+        <div class="bg-gray-50 rounded-3xl p-10 shadow-inner">
 
-            <h2 class="text-5xl font-black text-orange-500">
-                {{ $completed }}
+            <h2 class="text-4xl font-black text-purple-500 mb-10 text-center">
+                Diagram Produktivitas 📈
             </h2>
 
-            <p class="mt-3 text-gray-500 font-bold">
-                Tugas Selesai
-            </p>
+            <div class="max-w-2xl mx-auto">
+
+                <canvas id="myChart"></canvas>
+
+            </div>
 
         </div>
 
@@ -137,16 +211,90 @@
 
 </div>
 
+<!-- CHART SCRIPT -->
 <script>
 
-function toggleMenu(){
+const ctx = document.getElementById('myChart');
 
-    const menu = document.getElementById('menu');
+new Chart(ctx, {
 
-    if(menu.style.left == '0px'){
-        menu.style.left = '-300px';
-    }else{
-        menu.style.left = '0px';
+    type: 'doughnut',
+
+    data: {
+
+        labels: [
+
+            'Tugas Selesai',
+            'Belum Selesai'
+
+        ],
+
+        datasets: [{
+
+            data: [
+
+                {{ $completed }},
+                {{ $unfinished }}
+
+            ],
+
+            backgroundColor: [
+
+                '#58cc02',
+                '#ef4444'
+
+            ],
+
+            borderWidth: 0
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                labels: {
+
+                    font: {
+
+                        size: 18,
+                        weight: 'bold'
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+<!-- SIDEBAR SCRIPT -->
+<script>
+
+function toggleMenu() {
+
+    const sidebar = document.getElementById('sidebar');
+
+    if(sidebar.style.left === '0px') {
+
+        sidebar.style.left = '-300px';
+
+    } else {
+
+        sidebar.style.left = '0px';
+
     }
 
 }
