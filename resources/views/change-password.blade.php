@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Ubah Password</title>
@@ -12,129 +14,152 @@
 
 <body class="bg-[#58cc02] min-h-screen flex items-center justify-center p-5">
 
-    <div class="bg-white rounded-[40px] shadow-2xl p-10 w-full max-w-2xl">
+<div class="w-full max-w-3xl bg-white rounded-[40px] shadow-2xl p-8 md:p-12">
 
-        <!-- TITLE -->
-        <div class="text-center mb-10">
+    <!-- HEADER -->
+    <div class="text-center mb-10">
 
-            <div class="text-8xl">
-                🔐
-            </div>
+        <div class="text-8xl mb-5">
+            🔐
+        </div>
 
-            <h1 class="text-5xl font-black text-green-500 mt-5">
-                Ubah Password
-            </h1>
+        <h1 class="text-5xl font-black text-green-500">
+            Ubah Password
+        </h1>
 
-            <p class="text-gray-500 mt-3">
-                Gunakan password yang aman
-            </p>
+        <p class="text-gray-500 text-lg mt-4">
+            Amankan akun Run-pro milikmu 🚀
+        </p>
+
+    </div>
+
+    <!-- SUCCESS -->
+    @if(session('success'))
+
+        <div class="bg-green-100 text-green-700 p-5 rounded-2xl mb-6 font-bold">
+
+            {{ session('success') }}
 
         </div>
 
-        <!-- SUCCESS -->
-        @if(session('success'))
+    @endif
 
-            <div class="bg-green-100 text-green-700 p-4 rounded-2xl mb-5 font-bold">
+    <!-- ERROR -->
+    @if(session('error'))
 
-                {{ session('success') }}
+        <div class="bg-red-100 text-red-700 p-5 rounded-2xl mb-6 font-bold">
 
-            </div>
+            {{ session('error') }}
 
-        @endif
+        </div>
 
-        <!-- ERROR -->
-        @if(session('error'))
+    @endif
 
-            <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
+    <!-- VALIDATION ERROR -->
+    @if ($errors->any())
 
-                {{ session('error') }}
+        <div class="bg-red-100 text-red-700 p-5 rounded-2xl mb-6">
 
-            </div>
+            <ul class="space-y-2 font-bold">
 
-        @endif
+                @foreach ($errors->all() as $error)
 
-        <!-- VALIDATION -->
-        @if($errors->any())
+                    <li>• {{ $error }}</li>
 
-            <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
+                @endforeach
 
-                {{ $errors->first() }}
+            </ul>
 
-            </div>
+        </div>
 
-        @endif
+    @endif
 
-        <!-- FORM -->
-        <form action="/change-password" method="POST" class="space-y-6">
+    <!-- FORM -->
+    <form action="/change-password" method="POST" class="space-y-6">
 
-            @csrf
+        @csrf
 
-            <!-- OLD PASSWORD -->
-            <div>
+        <!-- OLD PASSWORD -->
+        <div>
 
-                <label class="block font-black text-gray-700 mb-3">
-                    Password Lama
-                </label>
+            <label class="block text-2xl font-black text-slate-700 mb-3">
 
-                <input
-                    type="password"
-                    name="old_password"
-                    required
-                    class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
-                >
+                🔒 Password Lama
 
-            </div>
+            </label>
 
-            <!-- NEW PASSWORD -->
-            <div>
-
-                <label class="block font-black text-gray-700 mb-3">
-                    Password Baru
-                </label>
-
-                <input
-                    type="password"
-                    name="password"
-                    required
-                    class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
-                >
-
-            </div>
-
-            <!-- CONFIRM -->
-            <div>
-
-                <label class="block font-black text-gray-700 mb-3">
-                    Konfirmasi Password Baru
-                </label>
-
-                <input
-                    type="password"
-                    name="password_confirmation"
-                    required
-                    class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-green-400"
-                >
-
-            </div>
-
-            <!-- BUTTON -->
-            <button
-                class="w-full bg-green-500 hover:bg-green-600 transition text-white py-5 rounded-2xl font-black text-xl shadow-xl"
+            <input
+                type="password"
+                name="old_password"
+                required
+                class="w-full p-5 rounded-3xl border-2 border-gray-200 focus:border-green-500 outline-none text-xl"
+                placeholder="Masukkan password lama"
             >
+
+        </div>
+
+        <!-- NEW PASSWORD -->
+        <div>
+
+            <label class="block text-2xl font-black text-slate-700 mb-3">
+
+                ✨ Password Baru
+
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                required
+                class="w-full p-5 rounded-3xl border-2 border-gray-200 focus:border-green-500 outline-none text-xl"
+                placeholder="Masukkan password baru"
+            >
+
+        </div>
+
+        <!-- CONFIRM -->
+        <div>
+
+            <label class="block text-2xl font-black text-slate-700 mb-3">
+
+                ✅ Konfirmasi Password
+
+            </label>
+
+            <input
+                type="password"
+                name="password_confirmation"
+                required
+                class="w-full p-5 rounded-3xl border-2 border-gray-200 focus:border-green-500 outline-none text-xl"
+                placeholder="Konfirmasi password baru"
+            >
+
+        </div>
+
+        <!-- BUTTON -->
+        <div class="flex flex-col md:flex-row gap-4 pt-4">
+
+            <button
+                type="submit"
+                class="flex-1 bg-green-500 hover:bg-green-600 transition text-white py-5 rounded-3xl font-black text-2xl shadow-xl"
+            >
+
                 Simpan Password 🚀
+
             </button>
 
-        </form>
+            <a href="/profile"
+               class="flex-1 bg-gray-200 hover:bg-gray-300 transition text-slate-700 py-5 rounded-3xl font-black text-2xl shadow-xl text-center">
 
-        <!-- BACK -->
-        <a
-            href="/profile"
-            class="block text-center mt-6 bg-gray-200 hover:bg-gray-300 transition py-4 rounded-2xl font-black"
-        >
-            ← Kembali ke Profil
-        </a>
+                Batal
 
-    </div>
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
 
 </body>
 </html>

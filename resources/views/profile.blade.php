@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Profil Saya</title>
@@ -81,9 +83,14 @@
                 🏠 Dashboard
             </a>
 
-            <a href="/completed"
-               class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
-                ✅ Tugas Selesai
+                <a href="/mission-center"
+                class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
+                    🎯 Mission Center
+                </a>
+
+                        <a href="/calendar"
+               class="block bg-pink-100 hover:bg-pink-200 transition p-4 rounded-2xl font-bold text-pink-700">
+                📅 Kalender
             </a>
 
             <a href="/profile"
@@ -118,7 +125,7 @@
 <div class="p-5 md:p-10">
 
     <!-- PROFILE CARD -->
-    <div class="bg-white rounded-[40px] shadow-2xl p-8 md:p-14 max-w-5xl mx-auto">
+    <div class="bg-white rounded-[40px] shadow-2xl p-8 md:p-14 max-w-6xl mx-auto">
 
         <!-- ICON -->
         <div class="text-center">
@@ -143,6 +150,10 @@
             <!-- XP -->
             <div class="bg-yellow-100 rounded-3xl p-8 text-center shadow-lg">
 
+                <div class="text-5xl mb-3">
+                    ⭐
+                </div>
+
                 <h1 class="text-6xl font-black text-yellow-700">
                     {{ $xp }}
                 </h1>
@@ -156,6 +167,10 @@
             <!-- LEVEL -->
             <div class="bg-blue-100 rounded-3xl p-8 text-center shadow-lg">
 
+                <div class="text-5xl mb-3">
+                    🏆
+                </div>
+
                 <h1 class="text-6xl font-black text-blue-700">
                     {{ $level }}
                 </h1>
@@ -168,6 +183,10 @@
 
             <!-- STREAK -->
             <div class="bg-orange-100 rounded-3xl p-8 text-center shadow-lg">
+
+                <div class="text-5xl mb-3">
+                    🔥
+                </div>
 
                 <h1 class="text-6xl font-black text-orange-700">
                     {{ $streak }}
@@ -229,11 +248,8 @@
                             ••••••••
                         </h1>
 
-                        <!-- CHANGE PASSWORD BUTTON -->
-                        <a
-                            href="/change-password"
-                            class="bg-green-500 hover:bg-green-600 transition text-white px-5 py-2 rounded-2xl font-bold shadow"
-                        >
+                        <a href="/change-password"
+                           class="bg-green-500 hover:bg-green-600 transition text-white px-5 py-2 rounded-2xl font-bold shadow">
                             ✏️ Ubah
                         </a>
 

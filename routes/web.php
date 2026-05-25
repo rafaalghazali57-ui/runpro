@@ -38,6 +38,15 @@ Route::get('/statistics', [TodoController::class, 'statistics'])
 
 /*
 |--------------------------------------------------------------------------
+| CALENDAR
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/calendar', [TodoController::class, 'calendar'])
+    ->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
 | TODO STORE
 |--------------------------------------------------------------------------
 */
@@ -158,7 +167,12 @@ Route::post('/change-password', function (Request $request) {
 
     $user = auth()->user();
 
-    // CHECK OLD PASSWORD
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK OLD PASSWORD
+    |--------------------------------------------------------------------------
+    */
+
     if (!Hash::check($request->old_password, $user->password)) {
 
         return back()->with(
@@ -168,18 +182,37 @@ Route::post('/change-password', function (Request $request) {
 
     }
 
-    // UPDATE PASSWORD
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE PASSWORD
+    |--------------------------------------------------------------------------
+    */
+
     $user->password = Hash::make($request->password);
 
     $user->save();
 
-    // REDIRECT KE PROFILE
+    /*
+    |--------------------------------------------------------------------------
+    | REDIRECT
+    |--------------------------------------------------------------------------
+    */
+
     return redirect('/profile')->with(
         'success',
         'Password berhasil diubah 🔥'
     );
 
 })->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| MISSION CENTER
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/mission-center', [TodoController::class, 'missionCenter'])
+    ->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------

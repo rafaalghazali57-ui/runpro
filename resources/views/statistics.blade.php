@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Statistik Run-pro</title>
@@ -83,9 +85,14 @@
                 🏠 Dashboard
             </a>
 
-            <a href="/completed"
-               class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
-                ✅ Tugas Selesai
+                <a href="/mission-center"
+                class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
+                    🎯 Mission Center
+                </a>
+
+                        <a href="/calendar"
+               class="block bg-pink-100 hover:bg-pink-200 transition p-4 rounded-2xl font-bold text-pink-700">
+                📅 Kalender
             </a>
 
             <a href="/profile"
@@ -125,12 +132,16 @@
         <!-- TITLE -->
         <div class="text-center mb-12">
 
+            <div class="text-8xl mb-5">
+                📊
+            </div>
+
             <h1 class="text-6xl font-black text-purple-500">
-                Statistik Produktivitas 🚀
+                Statistik Produktivitas
             </h1>
 
             <p class="text-gray-500 text-xl mt-4">
-                Lihat perkembangan misi dan progresmu
+                Lihat progres, level, dan perkembangan akunmu 🚀
             </p>
 
         </div>
@@ -139,53 +150,69 @@
         <div class="grid md:grid-cols-4 gap-6 mb-12">
 
             <!-- COMPLETED -->
-            <div class="bg-green-100 rounded-3xl p-8 text-center shadow-lg">
+            <div class="bg-green-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+
+                <div class="text-5xl mb-4">
+                    ✅
+                </div>
 
                 <h1 class="text-6xl font-black text-green-600">
                     {{ $completed }}
                 </h1>
 
                 <p class="text-2xl font-black text-green-700 mt-3">
-                    ✅ Selesai
+                    Selesai
                 </p>
 
             </div>
 
             <!-- UNFINISHED -->
-            <div class="bg-red-100 rounded-3xl p-8 text-center shadow-lg">
+            <div class="bg-red-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+
+                <div class="text-5xl mb-4">
+                    ❌
+                </div>
 
                 <h1 class="text-6xl font-black text-red-600">
                     {{ $unfinished }}
                 </h1>
 
                 <p class="text-2xl font-black text-red-700 mt-3">
-                    ❌ Belum
+                    Belum
                 </p>
 
             </div>
 
             <!-- XP -->
-            <div class="bg-yellow-100 rounded-3xl p-8 text-center shadow-lg">
+            <div class="bg-yellow-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+
+                <div class="text-5xl mb-4">
+                    ⭐
+                </div>
 
                 <h1 class="text-6xl font-black text-yellow-600">
                     {{ $xp }}
                 </h1>
 
                 <p class="text-2xl font-black text-yellow-700 mt-3">
-                    ⭐ XP
+                    Total XP
                 </p>
 
             </div>
 
             <!-- LEVEL -->
-            <div class="bg-blue-100 rounded-3xl p-8 text-center shadow-lg">
+            <div class="bg-blue-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+
+                <div class="text-5xl mb-4">
+                    🏆
+                </div>
 
                 <h1 class="text-6xl font-black text-blue-600">
                     {{ $level }}
                 </h1>
 
                 <p class="text-2xl font-black text-blue-700 mt-3">
-                    🏆 Level
+                    Level
                 </p>
 
             </div>
@@ -193,15 +220,81 @@
         </div>
 
         <!-- CHART -->
-        <div class="bg-gray-50 rounded-3xl p-10 shadow-inner">
+        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-10 shadow-inner">
 
             <h2 class="text-4xl font-black text-purple-500 mb-10 text-center">
                 Diagram Produktivitas 📈
             </h2>
 
-            <div class="max-w-2xl mx-auto">
+            <div class="max-w-xl mx-auto">
 
                 <canvas id="myChart"></canvas>
+
+            </div>
+
+        </div>
+
+        <!-- EXTRA INFO -->
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+
+            <!-- PRODUCTIVITY -->
+            <div class="bg-purple-100 rounded-3xl p-8 shadow-lg text-center">
+
+                <div class="text-5xl mb-4">
+                    🚀
+                </div>
+
+                <h1 class="text-4xl font-black text-purple-700">
+                    {{ $completed + $unfinished }}
+                </h1>
+
+                <p class="text-xl font-black text-purple-800 mt-3">
+                    Total Misi
+                </p>
+
+            </div>
+
+            <!-- SUCCESS RATE -->
+            <div class="bg-green-100 rounded-3xl p-8 shadow-lg text-center">
+
+                <div class="text-5xl mb-4">
+                    📈
+                </div>
+
+                <h1 class="text-4xl font-black text-green-700">
+
+                    @if(($completed + $unfinished) > 0)
+
+                        {{ round(($completed / ($completed + $unfinished)) * 100) }}%
+
+                    @else
+
+                        0%
+
+                    @endif
+
+                </h1>
+
+                <p class="text-xl font-black text-green-800 mt-3">
+                    Tingkat Selesai
+                </p>
+
+            </div>
+
+            <!-- STREAK -->
+            <div class="bg-orange-100 rounded-3xl p-8 shadow-lg text-center">
+
+                <div class="text-5xl mb-4">
+                    🔥
+                </div>
+
+                <h1 class="text-4xl font-black text-orange-700">
+                    {{ $completed }}
+                </h1>
+
+                <p class="text-xl font-black text-orange-800 mt-3">
+                    Streak Aktif
+                </p>
 
             </div>
 
@@ -245,6 +338,8 @@ new Chart(ctx, {
 
             ],
 
+            hoverOffset: 20,
+
             borderWidth: 0
 
         }]
@@ -259,6 +354,8 @@ new Chart(ctx, {
 
             legend: {
 
+                position: 'bottom',
+
                 labels: {
 
                     font: {
@@ -266,7 +363,9 @@ new Chart(ctx, {
                         size: 18,
                         weight: 'bold'
 
-                    }
+                    },
+
+                    padding: 25
 
                 }
 
