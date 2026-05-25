@@ -26,7 +26,7 @@
             </h1>
 
             <p class="text-gray-500 mt-3">
-                Gunakan password yang aman dan mudah diingat
+                Gunakan password yang aman
             </p>
 
         </div>
@@ -48,6 +48,17 @@
             <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
 
                 {{ session('error') }}
+
+            </div>
+
+        @endif
+
+        <!-- VALIDATION -->
+        @if($errors->any())
+
+            <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
+
+                {{ $errors->first() }}
 
             </div>
 
@@ -94,7 +105,7 @@
             <div>
 
                 <label class="block font-black text-gray-700 mb-3">
-                    Konfirmasi Password
+                    Konfirmasi Password Baru
                 </label>
 
                 <input

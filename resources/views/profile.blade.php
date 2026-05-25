@@ -229,12 +229,13 @@
                             ••••••••
                         </h1>
 
-                        <button
-                            onclick="window.location.href='/change-password'"
+                        <!-- CHANGE PASSWORD BUTTON -->
+                        <a
+                            href="/change-password"
                             class="bg-green-500 hover:bg-green-600 transition text-white px-5 py-2 rounded-2xl font-bold shadow"
                         >
                             ✏️ Ubah
-                        </button>
+                        </a>
 
                     </div>
 
@@ -254,73 +255,6 @@
                 </div>
 
             </div>
-
-        </div>
-
-        <!-- CHANGE PASSWORD -->
-        <div
-            id="passwordForm"
-            class="hidden mt-10 bg-gray-100 rounded-3xl p-8"
-        >
-
-            <h2 class="text-3xl font-black text-green-500 mb-6">
-                Ubah Password 🔐
-            </h2>
-
-            @if(session('password_success'))
-
-                <div class="bg-green-100 text-green-700 p-4 rounded-2xl mb-5 font-bold">
-
-                    {{ session('password_success') }}
-
-                </div>
-
-            @endif
-
-            <form action="/change-password" method="POST" class="space-y-5">
-
-                @csrf
-
-                <!-- PASSWORD -->
-                <div>
-
-                    <label class="font-bold text-gray-700 block mb-2">
-                        Password Baru
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password"
-                        required
-                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
-                    >
-
-                </div>
-
-                <!-- CONFIRM -->
-                <div>
-
-                    <label class="font-bold text-gray-700 block mb-2">
-                        Konfirmasi Password
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        required
-                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
-                    >
-
-                </div>
-
-                <!-- BUTTON -->
-                <button
-                    class="bg-green-500 hover:bg-green-600 transition text-white px-8 py-4 rounded-2xl font-black shadow-xl"
-                >
-                    Simpan Password 🚀
-                </button>
-
-            </form>
 
         </div>
 
@@ -344,14 +278,6 @@ function toggleMenu() {
         sidebar.style.left = '0px';
 
     }
-
-}
-
-function togglePasswordForm() {
-
-    const form = document.getElementById('passwordForm');
-
-    form.classList.toggle('hidden');
 
 }
 

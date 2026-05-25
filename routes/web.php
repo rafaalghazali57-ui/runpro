@@ -130,7 +130,19 @@ Route::get('/profile', function () {
 
 /*
 |--------------------------------------------------------------------------
-| CHANGE PASSWORD
+| CHANGE PASSWORD PAGE
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/change-password', function () {
+
+    return view('change-password');
+
+})->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| CHANGE PASSWORD PROCESS
 |--------------------------------------------------------------------------
 */
 
@@ -138,18 +150,32 @@ Route::post('/change-password', function (Request $request) {
 
     $request->validate([
 
-        'password' => 'required|confirmed|min:8',
+        'old_password' => 'required',
+
+        'password' => 'required|min:8|confirmed',
 
     ]);
 
     $user = auth()->user();
 
+    // CHECK OLD PASSWORD
+    if (!Hash::check($request->old_password, $user->password)) {
+
+        return back()->with(
+            'error',
+            'Password lama salah!'
+        );
+
+    }
+
+    // UPDATE PASSWORD
     $user->password = Hash::make($request->password);
 
     $user->save();
 
-    return back()->with(
-        'password_success',
+    // REDIRECT KE PROFILE
+    return redirect('/profile')->with(
+        'success',
         'Password berhasil diubah 🔥'
     );
 
