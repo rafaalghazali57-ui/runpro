@@ -4,105 +4,185 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>Statistik Run-pro</title>
+    <title>Statistics • RunPro</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        html{
+            background:#f6f7fb;
+        }
+
+        body{
+            margin:0;
+            padding:0;
+            background:#f6f7fb;
+            font-family:sans-serif;
+            overflow-x:hidden;
+            visibility:hidden;
+            opacity:0;
+        }
+
+        body.loaded{
+            visibility:visible;
+            opacity:1;
+            transition:.15s linear;
+        }
+
+        *{
+            box-sizing:border-box;
+            box-shadow:none !important;
+            scroll-behavior:smooth;
+        }
+
+        .smooth{
+            transition:
+                transform .28s cubic-bezier(.22,1,.36,1),
+                background .25s ease,
+                border .25s ease;
+        }
+
+        .smooth:hover{
+            transform:translateY(-3px);
+        }
+
+        .progress-line{
+
+            width:100%;
+            height:14px;
+
+            background:#ececec;
+
+            border-radius:999px;
+
+            overflow:hidden;
+
+            margin-top:16px;
+
+        }
+
+        .progress-fill{
+
+            height:100%;
+
+            border-radius:999px;
+
+            background:linear-gradient(
+                90deg,
+                #8b5cf6,
+                #ec4899
+            );
+
+            transition:1s ease;
+
+        }
+
+        canvas{
+            width:100% !important;
+        }
+
+    </style>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 
-<body class="bg-[#58cc02] min-h-screen">
+<body>
 
-<!-- HEADER -->
-<div class="bg-white shadow-xl px-5 py-5 flex items-center justify-between">
-
-    <!-- LEFT -->
-    <div class="flex items-center gap-4">
-
-        <!-- MENU BUTTON -->
-        <button
-            onclick="toggleMenu()"
-            class="bg-green-500 hover:bg-green-600 transition w-16 h-16 rounded-2xl shadow-xl text-white text-4xl font-black"
-        >
-            ☰
-        </button>
-
-        <div>
-
-            <h1 class="text-5xl font-black text-purple-500">
-                Statistik 📊
-            </h1>
-
-            <p class="text-gray-500 mt-1 text-lg">
-                Statistik produktivitas akunmu
-            </p>
-
-        </div>
-
-    </div>
-
-    <!-- DASHBOARD -->
-    <a href="/dashboard"
-       class="bg-green-500 hover:bg-green-600 transition text-white px-8 py-4 rounded-2xl font-black shadow-xl">
-        ← Dashboard
-    </a>
-
-</div>
+<!-- OVERLAY -->
+<div
+    id="overlay"
+    onclick="toggleMenu()"
+    class="hidden fixed inset-0 bg-black/10 z-40"
+></div>
 
 <!-- SIDEBAR -->
 <div
     id="sidebar"
-    class="fixed top-0 left-[-300px] w-72 h-full bg-white shadow-2xl p-6 flex flex-col justify-between z-50 transition-all duration-300"
+    class="fixed top-0 left-[-320px] lg:left-0
+           w-[290px] h-full bg-white
+           border-r border-gray-100
+           z-50 transition-all duration-500"
 >
 
-    <div>
+    <div class="p-7">
 
         <!-- LOGO -->
-        <div class="text-center mb-10 mt-10">
+        <div class="flex items-center gap-3 mb-14">
 
-            <div class="text-7xl">
+            <div class="text-5xl">
                 🚀
             </div>
 
-            <h1 class="text-4xl font-black text-green-500 mt-3">
-                Run-pro
-            </h1>
+            <div>
 
-            <p class="text-gray-400 mt-2">
-                Rutinitas Produktif
-            </p>
+                <h1 class="text-3xl font-black text-purple-600">
+                    RunPro
+                </h1>
+
+                <p class="text-gray-400 text-sm">
+                    Productivity App
+                </p>
+
+            </div>
 
         </div>
 
         <!-- MENU -->
-        <div class="space-y-4">
+        <div class="space-y-3">
 
             <a href="/dashboard"
-               class="block bg-green-100 hover:bg-green-200 transition p-4 rounded-2xl font-bold text-green-700">
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
+
                 🏠 Dashboard
+
             </a>
 
-                <a href="/mission-center"
-                class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
-                    🎯 Mission Center
-                </a>
+            <a href="/mission-center"
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
 
-                        <a href="/calendar"
-               class="block bg-pink-100 hover:bg-pink-200 transition p-4 rounded-2xl font-bold text-pink-700">
+                🎯 Mission Center
+
+            </a>
+
+            <a href="/calendar"
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
+
                 📅 Kalender
-            </a>
 
-            <a href="/profile"
-               class="block bg-blue-100 hover:bg-blue-200 transition p-4 rounded-2xl font-bold text-blue-700">
-                👤 Profil Saya
             </a>
 
             <a href="/statistics"
-               class="block bg-purple-100 hover:bg-purple-200 transition p-4 rounded-2xl font-bold text-purple-700">
+               class="flex items-center gap-4
+                      bg-gradient-to-r
+                      from-purple-500 to-pink-500
+                      text-white
+                      p-4 rounded-2xl
+                      font-bold smooth">
+
                 📊 Statistik
+
+            </a>
+
+            <a href="/profile"
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
+
+                👤 Profil
+
             </a>
 
         </div>
@@ -110,109 +190,232 @@
     </div>
 
     <!-- LOGOUT -->
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
+    <div class="p-7">
 
-        <button
-            class="w-full bg-red-500 hover:bg-red-600 transition text-white py-4 rounded-2xl font-black shadow-xl"
-        >
-            Logout 🚪
-        </button>
+        <form action="{{ route('logout') }}"
+              method="POST">
 
-    </form>
+            @csrf
+
+            <button
+                class="w-full bg-red-500
+                       hover:bg-red-600
+                       text-white py-4
+                       rounded-2xl
+                       font-bold smooth"
+            >
+                Logout 🚪
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
 
-<!-- CONTENT -->
-<div class="p-5 md:p-10">
+<!-- MAIN -->
+<div class="lg:ml-[290px] min-h-screen">
 
-    <!-- CARD -->
-    <div class="bg-white rounded-[40px] shadow-2xl p-8 md:p-12">
+    <!-- HEADER -->
+    <div class="p-5 lg:p-8">
 
-        <!-- TITLE -->
-        <div class="text-center mb-12">
+        <div class="bg-gradient-to-r
+                    from-[#ede9fe]
+                    to-[#fdf2f8]
+                    rounded-[35px]
+                    p-6 lg:p-8
+                    relative overflow-hidden smooth">
 
-            <div class="text-8xl mb-5">
+            <div class="absolute
+                        right-[-20px]
+                        top-[-20px]
+                        opacity-10
+                        text-[180px]">
+
                 📊
+
             </div>
 
-            <h1 class="text-6xl font-black text-purple-500">
-                Statistik Produktivitas
-            </h1>
+            <div class="flex items-center gap-4">
 
-            <p class="text-gray-500 text-xl mt-4">
-                Lihat progres, level, dan perkembangan akunmu 🚀
-            </p>
+                <button
+                    onclick="toggleMenu()"
+                    class="lg:hidden
+                           w-14 h-14
+                           rounded-2xl
+                           bg-white text-2xl smooth"
+                >
+                    ☰
+                </button>
+
+                <div>
+
+                    <p class="text-gray-500">
+                        Your Productivity Stats
+                    </p>
+
+                    <h1 class="text-4xl lg:text-5xl
+                               font-black text-gray-800 mt-1">
+
+                        Statistik RunPro 📈
+
+                    </h1>
+
+                </div>
+
+            </div>
 
         </div>
 
-        <!-- STATS -->
-        <div class="grid md:grid-cols-4 gap-6 mb-12">
+    </div>
 
-            <!-- COMPLETED -->
-            <div class="bg-green-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+    <!-- CONTENT -->
+    <div class="px-5 lg:px-8 pb-20">
 
-                <div class="text-5xl mb-4">
+        @php
+
+            $totalMission =
+                $todos->count();
+
+            $completedMission =
+                $todos->where('completed', true)->count();
+
+            $ongoingMission =
+                $todos->where('completed', false)->count();
+
+            $progress =
+                $totalMission > 0
+                    ? round(($completedMission / $totalMission) * 100)
+                    : 0;
+
+            $high =
+                $todos->where('priority','high')->count();
+
+            $medium =
+                $todos->where('priority','medium')->count();
+
+            $low =
+                $todos->where('priority','low')->count();
+
+            // 7 HARI TERAKHIR
+            $days = [];
+            $donePerDay = [];
+
+            for($i = 6; $i >= 0; $i--){
+
+                $date =
+                    \Carbon\Carbon::now()->subDays($i);
+
+                $days[] =
+                    $date->format('d M');
+
+                $count = 0;
+
+                foreach($todos as $todo){
+
+                    if(
+                        $todo->completed &&
+                        \Carbon\Carbon::parse(
+                            $todo->updated_at
+                        )->format('Y-m-d')
+                        ==
+                        $date->format('Y-m-d')
+                    ){
+
+                        $count++;
+
+                    }
+
+                }
+
+                $donePerDay[] = $count;
+
+            }
+
+        @endphp
+
+        <!-- TOP STATS -->
+        <div class="grid
+                    grid-cols-2
+                    lg:grid-cols-4
+                    gap-5">
+
+            <div class="bg-white
+                        rounded-[30px]
+                        p-6 smooth">
+
+                <div class="text-5xl">
+                    🎯
+                </div>
+
+                <h2 class="text-3xl font-black mt-4">
+
+                    {{ $totalMission }}
+
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+                    Total Mission
+                </p>
+
+            </div>
+
+            <div class="bg-white
+                        rounded-[30px]
+                        p-6 smooth">
+
+                <div class="text-5xl">
                     ✅
                 </div>
 
-                <h1 class="text-6xl font-black text-green-600">
-                    {{ $completed }}
-                </h1>
+                <h2 class="text-3xl font-black mt-4">
 
-                <p class="text-2xl font-black text-green-700 mt-3">
-                    Selesai
+                    {{ $completedMission }}
+
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+                    Mission Selesai
                 </p>
 
             </div>
 
-            <!-- UNFINISHED -->
-            <div class="bg-red-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+            <div class="bg-white
+                        rounded-[30px]
+                        p-6 smooth">
 
-                <div class="text-5xl mb-4">
-                    ❌
-                </div>
-
-                <h1 class="text-6xl font-black text-red-600">
-                    {{ $unfinished }}
-                </h1>
-
-                <p class="text-2xl font-black text-red-700 mt-3">
-                    Belum
-                </p>
-
-            </div>
-
-            <!-- XP -->
-            <div class="bg-yellow-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
-
-                <div class="text-5xl mb-4">
+                <div class="text-5xl">
                     ⭐
                 </div>
 
-                <h1 class="text-6xl font-black text-yellow-600">
-                    {{ $xp }}
-                </h1>
+                <h2 class="text-3xl font-black mt-4">
 
-                <p class="text-2xl font-black text-yellow-700 mt-3">
+                    {{ $xp }}
+
+                </h2>
+
+                <p class="text-gray-500 mt-1">
                     Total XP
                 </p>
 
             </div>
 
-            <!-- LEVEL -->
-            <div class="bg-blue-100 rounded-3xl p-8 text-center shadow-lg hover:scale-105 transition">
+            <div class="bg-white
+                        rounded-[30px]
+                        p-6 smooth">
 
-                <div class="text-5xl mb-4">
+                <div class="text-5xl">
                     🏆
                 </div>
 
-                <h1 class="text-6xl font-black text-blue-600">
-                    {{ $level }}
-                </h1>
+                <h2 class="text-3xl font-black mt-4">
 
-                <p class="text-2xl font-black text-blue-700 mt-3">
-                    Level
+                    {{ $level }}
+
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+                    Current Level
                 </p>
 
             </div>
@@ -220,81 +423,185 @@
         </div>
 
         <!-- CHART -->
-        <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-10 shadow-inner">
+        <div class="grid lg:grid-cols-2 gap-6 mt-6">
 
-            <h2 class="text-4xl font-black text-purple-500 mb-10 text-center">
-                Diagram Produktivitas 📈
-            </h2>
+            <!-- LINE -->
+            <div class="bg-white
+                        rounded-[35px]
+                        p-7 smooth">
 
-            <div class="max-w-xl mx-auto">
+                <div class="flex items-center justify-between mb-6">
 
-                <canvas id="myChart"></canvas>
+                    <div>
+
+                        <h2 class="text-3xl font-black text-gray-800">
+                            Progress Harian
+                        </h2>
+
+                        <p class="text-gray-400 mt-1">
+                            7 hari terakhir
+                        </p>
+
+                    </div>
+
+                    <div class="text-5xl">
+                        📈
+                    </div>
+
+                </div>
+
+                <div style="height:300px">
+
+                    <canvas id="lineChart"></canvas>
+
+                </div>
+
+            </div>
+
+            <!-- PIE -->
+            <div class="bg-white
+                        rounded-[35px]
+                        p-7 smooth">
+
+                <div class="flex items-center justify-between mb-6">
+
+                    <div>
+
+                        <h2 class="text-3xl font-black text-gray-800">
+                            Distribusi Progress
+                        </h2>
+
+                        <p class="text-gray-400 mt-1">
+                            Berdasarkan mission asli
+                        </p>
+
+                    </div>
+
+                    <div class="text-5xl">
+                        🥧
+                    </div>
+
+                </div>
+
+                <div class="flex justify-center">
+
+                    <div style="width:280px">
+
+                        <canvas id="pieChart"></canvas>
+
+                    </div>
+
+                </div>
+
+                <!-- DETAIL -->
+                <div class="grid grid-cols-2 gap-4 mt-8">
+
+                    <div class="bg-[#f6f7fb]
+                                rounded-2xl
+                                p-4">
+
+                        <h2 class="font-black text-green-500 text-2xl">
+
+                            {{ $completedMission }}
+
+                        </h2>
+
+                        <p class="text-gray-500 mt-1">
+                            Mission Selesai
+                        </p>
+
+                    </div>
+
+                    <div class="bg-[#f6f7fb]
+                                rounded-2xl
+                                p-4">
+
+                        <h2 class="font-black text-orange-500 text-2xl">
+
+                            {{ $ongoingMission }}
+
+                        </h2>
+
+                        <p class="text-gray-500 mt-1">
+                            Mission Berjalan
+                        </p>
+
+                    </div>
+
+                    <div class="bg-[#f6f7fb]
+                                rounded-2xl
+                                p-4">
+
+                        <h2 class="font-black text-red-500 text-2xl">
+
+                            {{ $high }}
+
+                        </h2>
+
+                        <p class="text-gray-500 mt-1">
+                            Priority High
+                        </p>
+
+                    </div>
+
+                    <div class="bg-[#f6f7fb]
+                                rounded-2xl
+                                p-4">
+
+                        <h2 class="font-black text-yellow-500 text-2xl">
+
+                            {{ $medium + $low }}
+
+                        </h2>
+
+                        <p class="text-gray-500 mt-1">
+                            Priority Normal
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
-        <!-- EXTRA INFO -->
-        <div class="grid md:grid-cols-3 gap-6 mt-12">
+        <!-- PROGRESS -->
+        <div class="bg-white
+                    rounded-[35px]
+                    p-7 mt-6 smooth">
 
-            <!-- PRODUCTIVITY -->
-            <div class="bg-purple-100 rounded-3xl p-8 shadow-lg text-center">
+            <div class="flex items-center justify-between">
 
-                <div class="text-5xl mb-4">
+                <div>
+
+                    <h2 class="text-3xl font-black text-gray-800">
+                        Progress Keseluruhan
+                    </h2>
+
+                    <p class="text-gray-400 mt-1">
+                        Semua mission yang berhasil selesai
+                    </p>
+
+                </div>
+
+                <div class="text-5xl">
                     🚀
                 </div>
 
-                <h1 class="text-4xl font-black text-purple-700">
-                    {{ $completed + $unfinished }}
-                </h1>
-
-                <p class="text-xl font-black text-purple-800 mt-3">
-                    Total Misi
-                </p>
-
             </div>
 
-            <!-- SUCCESS RATE -->
-            <div class="bg-green-100 rounded-3xl p-8 shadow-lg text-center">
+            <h2 class="text-5xl font-black mt-8">
 
-                <div class="text-5xl mb-4">
-                    📈
+                {{ $progress }}%
+
+            </h2>
+
+            <div class="progress-line">
+
+                <div class="progress-fill"
+                     style="width:{{ $progress }}%">
                 </div>
-
-                <h1 class="text-4xl font-black text-green-700">
-
-                    @if(($completed + $unfinished) > 0)
-
-                        {{ round(($completed / ($completed + $unfinished)) * 100) }}%
-
-                    @else
-
-                        0%
-
-                    @endif
-
-                </h1>
-
-                <p class="text-xl font-black text-green-800 mt-3">
-                    Tingkat Selesai
-                </p>
-
-            </div>
-
-            <!-- STREAK -->
-            <div class="bg-orange-100 rounded-3xl p-8 shadow-lg text-center">
-
-                <div class="text-5xl mb-4">
-                    🔥
-                </div>
-
-                <h1 class="text-4xl font-black text-orange-700">
-                    {{ $completed }}
-                </h1>
-
-                <p class="text-xl font-black text-orange-800 mt-3">
-                    Streak Aktif
-                </p>
 
             </div>
 
@@ -304,68 +611,123 @@
 
 </div>
 
-<!-- CHART SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 
-const ctx = document.getElementById('myChart');
+function toggleMenu(){
 
-new Chart(ctx, {
+    const sidebar =
+        document.getElementById('sidebar');
 
-    type: 'doughnut',
+    const overlay =
+        document.getElementById('overlay');
 
-    data: {
+    if(sidebar.style.left === '0px'){
 
-        labels: [
+        sidebar.style.left = '-320px';
 
-            'Tugas Selesai',
-            'Belum Selesai'
+        overlay.classList.add('hidden');
 
-        ],
+    }else{
 
-        datasets: [{
+        sidebar.style.left = '0px';
 
-            data: [
+        overlay.classList.remove('hidden');
 
-                {{ $completed }},
-                {{ $unfinished }}
+    }
 
+}
+
+window.addEventListener(
+    'DOMContentLoaded',
+    ()=>{
+
+        document.body.classList.add('loaded');
+
+    }
+);
+
+/* LINE CHART */
+new Chart(
+    document.getElementById('lineChart'),
+    {
+
+        type:'line',
+
+        data:{
+
+            labels:[
+                @foreach($days as $day)
+                    '{{ $day }}',
+                @endforeach
             ],
 
-            backgroundColor: [
+            datasets:[{
 
-                '#58cc02',
-                '#ef4444'
+                label:'Mission Selesai',
 
-            ],
+                data:[
+                    @foreach($donePerDay as $item)
+                        {{ $item }},
+                    @endforeach
+                ],
 
-            hoverOffset: 20,
+                borderColor:'#8b5cf6',
 
-            borderWidth: 0
+                backgroundColor:'rgba(139,92,246,.15)',
 
-        }]
+                fill:true,
 
-    },
+                tension:.4,
 
-    options: {
+                borderWidth:4,
 
-        responsive: true,
+                pointRadius:5,
 
-        plugins: {
+                pointHoverRadius:8,
 
-            legend: {
+                pointBackgroundColor:'#ec4899'
 
-                position: 'bottom',
+            }]
 
-                labels: {
+        },
 
-                    font: {
+        options:{
 
-                        size: 18,
-                        weight: 'bold'
+            responsive:true,
 
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+                    display:false
+                }
+
+            },
+
+            scales:{
+
+                y:{
+
+                    beginAtZero:true,
+
+                    ticks:{
+                        stepSize:1
                     },
 
-                    padding: 25
+                    grid:{
+                        color:'#f1f1f1'
+                    }
+
+                },
+
+                x:{
+
+                    grid:{
+                        display:false
+                    }
 
                 }
 
@@ -374,29 +736,73 @@ new Chart(ctx, {
         }
 
     }
+);
 
-});
+/* PIE CHART */
+new Chart(
+    document.getElementById('pieChart'),
+    {
 
-</script>
+        type:'doughnut',
 
-<!-- SIDEBAR SCRIPT -->
-<script>
+        data:{
 
-function toggleMenu() {
+            labels:[
+                'Selesai',
+                'Berjalan',
+                'Priority High',
+                'Priority Normal'
+            ],
 
-    const sidebar = document.getElementById('sidebar');
+            datasets:[{
 
-    if(sidebar.style.left === '0px') {
+                data:[
+                    {{ $completedMission }},
+                    {{ $ongoingMission }},
+                    {{ $high }},
+                    {{ $medium + $low }}
+                ],
 
-        sidebar.style.left = '-300px';
+                backgroundColor:[
+                    '#22c55e',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6'
+                ],
 
-    } else {
+                borderWidth:0
 
-        sidebar.style.left = '0px';
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            cutout:'70%',
+
+            plugins:{
+
+                legend:{
+
+                    position:'bottom',
+
+                    labels:{
+                        padding:20,
+                        font:{
+                            size:14
+                        }
+                    }
+
+                }
+
+            }
+
+        }
 
     }
-
-}
+);
 
 </script>
 

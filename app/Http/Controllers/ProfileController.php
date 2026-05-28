@@ -2,59 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use App\Models\Todo;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function index()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $todos = Todo::where('user_id', auth()->id())->get();
+
+        $xp = $todos->where('completed', true)->sum('xp');
+
+        $level = floor($xp / 500) + 1;
+
+        return view('profile', compact(
+            'todos',
+            'xp',
+            'level'
+        ));
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function uploadAvatar(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate([
+            'avatar' => 'required|image|max:5048'
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = auth()->user();
+
+        if ($request->hasFile('avatar')) {
+
+            $file = $request->file('avatar');
+
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+
+            $file->storeAs('avatars', $filename, 'public');
+
+            $user->avatar = $filename;
+
+            $user->save();
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return back();
     }
 }

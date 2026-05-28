@@ -1,236 +1,624 @@
+<!-- resources/views/edit-task.blade.php -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <title>Edit Misi</title>
+    <title>Edit Mission • RunPro</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+
+        html{
+            background:#0f172a;
+        }
+
+        body{
+            margin:0;
+            padding:0;
+            background:
+                radial-gradient(circle at top left,#312e81 0%,transparent 30%),
+                radial-gradient(circle at bottom right,#be185d 0%,transparent 30%),
+                #0f172a;
+            min-height:100vh;
+            overflow-x:hidden;
+            font-family:sans-serif;
+            visibility:hidden;
+            opacity:0;
+        }
+
+        body.loaded{
+            visibility:visible;
+            opacity:1;
+            transition:opacity .2s linear;
+        }
+
+        *{
+            box-sizing:border-box;
+            scroll-behavior:smooth;
+        }
+
+        .glass{
+
+            background:rgba(255,255,255,.08);
+
+            backdrop-filter:blur(20px);
+
+            border:1px solid rgba(255,255,255,.1);
+
+        }
+
+        .smooth{
+
+            transition:
+                transform .35s cubic-bezier(.22,1,.36,1),
+                background .25s ease,
+                border .25s ease,
+                opacity .25s ease;
+
+            will-change:transform;
+
+        }
+
+        .smooth:hover{
+
+            transform:translateY(-3px);
+
+        }
+
+        .input-modern{
+
+            width:100%;
+
+            padding:20px;
+
+            border-radius:22px;
+
+            border:1px solid rgba(255,255,255,.08);
+
+            background:rgba(255,255,255,.06);
+
+            color:white;
+
+            outline:none;
+
+            font-size:15px;
+
+            transition:all .25s ease;
+
+        }
+
+        .input-modern:focus{
+
+            border:1px solid #8b5cf6;
+
+            background:rgba(255,255,255,.1);
+
+            transform:translateY(-1px);
+
+        }
+
+        .input-modern::placeholder{
+
+            color:#94a3b8;
+
+        }
+
+        .label{
+
+            color:#e2e8f0;
+
+            font-weight:700;
+
+            margin-bottom:12px;
+
+            display:block;
+
+            font-size:15px;
+
+        }
+
+        .btn-main{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #8b5cf6,
+                    #ec4899
+                );
+
+            color:white;
+
+            font-weight:900;
+
+            border:none;
+
+            cursor:pointer;
+
+        }
+
+        .btn-secondary{
+
+            background:rgba(255,255,255,.08);
+
+            color:white;
+
+            text-decoration:none;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+        }
+
+        .floating{
+
+            position:absolute;
+
+            border-radius:999px;
+
+            filter:blur(80px);
+
+            opacity:.35;
+
+            z-index:-1;
+
+        }
+
+    </style>
+
+    @vite(['resources/js/app.js'])
 
 </head>
 
-<body class="bg-[#58cc02] min-h-screen flex items-center justify-center p-5">
+<body>
 
-    <div class="bg-white rounded-[40px] shadow-2xl w-full max-w-3xl p-8 md:p-12">
+<!-- FLOATING BG -->
+<div class="floating
+            top-[-120px]
+            left-[-100px]
+            w-[320px]
+            h-[320px]
+            bg-purple-500">
+</div>
 
-        <!-- TITLE -->
-        <div class="text-center mb-10">
+<div class="floating
+            bottom-[-120px]
+            right-[-100px]
+            w-[320px]
+            h-[320px]
+            bg-pink-500">
+</div>
 
-            <div class="text-8xl">
-                ✏️
+<!-- MAIN -->
+<div class="min-h-screen
+            flex
+            items-center
+            justify-center
+            p-5
+            lg:p-10">
+
+    <div class="w-full max-w-5xl">
+
+        <!-- TOP -->
+        <div class="flex flex-col lg:flex-row
+                    justify-between
+                    gap-5
+                    items-center
+                    mb-8">
+
+            <div>
+
+                <p class="text-purple-300 font-bold">
+                    🚀 RUNPRO MISSION
+                </p>
+
+                <h1 class="text-5xl lg:text-6xl
+                           font-black
+                           text-white
+                           mt-3">
+
+                    Edit Mission
+
+                </h1>
+
+                <p class="text-slate-300 mt-4 text-lg">
+
+                    Upgrade dan ubah mission kamu
+                    biar makin produktif ⚡
+
+                </p>
+
             </div>
 
-            <h1 class="text-5xl font-black text-blue-500 mt-4">
-                Edit Misi
-            </h1>
+            <a href="/dashboard"
+               class="glass smooth
+                      px-7 py-4
+                      rounded-2xl
+                      text-white
+                      font-bold">
 
-            <p class="text-gray-500 mt-3 text-lg">
-                Ubah detail misi produktivitasmu
-            </p>
+                ← Kembali Dashboard
+
+            </a>
 
         </div>
 
-        <!-- ERROR -->
-        @if ($errors->any())
+        <!-- CARD -->
+        <div class="glass
+                    rounded-[40px]
+                    overflow-hidden">
 
-            <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
+            <!-- HEADER -->
+            <div class="p-8 lg:p-10
+                        border-b
+                        border-white/10">
 
-                <ul class="space-y-2">
+                <div class="flex items-center gap-5">
 
-                    @foreach ($errors->all() as $error)
+                    <div class="w-24 h-24
+                                rounded-[30px]
+                                bg-gradient-to-r
+                                from-purple-500
+                                to-pink-500
+                                flex
+                                items-center
+                                justify-center
+                                text-5xl">
 
-                        <li>{{ $error }}</li>
+                        ✏️
 
-                    @endforeach
+                    </div>
 
-                </ul>
+                    <div>
 
-            </div>
+                        <h2 class="text-4xl
+                                   font-black
+                                   text-white">
 
-        @endif
+                            {{ $todo->title }}
 
-        <!-- FORM -->
-        <form
-            action="/todo/edit/{{ $todo->id }}"
-            method="POST"
-            class="space-y-6"
-        >
+                        </h2>
 
-            @csrf
-            @method('PUT')
+                        <p class="text-slate-300 mt-2">
 
-            <!-- TITLE -->
-            <div>
+                            Edit detail mission dengan
+                            tampilan modern ✨
 
-                <label class="block font-black text-gray-700 mb-3 text-lg">
-                    🎯 Nama Misi
-                </label>
+                        </p>
 
-                <input
-                    type="text"
-                    name="title"
-                    required
-                    value="{{ $todo->title }}"
-                    class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-blue-500"
-                >
-
-            </div>
-
-            <!-- DESCRIPTION -->
-            <div>
-
-                <label class="block font-black text-gray-700 mb-3 text-lg">
-                    📝 Deskripsi
-                </label>
-
-                <textarea
-                    name="description"
-                    rows="4"
-                    class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-blue-500"
-                >{{ $todo->description }}</textarea>
-
-            </div>
-
-            <!-- PRIORITY -->
-            <div>
-
-                <label class="block font-black text-gray-700 mb-3 text-lg">
-                    🚨 Prioritas
-                </label>
-
-                <select
-                    name="priority"
-                    class="w-full p-5 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-blue-500"
-                >
-
-                    <option
-                        value="low"
-                        {{ $todo->priority == 'low' ? 'selected' : '' }}
-                    >
-                        🟢 Mudah
-                    </option>
-
-                    <option
-                        value="medium"
-                        {{ $todo->priority == 'medium' ? 'selected' : '' }}
-                    >
-                        🟡 Sedang
-                    </option>
-
-                    <option
-                        value="high"
-                        {{ $todo->priority == 'high' ? 'selected' : '' }}
-                    >
-                        🔴 Penting
-                    </option>
-
-                </select>
-
-            </div>
-
-            <!-- START -->
-            <div class="grid md:grid-cols-2 gap-5">
-
-                <div>
-
-                    <label class="block font-black text-gray-700 mb-3 text-lg">
-                        📅 Tanggal Mulai
-                    </label>
-
-                    <input
-                        type="date"
-                        name="start_date"
-                        required
-                        value="{{ $todo->start_date }}"
-                        class="w-full p-5 rounded-2xl border-2 border-gray-200"
-                    >
-
-                </div>
-
-                <div>
-
-                    <label class="block font-black text-gray-700 mb-3 text-lg">
-                        ⏰ Jam Mulai
-                    </label>
-
-                    <input
-                        type="time"
-                        name="start_time"
-                        required
-                        value="{{ $todo->start_time }}"
-                        class="w-full p-5 rounded-2xl border-2 border-gray-200"
-                    >
+                    </div>
 
                 </div>
 
             </div>
 
-            <!-- END -->
-            <div class="grid md:grid-cols-2 gap-5">
+            <!-- FORM -->
+            <div class="p-8 lg:p-10">
 
-                <div>
+                <form action="/todo/edit/{{ $todo->id }}"
+                      method="POST"
+                      class="space-y-8">
 
-                    <label class="block font-black text-gray-700 mb-3 text-lg">
-                        📅 Deadline
-                    </label>
+                    @csrf
+                    @method('PUT')
 
-                    <input
-                        type="date"
-                        name="end_date"
-                        required
-                        value="{{ $todo->end_date }}"
-                        class="w-full p-5 rounded-2xl border-2 border-gray-200"
-                    >
+                    <!-- TITLE -->
+                    <div>
 
-                </div>
+                        <label class="label">
+                            Nama Mission
+                        </label>
 
-                <div>
+                        <input
+                            type="text"
+                            name="title"
+                            value="{{ $todo->title }}"
+                            required
+                            class="input-modern"
+                            placeholder="Masukkan nama mission..."
+                        >
 
-                    <label class="block font-black text-gray-700 mb-3 text-lg">
-                        ⏰ Jam Deadline
-                    </label>
+                    </div>
 
-                    <input
-                        type="time"
-                        name="end_time"
-                        required
-                        value="{{ $todo->end_time }}"
-                        class="w-full p-5 rounded-2xl border-2 border-gray-200"
-                    >
+                    <!-- DESC -->
+                    <div>
 
-                </div>
+                        <label class="label">
+                            Deskripsi Mission
+                        </label>
+
+                        <textarea
+                            name="description"
+                            rows="5"
+                            class="input-modern"
+                            placeholder="Masukkan deskripsi mission..."
+                        >{{ $todo->description }}</textarea>
+
+                    </div>
+
+                    <!-- PRIORITY -->
+                    <div>
+
+                        <label class="label">
+                            Tingkat Kesulitan
+                        </label>
+
+                        <select
+                            name="priority"
+                            required
+                            class="input-modern"
+                        >
+
+                            <option
+                                value="low"
+                                {{ $todo->priority == 'low' ? 'selected' : '' }}>
+
+                                🟢 Mudah
+
+                            </option>
+
+                            <option
+                                value="medium"
+                                {{ $todo->priority == 'medium' ? 'selected' : '' }}>
+
+                                🟡 Sedang
+
+                            </option>
+
+                            <option
+                                value="high"
+                                {{ $todo->priority == 'high' ? 'selected' : '' }}>
+
+                                🔴 Sulit
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- DATE -->
+                    <div class="grid lg:grid-cols-2 gap-6">
+
+                        <div>
+
+                            <label class="label">
+                                Tanggal Mulai
+                            </label>
+
+                            <input
+                                type="date"
+                                name="start_date"
+                                value="{{ $todo->start_date }}"
+                                required
+                                class="input-modern"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label class="label">
+                                Jam Mulai
+                            </label>
+
+                            <input
+                                type="time"
+                                name="start_time"
+                                value="{{ $todo->start_time }}"
+                                required
+                                class="input-modern"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- END -->
+                    <div class="grid lg:grid-cols-2 gap-6">
+
+                        <div>
+
+                            <label class="label">
+                                Deadline Tanggal
+                            </label>
+
+                            <input
+                                type="date"
+                                name="end_date"
+                                value="{{ $todo->end_date }}"
+                                required
+                                class="input-modern"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label class="label">
+                                Deadline Jam
+                            </label>
+
+                            <input
+                                type="time"
+                                name="end_time"
+                                value="{{ $todo->end_time }}"
+                                required
+                                class="input-modern"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- INFO -->
+                    <div class="grid md:grid-cols-3 gap-5">
+
+                        <div class="glass smooth
+                                    rounded-3xl
+                                    p-6">
+
+                            <div class="text-4xl">
+                                🚀
+                            </div>
+
+                            <h3 class="text-white
+                                       text-2xl
+                                       font-black
+                                       mt-4">
+
+                                Productivity
+
+                            </h3>
+
+                            <p class="text-slate-300 mt-2">
+
+                                Keep grinding every day
+
+                            </p>
+
+                        </div>
+
+                        <div class="glass smooth
+                                    rounded-3xl
+                                    p-6">
+
+                            <div class="text-4xl">
+                                ⚡
+                            </div>
+
+                            <h3 class="text-white
+                                       text-2xl
+                                       font-black
+                                       mt-4">
+
+                                Focus Mode
+
+                            </h3>
+
+                            <p class="text-slate-300 mt-2">
+
+                                Stay locked in mission
+
+                            </p>
+
+                        </div>
+
+                        <div class="glass smooth
+                                    rounded-3xl
+                                    p-6">
+
+                            <div class="text-4xl">
+                                🏆
+                            </div>
+
+                            <h3 class="text-white
+                                       text-2xl
+                                       font-black
+                                       mt-4">
+
+                                Level Up
+
+                            </h3>
+
+                            <p class="text-slate-300 mt-2">
+
+                                Complete missions for XP
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="grid md:grid-cols-2 gap-5 pt-5">
+
+                        <a href="/dashboard"
+                           class="btn-secondary
+                                  smooth
+                                  rounded-2xl
+                                  py-5
+                                  font-black">
+
+                            Batal
+
+                        </a>
+
+                        <button
+                            class="btn-main
+                                   smooth
+                                   rounded-2xl
+                                   py-5
+                                   text-xl">
+
+                            Simpan Perubahan ✨
+
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 
-            <!-- BUTTON -->
-            <div class="flex flex-col md:flex-row gap-4">
-
-                <button
-                    type="submit"
-                    class="flex-1 bg-blue-500 hover:bg-blue-600 transition text-white py-5 rounded-2xl font-black text-xl shadow-xl"
-                >
-
-                    Simpan Perubahan 💾
-
-                </button>
-
-                <a
-                    href="/dashboard"
-                    class="flex-1 bg-gray-200 hover:bg-gray-300 transition text-gray-700 py-5 rounded-2xl font-black text-xl shadow-xl text-center"
-                >
-
-                    Batal ❌
-
-                </a>
-
-            </div>
-
-        </form>
+        </div>
 
     </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+
+window.addEventListener('DOMContentLoaded', ()=>{
+
+    document.body.classList.add('loaded');
+
+    document.querySelectorAll('.smooth').forEach((el,index)=>{
+
+        el.animate(
+
+            [
+
+                {
+                    opacity:0,
+                    transform:'translateY(20px)'
+                },
+
+                {
+                    opacity:1,
+                    transform:'translateY(0)'
+                }
+
+            ],
+
+            {
+
+                duration:500,
+
+                delay:index * 40,
+
+                easing:'cubic-bezier(.22,1,.36,1)',
+
+                fill:'forwards'
+
+            }
+
+        );
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>

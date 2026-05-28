@@ -6,90 +6,171 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Run-pro Dashboard</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>RunPro Dashboard</title>
 
     <style>
 
-        body{
-            font-family: sans-serif;
-            overflow-x: hidden;
+        html{
+            background:#f6f7fb;
         }
 
-        .route-line{
-            width: 120px;
-            height: 60px;
-            border: 10px solid white;
-            border-top: none;
-            border-radius: 0 0 100px 100px;
-            margin: auto;
+        body{
+            background:#f6f7fb;
+            overflow-x:hidden;
+            visibility:hidden;
+            opacity:0;
+            margin:0;
+            padding:0;
+            font-family:sans-serif;
+        }
+
+        *{
+            box-sizing:border-box;
+            scroll-behavior:smooth;
+            box-shadow:none !important;
+        }
+
+        body.loaded{
+            visibility:visible;
+            opacity:1;
+            transition:opacity .15s linear;
+        }
+
+        .smooth-card{
+
+            border:1px solid rgba(255,255,255,.8);
+
+            transition:
+                transform .35s cubic-bezier(.22,1,.36,1),
+                background .25s ease;
+
+        }
+
+        .smooth-card:hover{
+
+            transform:translateY(-3px);
+
+        }
+
+        button,
+        a{
+
+            transition:
+                transform .25s ease,
+                background .25s ease;
+
+        }
+
+        button:active,
+        a:active{
+
+            transform:scale(.97);
+
+        }
+
+        .profile-img{
+
+            width:70px;
+            height:70px;
+            border-radius:50%;
+            object-fit:cover;
+            border:4px solid white;
+
         }
 
     </style>
 
+    @vite(['resources/js/app.js'])
+
 </head>
 
-<body class="bg-[#58cc02] min-h-screen">
+<body class="bg-[#f6f7fb]">
 
 <!-- OVERLAY -->
 <div
     id="overlay"
     onclick="toggleMenu()"
-    class="hidden fixed inset-0 bg-black/40 z-30"
+    class="hidden fixed inset-0 bg-white/5 backdrop-blur-[1px] z-40"
 ></div>
 
 <!-- SIDEBAR -->
 <div
     id="sidebar"
-    class="fixed top-0 left-[-300px] w-64 md:w-72 h-full bg-white shadow-2xl p-6 flex flex-col justify-between z-40 transition-all duration-300"
+    class="fixed top-0 left-[-320px] lg:left-0
+           w-[290px] h-full bg-white/90
+           backdrop-blur-xl border-r border-gray-100
+           z-50 transition-all duration-500"
 >
 
-    <div>
+    <div class="p-7">
 
         <!-- LOGO -->
-        <div class="text-center mb-10 mt-10">
+        <div class="flex items-center gap-3 mb-14">
 
-            <div class="text-6xl md:text-7xl">
+            <div class="text-5xl">
                 🚀
             </div>
 
-            <h1 class="text-3xl md:text-4xl font-black text-green-500 mt-3">
-                Run-pro
-            </h1>
+            <div>
 
-            <p class="text-gray-400 mt-2 text-sm md:text-base">
-                Rutinitas Produktif
-            </p>
+                <h1 class="text-3xl font-black text-purple-600">
+                    RunPro
+                </h1>
+
+                <p class="text-gray-400 text-sm">
+                    Productivity App
+                </p>
+
+            </div>
 
         </div>
 
         <!-- MENU -->
-        <div class="space-y-4">
+        <div class="space-y-3">
 
             <a href="/dashboard"
-               class="block bg-green-100 hover:bg-green-200 transition p-4 rounded-2xl font-bold text-green-700">
+               class="flex items-center gap-4
+                      bg-gradient-to-r from-purple-500 to-pink-500
+                      text-white p-4 rounded-2xl font-bold">
+
                 🏠 Dashboard
+
             </a>
 
             <a href="/mission-center"
-            class="block bg-yellow-100 hover:bg-yellow-200 transition p-4 rounded-2xl font-bold text-yellow-700">
+               class="flex items-center gap-4
+                      hover:bg-gray-100 p-4 rounded-2xl
+                      font-bold text-gray-600">
+
                 🎯 Mission Center
+
             </a>
 
             <a href="/calendar"
-               class="block bg-pink-100 hover:bg-pink-200 transition p-4 rounded-2xl font-bold text-pink-700">
-                📅 Kalender
-            </a>
+               class="flex items-center gap-4
+                      hover:bg-gray-100 p-4 rounded-2xl
+                      font-bold text-gray-600">
 
-            <a href="/profile"
-               class="block bg-blue-100 hover:bg-blue-200 transition p-4 rounded-2xl font-bold text-blue-700">
-                👤 Profil Saya
+                📅 Kalender
+
             </a>
 
             <a href="/statistics"
-               class="block bg-purple-100 hover:bg-purple-200 transition p-4 rounded-2xl font-bold text-purple-700">
+               class="flex items-center gap-4
+                      hover:bg-gray-100 p-4 rounded-2xl
+                      font-bold text-gray-600">
+
                 📊 Statistik
+
+            </a>
+
+            <a href="/profile"
+               class="flex items-center gap-4
+                      hover:bg-gray-100 p-4 rounded-2xl
+                      font-bold text-gray-600">
+
+                👤 Profil
+
             </a>
 
         </div>
@@ -97,64 +178,148 @@
     </div>
 
     <!-- LOGOUT -->
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
+    <div class="p-7">
 
-        <button
-            class="w-full bg-red-500 hover:bg-red-600 transition text-white py-4 rounded-2xl font-black shadow-xl"
-        >
-            Logout 🚪
-        </button>
+        <form action="{{ route('logout') }}" method="POST">
 
-    </form>
+            @csrf
+
+            <button
+                class="w-full bg-red-500 hover:bg-red-600
+                       text-white py-4 rounded-2xl font-bold"
+            >
+                Logout 🚪
+            </button>
+
+        </form>
+
+    </div>
 
 </div>
 
-<!-- CONTENT -->
-<div class="pb-20">
+<!-- MAIN -->
+<div class="lg:ml-[290px] transition-all duration-500">
 
     <!-- HEADER -->
-    <div class="bg-white rounded-b-[40px] shadow-xl p-5 md:p-8 mb-10 relative">
+    <div class="p-5 lg:p-8">
 
-        <!-- MENU BUTTON -->
-        <button
-            onclick="toggleMenu()"
-            class="absolute left-5 md:left-8 top-5 md:top-8 bg-green-500 hover:bg-green-600 transition
-                   w-14 h-14 md:w-16 md:h-16 rounded-2xl text-white text-3xl md:text-4xl font-black shadow-xl"
-        >
-            ☰
-        </button>
+        <div class="bg-gradient-to-r from-[#ede9fe] to-[#fdf2f8]
+                    rounded-[35px] p-6 lg:p-10
+                    relative overflow-hidden smooth-card">
 
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 pl-20 md:pl-24">
+            <!-- BG ICON -->
+            <div class="absolute right-[-20px] top-[-20px]
+                        opacity-10 text-[220px]">
 
-            <div>
-
-                <h1 class="text-3xl md:text-5xl font-black text-green-500">
-                    Dashboard 🚀
-                </h1>
-
-                <p class="text-gray-500 mt-2 md:mt-3 text-sm md:text-base">
-                    Selamat datang,
-                    {{ auth()->user()->username ?? auth()->user()->name }}
-                </p>
+                🚀
 
             </div>
 
-            <div class="flex flex-wrap gap-3 w-full md:w-auto">
+            <!-- TOP -->
+            <div class="flex justify-between items-start flex-wrap gap-5">
 
-                <div class="bg-yellow-100 px-4 py-3 rounded-2xl font-bold shadow text-sm md:text-base">
-                    ⭐ XP:
-                    {{ $xp }}
+                <div class="flex items-center gap-4">
+
+                    <!-- MENU -->
+                    <button
+                        onclick="toggleMenu()"
+                        class="lg:hidden w-14 h-14 rounded-2xl
+                               bg-white text-2xl"
+                    >
+                        ☰
+                    </button>
+
+                    <!-- FOTO PROFIL -->
+                    @if(auth()->user()->photo)
+
+                        <img
+                            src="{{ asset('storage/' . auth()->user()->photo) }}"
+                            class="profile-img"
+                        >
+
+                    @else
+
+                        <img
+                            src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->username) }}&background=8b5cf6&color=fff&size=256"
+                            class="profile-img"
+                        >
+
+                    @endif
+
+                    <div>
+
+                        <p class="text-gray-500 text-sm md:text-base">
+                            Selamat datang kembali,
+                        </p>
+
+                        <h1 class="text-4xl lg:text-5xl
+                                   font-black text-gray-800 mt-1">
+
+                            {{ auth()->user()?->username ?? 'Guest' }} 👋
+
+                        </h1>
+
+                        <p class="text-gray-500 mt-2 text-sm">
+
+                            Tetap produktif hari ini 🚀
+
+                        </p>
+
+                    </div>
+
                 </div>
 
-                <div class="bg-blue-100 px-4 py-3 rounded-2xl font-bold shadow text-sm md:text-base">
-                    🏆 Level:
-                    {{ $level }}
+            </div>
+
+            <!-- STATS -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
+
+                <div class="bg-white p-6 rounded-3xl smooth-card">
+
+                    <div class="text-4xl mb-2">
+                        ⭐
+                    </div>
+
+                    <h2 class="text-3xl font-black">
+                        {{ $xp }}
+                    </h2>
+
+                    <p class="text-gray-500">
+                        Total XP
+                    </p>
+
                 </div>
 
-                <div class="bg-orange-100 px-4 py-3 rounded-2xl font-bold shadow text-sm md:text-base">
-                    🔥 Streak:
-                    {{ $todos->where('completed', true)->count() }}
+                <div class="bg-white p-6 rounded-3xl smooth-card">
+
+                    <div class="text-4xl mb-2">
+                        🏆
+                    </div>
+
+                    <h2 class="text-3xl font-black">
+                        {{ $level }}
+                    </h2>
+
+                    <p class="text-gray-500">
+                        Level
+                    </p>
+
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl smooth-card">
+
+                    <div class="text-4xl mb-2">
+                        🔥
+                    </div>
+
+                    <h2 class="text-3xl font-black">
+                        {{ $todos->where('completed', true)->count() }}
+                    </h2>
+
+                    <p class="text-gray-500">
+                        Mission Complete
+                    </p>
+
                 </div>
 
             </div>
@@ -163,35 +328,23 @@
 
     </div>
 
-    <!-- MAIN -->
-    <div class="p-4 md:p-10">
-
-        <!-- SUCCESS -->
-        @if(session('success'))
-
-            <div class="bg-green-100 text-green-700 p-4 rounded-2xl mb-5 font-bold">
-                {{ session('success') }}
-            </div>
-
-        @endif
-
-        <!-- ERROR -->
-        @if(session('error'))
-
-            <div class="bg-red-100 text-red-700 p-4 rounded-2xl mb-5 font-bold">
-                {{ session('error') }}
-            </div>
-
-        @endif
+    <!-- CONTENT -->
+    <div class="px-5 lg:px-8 pb-20">
 
         <!-- FORM -->
-        <div class="bg-white rounded-3xl shadow-xl p-5 md:p-8 mb-12">
+        <div class="bg-white rounded-[35px]
+                    p-6 lg:p-8 mb-10 smooth-card">
 
-            <h2 class="text-2xl md:text-3xl font-black text-green-500 mb-3">
+            <h2 class="text-3xl font-black
+                       text-purple-600 mb-6">
+
                 Tambah Misi Baru 🎯
+
             </h2>
 
-            <form action="/todo/store" method="POST" class="space-y-5">
+            <form action="/todo/store"
+                  method="POST"
+                  class="space-y-5">
 
                 @csrf
 
@@ -200,216 +353,228 @@
                     name="title"
                     placeholder="Nama misi..."
                     required
-                    class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    class="w-full p-5 rounded-2xl
+                           border border-gray-200
+                           focus:outline-none"
                 >
 
                 <textarea
                     name="description"
+                    rows="4"
                     placeholder="Deskripsi misi..."
-                    rows="3"
-                    class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    class="w-full p-5 rounded-2xl
+                           border border-gray-200
+                           focus:outline-none"
                 ></textarea>
 
                 <select
                     name="priority"
                     required
-                    class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                    class="w-full p-5 rounded-2xl
+                           border border-gray-200"
                 >
 
-                    <option value="low">
-                        🟢 Mudah
-                    </option>
-
-                    <option value="medium">
-                        🟡 Sedang
-                    </option>
-
-                    <option value="high">
-                        🔴 Penting
-                    </option>
+                    <option value="low">🟢 Mudah</option>
+                    <option value="medium">🟡 Sedang</option>
+                    <option value="high">🔴 Sulit</option>
 
                 </select>
 
-                <!-- START -->
                 <div class="grid md:grid-cols-2 gap-5">
 
                     <input
                         type="date"
                         name="start_date"
                         required
-                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                        class="w-full p-5 rounded-2xl border border-gray-200"
                     >
 
                     <input
                         type="time"
                         name="start_time"
                         required
-                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                        class="w-full p-5 rounded-2xl border border-gray-200"
                     >
 
                 </div>
 
-                <!-- END -->
                 <div class="grid md:grid-cols-2 gap-5">
 
                     <input
                         type="date"
                         name="end_date"
                         required
-                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                        class="w-full p-5 rounded-2xl border border-gray-200"
                     >
 
                     <input
                         type="time"
                         name="end_time"
                         required
-                        class="w-full p-4 rounded-2xl border-2 border-gray-200"
+                        class="w-full p-5 rounded-2xl border border-gray-200"
                     >
 
                 </div>
 
                 <button
-                    class="w-full bg-green-500 hover:bg-green-600 transition text-white py-4 rounded-2xl font-black text-lg shadow-lg"
+                    class="w-full bg-gradient-to-r
+                           from-purple-600 to-pink-500
+                           text-white py-5 rounded-2xl
+                           font-black"
                 >
-                    Tambah Misi 🚀
+                    + Tambah Misi
                 </button>
 
             </form>
 
         </div>
 
-        <!-- TASK LIST -->
-        <div class="relative py-10">
+        <!-- TASK -->
+        <div class="space-y-6">
 
-            @forelse($todos as $index => $todo)
+            @forelse($todos as $todo)
 
-                @php
+                <div class="bg-white rounded-[30px]
+                            p-6 smooth-card">
 
-                    $startDateTime = \Carbon\Carbon::parse(
-                        $todo->start_date . ' ' . $todo->start_time
-                    );
+                    <div class="flex flex-col lg:flex-row
+                                justify-between gap-5">
 
-                    $endDateTime = \Carbon\Carbon::parse(
-                        $todo->end_date . ' ' . $todo->end_time
-                    );
+                        <!-- LEFT -->
+                        <div class="flex-1">
 
-                    $canComplete = now()->between(
-                        $startDateTime,
-                        $endDateTime
-                    );
+                            <h2 class="text-2xl font-black
+                                {{ $todo->completed
+                                    ? 'line-through opacity-50 text-gray-400'
+                                    : 'text-gray-800'
+                                }}">
 
-                @endphp
+                                {{ $todo->title }}
 
-                <div class="flex mb-16
-                    @if($index % 2 == 0)
-                        justify-start
-                    @else
-                        justify-end
-                    @endif
-                ">
+                            </h2>
 
-                    <div class="w-full">
+                            <p class="text-gray-500 mt-2">
 
-                        <div class="flex flex-col md:flex-row items-center gap-5
-                            @if($index % 2 != 0)
-                                md:flex-row-reverse
-                            @endif
-                        ">
+                                {{ $todo->description }}
+
+                            </p>
+
+                            <!-- STATUS -->
+                            <div class="mt-4">
+
+                                @if($todo->completed)
+
+                                    <div class="inline-flex items-center gap-2
+                                                bg-green-100 text-green-700
+                                                px-4 py-2 rounded-2xl
+                                                font-bold text-sm">
+
+                                        ✅ Mission Selesai
+
+                                    </div>
+
+                                @else
+
+                                    <div class="inline-flex items-center gap-2
+                                                bg-orange-100 text-orange-700
+                                                px-4 py-2 rounded-2xl
+                                                font-bold text-sm">
+
+                                        ⏳ Belum Selesai
+
+                                    </div>
+
+                                @endif
+
+                            </div>
+
+                            <!-- TAG -->
+                            <div class="flex flex-wrap gap-3 mt-5">
+
+                                <div class="bg-blue-100 text-blue-700
+                                            px-4 py-2 rounded-2xl
+                                            font-bold text-sm">
+
+                                    🚀 {{ $todo->start_date }}
+
+                                </div>
+
+                                <div class="bg-red-100 text-red-700
+                                            px-4 py-2 rounded-2xl
+                                            font-bold text-sm">
+
+                                    🏁 {{ $todo->end_date }}
+
+                                </div>
+
+                                <div class="bg-yellow-100 text-yellow-700
+                                            px-4 py-2 rounded-2xl
+                                            font-bold text-sm">
+
+                                    ⭐ +{{ $todo->xp }} XP
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ACTION -->
+                        <div class="flex items-center gap-3">
 
                             <!-- COMPLETE -->
-                            <form action="/todo/update/{{ $todo->id }}" method="POST">
+                            <form action="/todo/complete/{{ $todo->id }}"
+                                  method="POST">
 
                                 @csrf
-                                @method('PUT')
 
                                 <button
                                     type="submit"
-                                    {{ !$canComplete ? 'disabled' : '' }}
-
-                                    class="w-16 h-16 md:w-24 md:h-24 rounded-full text-2xl md:text-4xl shadow-2xl border-4 border-white transition
-
+                                    class="w-16 h-16 rounded-2xl
                                     {{ $todo->completed
-                                        ? 'bg-yellow-400'
-                                        : ($canComplete
-                                            ? 'bg-green-400 hover:scale-110'
-                                            : 'bg-gray-300 cursor-not-allowed')
-                                    }}"
+                                        ? 'bg-gray-400'
+                                        : 'bg-green-500 hover:bg-green-600'
+                                    }}
+                                    text-white text-2xl"
                                 >
 
                                     @if($todo->completed)
-
-                                        ⭐
-
+                                        ✔
                                     @else
-
-                                        🎯
-
+                                        ✓
                                     @endif
 
                                 </button>
 
                             </form>
 
-                            <!-- CARD -->
-                            <div class="bg-white rounded-3xl shadow-2xl p-5 md:p-6 flex-1 w-full">
+                            <!-- EDIT -->
+                            <a
+                                href="/todo/edit/{{ $todo->id }}"
+                                class="w-16 h-16 rounded-2xl
+                                       bg-blue-500 hover:bg-blue-600
+                                       flex items-center justify-center
+                                       text-white text-2xl"
+                            >
+                                ✏️
+                            </a>
 
-                                <h2 class="text-xl md:text-2xl font-black
+                            <!-- DELETE -->
+                            <form action="/todo/delete/{{ $todo->id }}"
+                                  method="POST">
 
-                                    {{ $todo->completed
-                                        ? 'line-through text-gray-400'
-                                        : 'text-gray-700' }}
-                                ">
+                                @csrf
+                                @method('DELETE')
 
-                                    {{ $todo->title }}
-
-                                </h2>
-
-                                <p class="text-gray-500 mt-2 text-sm md:text-base">
-                                    {{ $todo->description }}
-                                </p>
-
-                                <div class="mt-4 flex flex-wrap gap-3">
-
-                                    <div class="bg-blue-100 text-blue-700 px-4 py-2 rounded-2xl text-xs md:text-sm font-bold">
-                                        🚀 {{ $todo->start_date }} | {{ $todo->start_time }}
-                                    </div>
-
-                                    <div class="bg-red-100 text-red-700 px-4 py-2 rounded-2xl text-xs md:text-sm font-bold">
-                                        🏁 {{ $todo->end_date }} | {{ $todo->end_time }}
-                                    </div>
-
-                                    <div class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-2xl text-xs md:text-sm font-bold">
-                                        ⭐ +{{ $todo->xp }} XP
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <!-- ACTION -->
-                            <div class="flex md:flex-col gap-3">
-
-                                <a
-                                    href="/todo/edit/{{ $todo->id }}"
-                                    class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-4 rounded-2xl shadow-xl font-bold text-center"
+                                <button
+                                    class="w-16 h-16 rounded-2xl
+                                           bg-red-500 hover:bg-red-600
+                                           text-white text-2xl"
                                 >
-                                    ✏️
-                                </a>
+                                    ✖
+                                </button>
 
-                                <form action="/todo/delete/{{ $todo->id }}" method="POST">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button
-                                        class="bg-red-500 hover:bg-red-600 text-white px-5 py-4 rounded-2xl shadow-xl font-bold"
-                                    >
-                                        ✖️
-                                    </button>
-
-                                </form>
-
-                            </div>
+                            </form>
 
                         </div>
 
@@ -419,7 +584,8 @@
 
             @empty
 
-                <div class="bg-white rounded-3xl shadow-xl p-10 text-center">
+                <div class="bg-white rounded-[35px]
+                            p-16 text-center smooth-card">
 
                     <div class="text-8xl mb-5">
                         📭
@@ -429,8 +595,8 @@
                         Belum Ada Misi
                     </h1>
 
-                    <p class="text-gray-500 mt-3 text-lg">
-                        Tambahkan misi pertamamu sekarang 🚀
+                    <p class="text-gray-500 mt-3">
+                        Tambahkan misi pertamamu 🚀
                     </p>
 
                 </div>
@@ -443,27 +609,37 @@
 
 </div>
 
-<!-- SCRIPT -->
 <script>
 
-function toggleMenu() {
+function toggleMenu(){
 
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
+    const sidebar =
+        document.getElementById('sidebar');
 
-    if(sidebar.style.left === '0px') {
+    const overlay =
+        document.getElementById('overlay');
 
-        sidebar.style.left = '-300px';
+    if(sidebar.style.left === '0px'){
+
+        sidebar.style.left = '-320px';
+
         overlay.classList.add('hidden');
 
-    } else {
+    }else{
 
         sidebar.style.left = '0px';
+
         overlay.classList.remove('hidden');
 
     }
 
 }
+
+window.addEventListener('DOMContentLoaded', ()=>{
+
+    document.body.classList.add('loaded');
+
+});
 
 </script>
 
