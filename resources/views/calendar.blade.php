@@ -7,100 +7,196 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>RunPro Calendar</title>
+    <title>RunPro Kalender</title>
 
-    @vite(['resources/css/app.css','resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:sans-serif;
+        html{
+            background:#f6f7fb;
         }
 
         body{
+            margin:0;
+            padding:0;
             background:#f6f7fb;
+            font-family:sans-serif;
             overflow-x:hidden;
+            visibility:hidden;
+            opacity:0;
         }
 
-        .layout{
-            display:flex;
+        body.loaded{
+            visibility:visible;
+            opacity:1;
+            transition:.15s linear;
         }
 
-        /* SIDEBAR */
-
-        .sidebar{
-
-            width:260px;
-            height:100vh;
-
-            background:white;
-
-            position:fixed;
-            left:0;
-            top:0;
-
-            border-right:1px solid #ececec;
-
-            padding:30px 18px;
-
-            display:flex;
-            flex-direction:column;
-            justify-content:space-between;
-
+        *{
+            box-sizing:border-box;
+            box-shadow:none !important;
+            scroll-behavior:smooth;
         }
 
-        .logo{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-bottom:40px;
-        }
-
-        .logo h1{
-            font-size:42px;
-            font-weight:900;
-            color:#7c3aed;
-        }
-
-        .logo p{
-            color:#9ca3af;
-            margin-top:5px;
-        }
-
-        .menu{
-            display:flex;
-            flex-direction:column;
-            gap:10px;
-        }
-
-        .menu a{
-
+        a{
             text-decoration:none;
+        }
 
-            padding:15px 18px;
+        .smooth{
+            transition:
+                transform .28s cubic-bezier(.22,1,.36,1),
+                background .25s ease,
+                border .25s ease;
+        }
 
-            border-radius:16px;
+        .smooth:hover{
+            transform:translateY(-3px);
+        }
+
+        canvas{
+            width:100% !important;
+        }
+
+        .sidebar-menu{
 
             display:flex;
             align-items:center;
-            gap:14px;
+            gap:16px;
 
-            font-weight:700;
+            padding:16px 18px;
+
+            border-radius:20px;
+
+            font-weight:800;
 
             color:#4b5563;
 
-            transition:.2s;
+            text-decoration:none;
 
+            transition:.25s ease;
         }
 
-        .menu a:hover{
+        .sidebar-menu:hover{
+
+            background:#f5f3ff;
+
+            transform:translateX(3px);
+        }
+
+        .sidebar-icon{
+
+            width:45px;
+            height:45px;
+
+            border-radius:16px;
+
             background:#f3f4f6;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            font-size:22px;
         }
 
-        .menu .active{
+        .active-menu{
+
+            background:linear-gradient(
+                90deg,
+                #a855f7,
+                #ec4899
+            );
+
+            color:white;
+        }
+
+        .active-menu .sidebar-icon{
+
+            background:rgba(255,255,255,.2);
+        }
+
+        /* MAIN */
+
+        .main{
+
+            margin-left:290px;
+
+            padding:30px;
+
+        }
+
+        /* TOPBAR */
+
+        .topbar{
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:20px;
+            flex-wrap:wrap;
+
+        }
+
+        .title h1{
+
+            font-size:65px;
+            color:#7c3aed;
+            font-weight:900;
+        }
+
+        .title p{
+            color:#6b7280;
+            margin-top:10px;
+            font-size:19px;
+        }
+
+        .top-actions{
+            display:flex;
+            align-items:center;
+            gap:15px;
+            flex-wrap:wrap;
+        }
+
+        .nav-btn{
+
+            width:55px;
+            height:55px;
+
+            border:none;
+
+            border-radius:18px;
+
+            background:white;
+
+            cursor:pointer;
+
+            font-size:20px;
+
+            font-weight:900;
+        }
+
+        .month-box{
+
+            background:white;
+
+            padding:16px 24px;
+
+            border-radius:18px;
+
+            font-size:22px;
+
+            font-weight:800;
+
+            color:#4b5563;
+
+            min-width:220px;
+            text-align:center;
+        }
+
+        .add-btn{
+
+            border:none;
 
             background:linear-gradient(
                 90deg,
@@ -110,474 +206,266 @@
 
             color:white;
 
-        }
+            padding:18px 28px;
 
-        .logout{
-
-            width:100%;
-
-            border:none;
-
-            padding:15px;
-
-            border-radius:18px;
-
-            background:linear-gradient(
-                90deg,
-                #ff4d4d,
-                #ff6666
-            );
-
-            color:white;
-
-            font-weight:800;
-
-            font-size:17px;
-
-            cursor:pointer;
-
-        }
-
-        /* MAIN */
-
-        .main{
-
-            margin-left:260px;
-
-            width:calc(100% - 260px);
-
-            padding:28px;
-
-        }
-
-        .hero{
-
-            background:linear-gradient(
-                90deg,
-                #eef2ff,
-                #ffe4e6
-            );
-
-            border-radius:30px;
-
-            padding:35px;
-
-            position:relative;
-
-            overflow:hidden;
-
-        }
-
-        .hero::after{
-
-            content:'📅';
-
-            position:absolute;
-
-            right:20px;
-            top:-20px;
-
-            font-size:180px;
-
-            opacity:.08;
-
-        }
-
-        .hero h1{
-
-            font-size:58px;
-
-            font-weight:900;
-
-            color:#111827;
-
-        }
-
-        /* STATS */
-
-        .stats{
-
-            margin-top:22px;
-
-            display:grid;
-
-            grid-template-columns:repeat(4,1fr);
-
-            gap:18px;
-
-        }
-
-        .stat-card{
-
-            background:white;
-
-            border-radius:26px;
-
-            padding:28px;
-
-        }
-
-        .stat-icon{
-            font-size:38px;
-        }
-
-        .stat-card h2{
-
-            font-size:48px;
-
-            margin-top:15px;
-
-            font-weight:900;
-
-            color:#111827;
-
-        }
-
-        .stat-card p{
-
-            margin-top:4px;
-
-            color:#9ca3af;
+            border-radius:20px;
 
             font-size:18px;
 
+            font-weight:800;
+
+            cursor:pointer;
         }
 
         /* CONTENT */
 
         .content{
 
-            margin-top:25px;
+            margin-top:30px;
 
             display:grid;
 
-            grid-template-columns:420px 1fr;
+            grid-template-columns:
+                minmax(0,1fr)
+                320px;
 
-            gap:22px;
+            gap:25px;
 
-        }
-
-        .calendar-box,
-        .mission-box{
-
-            background:white;
-
-            border-radius:32px;
-
-            padding:28px;
-
-        }
-
-        .title{
-
-            font-size:24px;
-
-            font-weight:900;
-
-            color:#111827;
-
-        }
-
-        .sub{
-            color:#9ca3af;
-            margin-top:8px;
-        }
-
-        /* MONTH NAV */
-
-        .month-nav{
-
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-
-            margin-top:18px;
-
-        }
-
-        .month-btn{
-
-            width:42px;
-            height:42px;
-
-            border:none;
-
-            border-radius:14px;
-
-            background:#f3f4f6;
-
-            cursor:pointer;
-
-            font-size:20px;
-
-            font-weight:900;
-
-        }
-
-        .month-btn:hover{
-            background:#e5e7eb;
-        }
-
-        #monthText{
-
-            font-size:18px;
-
-            font-weight:800;
-
-            color:#6b7280;
-
+            align-items:start;
         }
 
         /* CALENDAR */
 
-        .calendar-head{
+        .calendar-box{
+
+            background:white;
+
+            border-radius:35px;
+
+            padding:25px;
+
+            overflow:hidden;
+        }
+
+        .calendar-header{
 
             display:grid;
 
-            grid-template-columns:repeat(7,1fr);
+            grid-template-columns:
+                80px repeat(7,1fr);
 
-            margin-top:28px;
+            margin-bottom:15px;
+
+            min-width:900px;
+        }
+
+        .calendar-header div{
 
             text-align:center;
 
-            color:#9ca3af;
+            font-weight:900;
 
-            font-weight:700;
+            color:#374151;
 
+            font-size:20px;
+        }
+
+        .calendar-grid-wrapper{
+            overflow-x:auto;
         }
 
         .calendar-grid{
 
-            margin-top:18px;
+            position:relative;
+
+            min-width:900px;
+        }
+
+        .calendar-row{
 
             display:grid;
 
-            grid-template-columns:repeat(7,1fr);
+            grid-template-columns:
+                80px repeat(7,1fr);
 
-            gap:12px;
-
+            height:90px;
         }
 
-        .day{
+        .time-label{
 
-            width:48px;
-            height:78px;
+            border-top:1px solid #eee;
 
-            border:1px solid #ededed;
+            padding-top:8px;
 
-            border-radius:20px;
+            color:#6b7280;
 
-            display:flex;
+            font-size:15px;
+        }
 
-            flex-direction:column;
+        .cell{
 
-            align-items:center;
-            justify-content:center;
-
-            font-weight:900;
-
-            font-size:22px;
+            border-top:1px solid #eee;
+            border-left:1px solid #eee;
 
             position:relative;
-
-            cursor:pointer;
-
-            transition:.2s;
-
-            background:white;
-
         }
 
-        .day:hover{
-
-            transform:translateY(-2px);
-
-            border-color:#22c55e;
-
-        }
-
-        .active-day{
-
-            background:linear-gradient(
-                180deg,
-                #22c55e,
-                #16a34a
-            );
-
-            color:white;
-
-            border:none;
-
-        }
-
-        .dot-container{
+        .task{
 
             position:absolute;
 
-            bottom:9px;
+            left:6px;
+            right:6px;
+            top:6px;
+
+            border-radius:16px;
+
+            padding:10px;
+
+            font-size:13px;
+
+            font-weight:700;
+
+            color:#111827;
+
+            overflow:hidden;
+        }
+
+        .task small{
+            display:block;
+            margin-top:5px;
+            font-size:12px;
+        }
+
+        /* RIGHT */
+
+        .right{
+            display:flex;
+            flex-direction:column;
+            gap:20px;
+        }
+
+        .card{
+
+            background:white;
+
+            border-radius:30px;
+
+            padding:25px;
+        }
+
+        .card h2{
+
+            color:#7c3aed;
+
+            font-size:22px;
+
+            margin-bottom:20px;
+        }
+
+        .mini-calendar{
+
+            display:grid;
+            grid-template-columns:repeat(7,1fr);
+            gap:10px;
+            text-align:center;
+        }
+
+        .mini-day{
+
+            padding:10px 0;
+
+            border-radius:12px;
+
+            cursor:pointer;
+
+            font-weight:700;
+
+            transition:.2s;
+        }
+
+        .mini-day:hover{
+            background:#f3f4f6;
+        }
+
+        .mini-active{
+
+            background:#8b5cf6;
+            color:white;
+        }
+
+        .agenda-item{
 
             display:flex;
+            justify-content:space-between;
+            align-items:center;
 
-            gap:4px;
+            gap:10px;
 
+            padding:14px 0;
+
+            border-bottom:1px solid #eee;
+        }
+
+        .agenda-left{
+            display:flex;
+            align-items:center;
+            gap:10px;
         }
 
         .dot{
 
-            width:7px;
-            height:7px;
-
+            width:10px;
+            height:10px;
             border-radius:999px;
-
         }
 
-        .orange{
-            background:#fb923c;
-        }
+        .week-info{
 
-        .green{
-            background:#22c55e;
-        }
+            margin-top:15px;
 
-        /* MISSION */
+            background:#f3f4f6;
 
-        .mission-list{
-            margin-top:25px;
-        }
+            padding:15px;
 
-        .mission-card{
-
-            background:#f8fafc;
-
-            border-radius:28px;
-
-            padding:24px;
-
-            display:flex;
-
-            justify-content:space-between;
-
-            align-items:center;
-
-            margin-bottom:18px;
-
-        }
-
-        .mission-left{
-
-            display:flex;
-            gap:18px;
-
-        }
-
-        .mission-icon{
-            font-size:58px;
-        }
-
-        .mission-title{
-
-            font-size:26px;
-
-            font-weight:900;
-
-            color:#111827;
-
-        }
-
-        .mission-desc{
-
-            margin-top:6px;
-
-            color:#9ca3af;
-
-        }
-
-        .tags{
-
-            display:flex;
-
-            gap:10px;
-
-            margin-top:18px;
-
-            flex-wrap:wrap;
-
-        }
-
-        .tag{
-
-            padding:10px 15px;
-
-            border-radius:16px;
-
-            font-size:14px;
-
-            font-weight:800;
-
-        }
-
-        .blue{
-            background:#dbeafe;
-            color:#2563eb;
-        }
-
-        .red{
-            background:#fee2e2;
-            color:#dc2626;
-        }
-
-        .yellow{
-            background:#fef3c7;
-            color:#ca8a04;
-        }
-
-        .actions{
-            display:flex;
-            gap:12px;
-        }
-
-        .btn{
-
-            width:54px;
-            height:54px;
-
-            border:none;
-
-            border-radius:16px;
-
-            color:white;
-
-            font-size:22px;
-
-            cursor:pointer;
-
-            font-weight:900;
-
-        }
-
-        .edit{
-            background:#2563eb;
-        }
-
-        .delete{
-            background:#ff4d4d;
-        }
-
-        .hidden{
-            display:none;
-        }
-
-        .empty{
-
-            margin-top:50px;
-
-            text-align:center;
-
-            color:#9ca3af;
-
-            font-size:20px;
+            border-radius:18px;
 
             font-weight:700;
+
+            color:#4b5563;
+
+            line-height:1.7;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:1100px){
+
+            .content{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+        @media(max-width:900px){
+
+            #sidebar{
+                left:-320px;
+            }
+
+            .main{
+                margin-left:0;
+                padding:20px;
+            }
+
+            .title h1{
+                font-size:45px;
+            }
+
+            .calendar-header,
+            .calendar-grid{
+                min-width:800px;
+            }
 
         }
 
@@ -587,171 +475,283 @@
 
 <body>
 
-<div class="layout">
+<!-- OVERLAY -->
+<div
+    id="overlay"
+    onclick="toggleMenu()"
+    class="hidden fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40"
+></div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+<!-- SIDEBAR -->
+<div
+    id="sidebar"
+    class="fixed top-0 left-[-320px] lg:left-0
+           w-[290px] h-full bg-white
+           border-r border-gray-100
+           z-50 transition-all duration-500 flex flex-col"
+>
 
-        <div>
+    <!-- TOP -->
+    <div class="p-7">
 
-            <div class="logo">
+        <!-- LOGO -->
+        <div class="flex items-center gap-3 mb-14">
 
-                <div style="font-size:42px;">
-                    🚀
-                </div>
-
-                <div>
-
-                    <h1>RunPro</h1>
-
-                    <p>Productivity App</p>
-
-                </div>
-
+            <div class="text-5xl">
+                🚀
             </div>
 
-            <div class="menu">
+            <div>
 
-                <a href="/dashboard">
-                    🏠 Dashboard
-                </a>
+                <h1 class="text-3xl font-black
+                           bg-gradient-to-r
+                           from-purple-600 to-pink-500
+                           bg-clip-text text-transparent">
 
-                <a href="/mission-center">
-                    🎯 Mission Center
-                </a>
+                    RunPro
 
-                <a href="/calendar"
-                   class="active">
-                    📅 Kalender
-                </a>
+                </h1>
 
-                <a href="/statistics">
-                    📊 Statistik
-                </a>
-
-                <a href="/profile">
-                    👤 Profil
-                </a>
+                <p class="text-gray-400 text-sm font-medium">
+                    Productivity App
+                </p>
 
             </div>
 
         </div>
 
+        <!-- MENU -->
+        <div class="space-y-4">
+
+            <!-- DASHBOARD -->
+            <a href="/dashboard"
+               class="sidebar-menu">
+
+                <div class="sidebar-icon">
+                    🏠
+                </div>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+            <!-- MISSION -->
+            <a href="/mission-center"
+               class="sidebar-menu">
+
+                <div class="sidebar-icon">
+                    🎯
+                </div>
+
+                <span>
+                    Mission Center
+                </span>
+
+            </a>
+
+            <!-- CALENDAR -->
+            <a href="/calendar"
+               class="sidebar-menu active-menu">
+
+                <div class="sidebar-icon">
+                    📅
+                </div>
+
+                <span>
+                    Kalender
+                </span>
+
+            </a>
+
+            <!-- STATISTIC -->
+            <a href="/statistics"
+               class="sidebar-menu">
+
+                <div class="sidebar-icon">
+                    📊
+                </div>
+
+                <span>
+                    Statistik
+                </span>
+
+            </a>
+
+            <!-- PROFILE -->
+            <a href="/profile"
+               class="sidebar-menu">
+
+                <div class="sidebar-icon">
+                    👤
+                </div>
+
+                <span>
+                    Profil
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- USER -->
+    <div class="mt-auto p-7">
+
+        <div class="bg-[#f6f7fb]
+                    rounded-3xl
+                    p-4 mb-5">
+
+            <div class="flex items-center gap-3">
+
+                @if(auth()->user()->photo)
+
+                    <img
+                        src="{{ asset('storage/' . auth()->user()->photo) }}"
+                        class="w-14 h-14 rounded-2xl object-cover"
+                    >
+
+                @else
+
+                    <div class="w-14 h-14
+                                rounded-2xl
+                                bg-gradient-to-r
+                                from-purple-500 to-pink-500
+                                flex items-center
+                                justify-center
+                                text-white text-xl font-black">
+
+                        {{ strtoupper(substr(auth()->user()->name,0,1)) }}
+
+                    </div>
+
+                @endif
+
+                <div class="flex-1 overflow-hidden">
+
+                    <h2 class="font-black
+                               text-gray-800
+                               truncate">
+
+                        {{ auth()->user()->name }}
+
+                    </h2>
+
+                    <p class="text-sm text-gray-400 truncate">
+
+                        Productivity User
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- LOGOUT -->
         <form action="{{ route('logout') }}"
               method="POST">
 
             @csrf
 
-            <button class="logout">
-                🚪 Logout
+            <button
+                class="w-full
+                       bg-gradient-to-r
+                       from-red-500 to-red-400
+                       hover:scale-[1.02]
+                       text-white py-4
+                       rounded-2xl
+                       font-black
+                       transition-all duration-300"
+            >
+
+                Logout 🚪
+
             </button>
 
         </form>
 
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
+</div>
 
-        <!-- HERO -->
-        <div class="hero">
+<!-- MAIN -->
+<div class="main">
 
-            <h1>
-                Kalender Mission 📅
-            </h1>
+    <!-- TOP -->
+    <div class="topbar">
 
-            <div class="stats">
+        <div class="title">
 
-                <div class="stat-card">
+            <div class="flex items-center gap-4 mb-3">
 
-                    <div class="stat-icon">🎯</div>
+                <button
+                    onclick="toggleMenu()"
+                    class="lg:hidden
+                           w-14 h-14
+                           rounded-2xl
+                           bg-white text-2xl smooth"
+                >
+                    ☰
+                </button>
 
-                    <h2>{{ $todos->count() }}</h2>
-
-                    <p>Total Mission</p>
-
-                </div>
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">✅</div>
-
-                    <h2>
-                        {{ $todos->where('completed', true)->count() }}
-                    </h2>
-
-                    <p>Mission Selesai</p>
-
-                </div>
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">⭐</div>
-
-                    <h2>{{ $xp }}</h2>
-
-                    <p>Total XP</p>
-
-                </div>
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">🏆</div>
-
-                    <h2>{{ $level }}</h2>
-
-                    <p>Level</p>
-
-                </div>
+                <h1>
+                    Kalender
+                </h1>
 
             </div>
 
+            <p>
+                Kelola jadwal dan mission produktifmu.
+            </p>
+
         </div>
 
-        <!-- CONTENT -->
-        <div class="content">
+        <div class="top-actions">
 
-            <!-- CALENDAR -->
-            <div class="calendar-box">
+            <button class="nav-btn"
+                    onclick="prevWeek()">
+                ←
+            </button>
 
-                <div class="title">
-                    Kalender Mission 📅
+            <button class="nav-btn"
+                    onclick="nextWeek()">
+                →
+            </button>
+
+            <div class="month-box"
+                 id="monthText">
+
+            </div>
+
+            <a href="/dashboard">
+
+                <button class="add-btn">
+                    + Tambah Jadwal
+                </button>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- CALENDAR -->
+        <div class="calendar-box">
+
+            <div class="calendar-grid-wrapper">
+
+                <div class="calendar-header"
+                     id="calendarHeader">
+
                 </div>
 
-                <div class="month-nav">
-
-                    <button
-                        class="month-btn"
-                        onclick="prevMonth()"
-                    >
-                        ←
-                    </button>
-
-                    <div id="monthText"></div>
-
-                    <button
-                        class="month-btn"
-                        onclick="nextMonth()"
-                    >
-                        →
-                    </button>
-
-                </div>
-
-                <!-- DAY NAME -->
-                <div class="calendar-head">
-
-                    <div>Min</div>
-                    <div>Sen</div>
-                    <div>Sel</div>
-                    <div>Rab</div>
-                    <div>Kam</div>
-                    <div>Jum</div>
-                    <div>Sab</div>
-
-                </div>
-
-                <!-- GRID -->
                 <div class="calendar-grid"
                      id="calendarGrid">
 
@@ -759,121 +759,38 @@
 
             </div>
 
-            <!-- MISSION -->
-            <div class="mission-box">
+        </div>
 
-                <div class="title">
+        <!-- RIGHT -->
+        <div class="right">
 
-                    Mission Tanggal
-                    <span id="selectedDate"></span>
+            <!-- MINI CALENDAR -->
+            <div class="card">
+
+                <h2>
+                    Kalender
+                </h2>
+
+                <div class="mini-calendar"
+                     id="miniCalendar">
 
                 </div>
 
-                <div class="sub">
-                    Mission sesuai tanggal dipilih
+                <div class="week-info"
+                     id="weekInfo">
+
                 </div>
 
-                <div class="mission-list">
+            </div>
 
-                    @foreach($todos as $todo)
+            <!-- AGENDA -->
+            <div class="card">
 
-                        @php
+                <h2 id="agendaTitle">
+                    Agenda Hari Ini
+                </h2>
 
-                            $start =
-                                \Carbon\Carbon::parse(
-                                    $todo->start_date
-                                )->format('Y-m-d');
-
-                            $end =
-                                \Carbon\Carbon::parse(
-                                    $todo->end_date
-                                )->format('Y-m-d');
-
-                        @endphp
-
-                        <div
-                            class="mission-card mission-item hidden"
-                            data-start="{{ $start }}"
-                            data-end="{{ $end }}"
-                        >
-
-                            <div class="mission-left">
-
-                                <div class="mission-icon">
-
-                                    @if($todo->completed)
-                                        ✅
-                                    @else
-                                        🎯
-                                    @endif
-
-                                </div>
-
-                                <div>
-
-                                    <div class="mission-title">
-                                        {{ $todo->title }}
-                                    </div>
-
-                                    <div class="mission-desc">
-                                        {{ $todo->description }}
-                                    </div>
-
-                                    <div class="tags">
-
-                                        <div class="tag blue">
-                                            🚀 {{ $todo->start_date }}
-                                        </div>
-
-                                        <div class="tag red">
-                                            🏁 {{ $todo->end_date }}
-                                        </div>
-
-                                        <div class="tag yellow">
-                                            ⭐ {{ $todo->xp }} XP
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="actions">
-
-                                <a href="/todo/edit/{{ $todo->id }}">
-
-                                    <button class="btn edit">
-                                        ✏️
-                                    </button>
-
-                                </a>
-
-                                <form
-                                    action="/todo/delete/{{ $todo->id }}"
-                                    method="POST">
-
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button class="btn delete">
-                                        ✖
-                                    </button>
-
-                                </form>
-
-                            </div>
-
-                        </div>
-
-                    @endforeach
-
-                    <div id="emptyMission"
-                         class="empty">
-
-                        Tidak ada mission di tanggal ini 🚫
-
-                    </div>
+                <div id="agendaList">
 
                 </div>
 
@@ -887,53 +804,216 @@
 
 <script>
 
+window.addEventListener(
+    'DOMContentLoaded',
+    ()=>{
+
+        document.body.classList.add('loaded');
+
+    }
+);
+
+function toggleMenu(){
+
+    const sidebar =
+        document.getElementById('sidebar');
+
+    const overlay =
+        document.getElementById('overlay');
+
+    if(sidebar.style.left === '0px'){
+
+        sidebar.style.left = '-320px';
+
+        overlay.classList.add('hidden');
+
+    }else{
+
+        sidebar.style.left = '0px';
+
+        overlay.classList.remove('hidden');
+
+    }
+
+}
+
 const todos = @json($todos);
 
 let currentDate = new Date();
 
-let selectedDate =
-    formatDate(currentDate);
+function formatDate(date){
 
-function formatDate(date)
-{
-    const year = date.getFullYear();
+    let y = date.getFullYear();
 
-    const month = String(
-        date.getMonth() + 1
+    let m = String(
+        date.getMonth()+1
     ).padStart(2,'0');
 
-    const day = String(
+    let d = String(
         date.getDate()
     ).padStart(2,'0');
 
-    return `${year}-${month}-${day}`;
+    return `${y}-${m}-${d}`;
+}
+
+function getWeekDates(date){
+
+    const current = new Date(date);
+
+    const day = current.getDay();
+
+    const diff =
+        current.getDate() - day + (day === 0 ? -6 : 1);
+
+    const monday = new Date(current.setDate(diff));
+
+    let week = [];
+
+    for(let i=0;i<7;i++){
+
+        let d = new Date(monday);
+
+        d.setDate(monday.getDate()+i);
+
+        week.push(d);
+
+    }
+
+    return week;
 }
 
 function renderCalendar(){
+
+    const weekDates =
+        getWeekDates(currentDate);
+
+    const header =
+        document.getElementById(
+            'calendarHeader'
+        );
 
     const grid =
         document.getElementById(
             'calendarGrid'
         );
 
+    header.innerHTML = '';
     grid.innerHTML = '';
 
-    const year =
-        currentDate.getFullYear();
+    const days = [
+        'Sen',
+        'Sel',
+        'Rab',
+        'Kam',
+        'Jum',
+        'Sab',
+        'Min'
+    ];
 
-    const month =
-        currentDate.getMonth();
+    header.innerHTML += `
+        <div></div>
+    `;
 
-    const daysInMonth =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
+    weekDates.forEach((date,index)=>{
+
+        header.innerHTML += `
+            <div
+                onclick="selectDate('${formatDate(date)}')"
+                style="
+                    cursor:pointer;
+                    padding:10px;
+                    border-radius:16px;
+                "
+            >
+                ${days[index]}<br>
+                ${date.getDate()}
+            </div>
+        `;
+
+    });
+
+    for(let hour=6;hour<=22;hour++){
+
+        let row =
+            document.createElement('div');
+
+        row.className = 'calendar-row';
+
+        row.innerHTML += `
+            <div class="time-label">
+                ${hour}:00
+            </div>
+        `;
+
+        weekDates.forEach(date=>{
+
+            const fullDate =
+                formatDate(date);
+
+            let tasks = todos.filter(todo=>{
+
+                return todo.start_date === fullDate;
+
+            });
+
+            let cellHTML = '';
+
+            tasks.forEach(todo=>{
+
+                const taskHour =
+                    parseInt(
+                        todo.start_time.split(':')[0]
+                    );
+
+                if(taskHour === hour){
+
+                    cellHTML += `
+                        <div class="task"
+                             style="
+                                background:
+                                ${
+                                    todo.completed
+                                    ?
+                                    '#dcfce7'
+                                    :
+                                    '#ede9fe'
+                                };
+                             ">
+
+                            ${todo.title}
+
+                            <small>
+                                ⏰
+                                ${todo.start_time}
+                                -
+                                ${todo.end_time}
+                            </small>
+
+                            <small>
+                                ⭐ ${todo.xp} XP
+                            </small>
+
+                        </div>
+                    `;
+                }
+
+            });
+
+            row.innerHTML += `
+                <div class="cell">
+                    ${cellHTML}
+                </div>
+            `;
+
+        });
+
+        grid.appendChild(row);
+
+    }
 
     const monthName =
         currentDate.toLocaleString(
-            'default',
+            'id-ID',
             {
                 month:'long',
                 year:'numeric'
@@ -944,191 +1024,234 @@ function renderCalendar(){
         'monthText'
     ).innerText = monthName;
 
-    for(let i = 1; i <= daysInMonth; i++){
-
-const date =
-    new Date(
-        year,
-        month,
-        i,
-        12,
-        0,
-        0
-    );
-
-        const fullDate =
-            formatDate(date);
-
-        let missions = [];
-
-        todos.forEach(todo=>{
-
-            const start =
-                todo.start_date;
-
-            const end =
-                todo.end_date;
-
-            if(
-                fullDate >= start &&
-                fullDate <= end
-            ){
-
-                missions.push(todo);
-
-            }
-
-        });
-
-        const day =
-            document.createElement('div');
-
-        day.className = 'day';
-
-        if(fullDate === selectedDate){
-
-            day.classList.add(
-                'active-day'
-            );
-
-        }
-
-        day.innerHTML = `
-            ${i}
-
-            ${
-                missions.length
-                ?
-                `<div class="dot-container">
-
-                    ${missions.slice(0,3)
-                    .map(mission=>`
-
-                        <div class="dot
-                        ${mission.completed
-                            ? 'green'
-                            : 'orange'
-                        }"></div>
-
-                    `).join('')}
-
-                </div>`
-                :
-                ''
-            }
-        `;
-
-        day.onclick = ()=>{
-
-            selectedDate = fullDate;
-
-            renderCalendar();
-
-            showMission(fullDate);
-
-        };
-
-        grid.appendChild(day);
-
-    }
-
+    renderMiniCalendar();
+    renderAgenda();
+    renderWeekInfo();
 }
 
-function showMission(date){
+function renderMiniCalendar(){
 
-const dateObj = new Date(date);
-
-const formattedDate =
-    dateObj.toLocaleDateString(
-        'id-ID',
-        {
-            day:'numeric',
-            month:'long',
-            year:'numeric'
-        }
-    );
-
-document.getElementById(
-    'selectedDate'
-).innerText = formattedDate;
-
-    const items =
-        document.querySelectorAll(
-            '.mission-item'
+    const mini =
+        document.getElementById(
+            'miniCalendar'
         );
 
-    let found = false;
+    mini.innerHTML = '';
 
-    items.forEach(item=>{
+    const days = [
+        'S','S','R','K','J','S','M'
+    ];
 
-        const start =
-            item.dataset.start;
+    days.forEach(day=>{
 
-        const end =
-            item.dataset.end;
-
-        if(date >= start && date <= end){
-
-            item.classList.remove(
-                'hidden'
-            );
-
-            found = true;
-
-        }else{
-
-            item.classList.add(
-                'hidden'
-            );
-
-        }
+        mini.innerHTML += `
+            <div style="font-weight:900">
+                ${day}
+            </div>
+        `;
 
     });
 
-    const empty =
-        document.getElementById(
-            'emptyMission'
-        );
+    const year =
+        currentDate.getFullYear();
 
-    if(found){
+    const month =
+        currentDate.getMonth();
 
-        empty.classList.add(
-            'hidden'
-        );
+    const totalDays =
+        new Date(
+            year,
+            month+1,
+            0
+        ).getDate();
 
-    }else{
+    for(let i=1;i<=totalDays;i++){
 
-        empty.classList.remove(
-            'hidden'
-        );
+        const d =
+            new Date(year,month,i);
 
+        const fullDate =
+            formatDate(d);
+
+        mini.innerHTML += `
+            <div
+                onclick="selectDate('${fullDate}')"
+                class="
+                    mini-day
+                    ${
+                        formatDate(currentDate)
+                        === fullDate
+                        ?
+                        'mini-active'
+                        :
+                        ''
+                    }
+                "
+            >
+                ${i}
+            </div>
+        `;
     }
 
 }
 
-function nextMonth(){
+function renderAgenda(){
 
-    currentDate.setMonth(
-        currentDate.getMonth() + 1
-    );
+    const agenda =
+        document.getElementById(
+            'agendaList'
+        );
 
-    renderCalendar();
+    const title =
+        document.getElementById(
+            'agendaTitle'
+        );
+
+    agenda.innerHTML = '';
+
+    const selected =
+        formatDate(currentDate);
+
+    title.innerHTML = `
+        Agenda
+        ${selected}
+    `;
+
+    let todayTasks =
+        todos.filter(todo=>{
+
+            return todo.start_date === selected;
+
+        });
+
+    if(todayTasks.length <= 0){
+
+        agenda.innerHTML = `
+            <p style="
+                color:#9ca3af;
+                font-weight:700;
+            ">
+                Tidak ada agenda
+            </p>
+        `;
+
+        return;
+    }
+
+    todayTasks.forEach(todo=>{
+
+        agenda.innerHTML += `
+            <div class="agenda-item">
+
+                <div class="agenda-left">
+
+                    <div class="dot"
+                         style="
+                            background:
+                            ${
+                                todo.completed
+                                ?
+                                '#22c55e'
+                                :
+                                '#8b5cf6'
+                            };
+                         ">
+                    </div>
+
+                    <div>
+
+                        <div style="
+                            font-weight:800;
+                        ">
+                            ${todo.title}
+                        </div>
+
+                        <div style="
+                            color:#9ca3af;
+                            font-size:13px;
+                            margin-top:4px;
+                        ">
+                            ⏰
+                            ${todo.start_time}
+                            -
+                            ${todo.end_time}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div style="
+                    font-size:13px;
+                    color:#9ca3af;
+                    font-weight:700;
+                ">
+                    ⭐ ${todo.xp}
+                </div>
+
+            </div>
+        `;
+
+    });
 
 }
 
-function prevMonth(){
+function renderWeekInfo(){
 
-    currentDate.setMonth(
-        currentDate.getMonth() - 1
+    const weekInfo =
+        document.getElementById(
+            'weekInfo'
+        );
+
+    const startOfYear =
+        new Date(
+            currentDate.getFullYear(),
+            0,
+            1
+        );
+
+    const days =
+        Math.floor(
+            (currentDate - startOfYear)
+            /
+            (24*60*60*1000)
+        );
+
+    const week =
+        Math.ceil((days + 1)/7);
+
+    weekInfo.innerHTML = `
+        📅 Minggu ke-${week}<br>
+        🗓️ Tahun ${currentDate.getFullYear()}
+    `;
+}
+
+function prevWeek(){
+
+    currentDate.setDate(
+        currentDate.getDate() - 7
     );
 
     renderCalendar();
+}
 
+function nextWeek(){
+
+    currentDate.setDate(
+        currentDate.getDate() + 7
+    );
+
+    renderCalendar();
+}
+
+function selectDate(date){
+
+    currentDate = new Date(date);
+
+    renderCalendar();
 }
 
 renderCalendar();
-
-showMission(selectedDate);
 
 </script>
 

@@ -348,6 +348,7 @@
 
                 @csrf
 
+                <!-- TITLE -->
                 <input
                     type="text"
                     name="title"
@@ -358,6 +359,7 @@
                            focus:outline-none"
                 >
 
+                <!-- DESCRIPTION -->
                 <textarea
                     name="description"
                     rows="4"
@@ -367,6 +369,7 @@
                            focus:outline-none"
                 ></textarea>
 
+                <!-- PRIORITY -->
                 <select
                     name="priority"
                     required
@@ -380,42 +383,86 @@
 
                 </select>
 
+                <!-- START -->
                 <div class="grid md:grid-cols-2 gap-5">
 
-                    <input
-                        type="date"
-                        name="start_date"
-                        required
-                        class="w-full p-5 rounded-2xl border border-gray-200"
-                    >
+                    <div>
 
-                    <input
-                        type="time"
-                        name="start_time"
-                        required
-                        class="w-full p-5 rounded-2xl border border-gray-200"
-                    >
+                        <label class="font-bold text-gray-600 mb-2 block">
+                            Tanggal Mulai
+                        </label>
+
+                        <input
+                            type="date"
+                            name="start_date"
+                            required
+                            class="w-full p-5 rounded-2xl border border-gray-200"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-bold text-gray-600 mb-2 block">
+                            Jam Mulai
+                        </label>
+
+                        <input
+                            type="time"
+                            name="start_time"
+                            required
+                            class="w-full p-5 rounded-2xl border border-gray-200"
+                        >
+
+                    </div>
 
                 </div>
 
+                <!-- END -->
                 <div class="grid md:grid-cols-2 gap-5">
 
-                    <input
-                        type="date"
-                        name="end_date"
-                        required
-                        class="w-full p-5 rounded-2xl border border-gray-200"
-                    >
+                    <div>
 
-                    <input
-                        type="time"
-                        name="end_time"
-                        required
-                        class="w-full p-5 rounded-2xl border border-gray-200"
-                    >
+                        <label class="font-bold text-gray-600 mb-2 block">
+                            Deadline
+                        </label>
+
+                        <input
+                            type="date"
+                            name="end_date"
+                            required
+                            class="w-full p-5 rounded-2xl border border-gray-200"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label class="font-bold text-gray-600 mb-2 block">
+                            Jam Selesai
+                        </label>
+
+                        <input
+                            type="time"
+                            name="end_time"
+                            required
+                            class="w-full p-5 rounded-2xl border border-gray-200"
+                        >
+
+                    </div>
 
                 </div>
 
+                <!-- XP -->
+                <input
+                    type="number"
+                    name="xp"
+                    value="10"
+                    placeholder="XP"
+                    class="w-full p-5 rounded-2xl border border-gray-200"
+                >
+
+                <!-- BUTTON -->
                 <button
                     class="w-full bg-gradient-to-r
                            from-purple-600 to-pink-500
@@ -433,6 +480,20 @@
         <div class="space-y-6">
 
             @forelse($todos as $todo)
+
+                @php
+
+                    $startDateTime =
+                        \Carbon\Carbon::parse(
+                            $todo->start_date . ' ' . $todo->start_time
+                        );
+
+                    $now = now();
+
+                    $canComplete =
+                        $now >= $startDateTime;
+
+                @endphp
 
                 <div class="bg-white rounded-[30px]
                             p-6 smooth-card">
@@ -460,7 +521,7 @@
                             </p>
 
                             <!-- STATUS -->
-                            <div class="mt-4">
+                            <div class="mt-4 flex flex-wrap gap-3">
 
                                 @if($todo->completed)
 
@@ -473,6 +534,17 @@
 
                                     </div>
 
+                                @elseif(!$canComplete)
+
+                                    <div class="inline-flex items-center gap-2
+                                                bg-red-100 text-red-700
+                                                px-4 py-2 rounded-2xl
+                                                font-bold text-sm">
+
+                                        🔒 Belum Waktunya
+
+                                    </div>
+
                                 @else
 
                                     <div class="inline-flex items-center gap-2
@@ -480,7 +552,7 @@
                                                 px-4 py-2 rounded-2xl
                                                 font-bold text-sm">
 
-                                        ⏳ Belum Selesai
+                                        ⏳ Bisa Dikerjakan
 
                                     </div>
 
@@ -495,7 +567,15 @@
                                             px-4 py-2 rounded-2xl
                                             font-bold text-sm">
 
-                                    🚀 {{ $todo->start_date }}
+                                    📅 {{ $todo->start_date }}
+
+                                </div>
+
+                                <div class="bg-purple-100 text-purple-700
+                                            px-4 py-2 rounded-2xl
+                                            font-bold text-sm">
+
+                                    🕒 {{ $todo->start_time }}
 
                                 </div>
 
@@ -504,6 +584,14 @@
                                             font-bold text-sm">
 
                                     🏁 {{ $todo->end_date }}
+
+                                </div>
+
+                                <div class="bg-pink-100 text-pink-700
+                                            px-4 py-2 rounded-2xl
+                                            font-bold text-sm">
+
+                                    ⏰ {{ $todo->end_time }}
 
                                 </div>
 
@@ -523,30 +611,49 @@
                         <div class="flex items-center gap-3">
 
                             <!-- COMPLETE -->
-                            <form action="/todo/complete/{{ $todo->id }}"
-                                  method="POST">
-
-                                @csrf
+                            @if($todo->completed)
 
                                 <button
-                                    type="submit"
+                                    disabled
                                     class="w-16 h-16 rounded-2xl
-                                    {{ $todo->completed
-                                        ? 'bg-gray-400'
-                                        : 'bg-green-500 hover:bg-green-600'
-                                    }}
-                                    text-white text-2xl"
+                                           bg-gray-400
+                                           text-white text-2xl
+                                           cursor-not-allowed"
                                 >
-
-                                    @if($todo->completed)
-                                        ✔
-                                    @else
-                                        ✓
-                                    @endif
-
+                                    ✔
                                 </button>
 
-                            </form>
+                            @elseif(!$canComplete)
+
+                                <button
+                                    disabled
+                                    class="w-16 h-16 rounded-2xl
+                                           bg-red-300
+                                           text-white text-2xl
+                                           cursor-not-allowed"
+                                >
+                                    🔒
+                                </button>
+
+                            @else
+
+                                <form action="/todo/complete/{{ $todo->id }}"
+                                      method="POST">
+
+                                    @csrf
+
+                                    <button
+                                        type="submit"
+                                        class="w-16 h-16 rounded-2xl
+                                               bg-green-500 hover:bg-green-600
+                                               text-white text-2xl"
+                                    >
+                                        ✓
+                                    </button>
+
+                                </form>
+
+                            @endif
 
                             <!-- EDIT -->
                             <a
