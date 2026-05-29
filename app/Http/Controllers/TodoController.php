@@ -136,7 +136,9 @@ class TodoController extends Controller
             'title'       => $request->title,
             'description' => $request->description,
             'start_date'  => $request->start_date,
+            'start_time'  => $request->start_time,
             'end_date'    => $request->end_date,
+            'end_time'    => $request->end_time,
             'priority'    => $request->priority,
             'xp'          => $request->xp ?? 10,
             'completed'   => false,
@@ -156,7 +158,7 @@ class TodoController extends Controller
         $todo = Todo::where('user_id', auth()->id())
             ->findOrFail($id);
 
-        return view('edit-mission', compact('todo'));
+        return view('edit-task', compact('todo'));
     }
 
     /*
@@ -179,7 +181,9 @@ class TodoController extends Controller
             'title'       => $request->title,
             'description' => $request->description,
             'start_date'  => $request->start_date,
+            'start_time'  => $request->start_time,
             'end_date'    => $request->end_date,
+            'end_time'    => $request->end_time,
             'priority'    => $request->priority,
             'xp'          => $request->xp,
         ]);

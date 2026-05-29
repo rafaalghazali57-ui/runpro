@@ -1,5 +1,3 @@
-<!-- resources/views/edit-task.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,289 +7,863 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Edit Mission • RunPro</title>
+    <title>Edit Task - RunPro</title>
+
+    @vite(['resources/css/app.css','resources/js/app.js'])
 
     <style>
 
         html{
-            background:#0f172a;
+            background:#f6f7fb;
         }
 
         body{
             margin:0;
             padding:0;
-            background:
-                radial-gradient(circle at top left,#312e81 0%,transparent 30%),
-                radial-gradient(circle at bottom right,#be185d 0%,transparent 30%),
-                #0f172a;
-            min-height:100vh;
-            overflow-x:hidden;
+            background:#f6f7fb;
             font-family:sans-serif;
-            visibility:hidden;
-            opacity:0;
-        }
-
-        body.loaded{
-            visibility:visible;
-            opacity:1;
-            transition:opacity .2s linear;
+            overflow-x:hidden;
         }
 
         *{
             box-sizing:border-box;
-            scroll-behavior:smooth;
         }
 
-        .glass{
-
-            background:rgba(255,255,255,.08);
-
-            backdrop-filter:blur(20px);
-
-            border:1px solid rgba(255,255,255,.1);
-
-        }
-
-        .smooth{
-
-            transition:
-                transform .35s cubic-bezier(.22,1,.36,1),
-                background .25s ease,
-                border .25s ease,
-                opacity .25s ease;
-
-            will-change:transform;
-
-        }
-
-        .smooth:hover{
-
-            transform:translateY(-3px);
-
-        }
-
-        .input-modern{
-
-            width:100%;
-
-            padding:20px;
-
-            border-radius:22px;
-
-            border:1px solid rgba(255,255,255,.08);
-
-            background:rgba(255,255,255,.06);
-
-            color:white;
-
-            outline:none;
-
-            font-size:15px;
-
-            transition:all .25s ease;
-
-        }
-
-        .input-modern:focus{
-
-            border:1px solid #8b5cf6;
-
-            background:rgba(255,255,255,.1);
-
-            transform:translateY(-1px);
-
-        }
-
-        .input-modern::placeholder{
-
-            color:#94a3b8;
-
-        }
-
-        .label{
-
-            color:#e2e8f0;
-
-            font-weight:700;
-
-            margin-bottom:12px;
-
-            display:block;
-
-            font-size:15px;
-
-        }
-
-        .btn-main{
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #8b5cf6,
-                    #ec4899
-                );
-
-            color:white;
-
-            font-weight:900;
-
-            border:none;
-
-            cursor:pointer;
-
-        }
-
-        .btn-secondary{
-
-            background:rgba(255,255,255,.08);
-
-            color:white;
-
+        a{
             text-decoration:none;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+
+            position:fixed;
+
+            left:0;
+            top:0;
+
+            width:290px;
+
+            height:100vh;
+
+            background:white;
+
+            border-right:1px solid #ececec;
+
+            padding:30px 22px;
+
+            display:flex;
+
+            flex-direction:column;
+
+            justify-content:space-between;
+
+        }
+
+        /* LOGO */
+
+        .logo{
 
             display:flex;
 
             align-items:center;
 
-            justify-content:center;
+            gap:14px;
+
+            margin-bottom:55px;
 
         }
 
-        .floating{
+        .logo-icon{
 
-            position:absolute;
+            font-size:56px;
 
-            border-radius:999px;
+            flex-shrink:0;
 
-            filter:blur(80px);
+        }
 
-            opacity:.35;
+        .logo-text{
 
-            z-index:-1;
+            overflow:hidden;
+
+        }
+
+        .logo-text h1{
+
+            margin:0;
+
+            font-size:32px;
+
+            line-height:1;
+
+            font-weight:900;
+
+            color:#7c3aed;
+
+            white-space:nowrap;
+
+        }
+
+        .logo-text p{
+
+            margin-top:6px;
+
+            font-size:14px;
+
+            color:#9ca3af;
+
+            white-space:nowrap;
+
+        }
+
+        /* MENU */
+
+        .menu{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:14px;
+
+        }
+
+        .menu a{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:14px;
+
+            padding:18px 20px;
+
+            border-radius:22px;
+
+            color:#4b5563;
+
+            font-weight:700;
+
+            transition:.25s;
+
+            font-size:16px;
+
+        }
+
+        .menu a:hover{
+
+            background:#f3f4f6;
+
+        }
+
+        .menu .active{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #9333ea,
+                    #ec4899
+                );
+
+            color:white;
+
+            box-shadow:
+                0 12px 25px rgba(168,85,247,.25);
+
+        }
+
+        /* ROCKET */
+
+        .rocket{
+
+            text-align:center;
+
+            font-size:120px;
+
+            opacity:.9;
+
+            margin-top:40px;
+
+        }
+
+        /* LOGOUT */
+
+        .logout{
+
+            width:100%;
+
+            border:none;
+
+            background:#ef4444;
+
+            color:white;
+
+            padding:18px;
+
+            border-radius:22px;
+
+            font-size:16px;
+
+            font-weight:800;
+
+            cursor:pointer;
+
+            transition:.25s;
+
+        }
+
+        .logout:hover{
+
+            background:#dc2626;
+
+        }
+
+        /* MAIN */
+
+        .main{
+
+            margin-left:290px;
+
+            padding:35px;
+
+        }
+
+        /* TOPBAR */
+
+        .topbar{
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:flex-start;
+
+            margin-bottom:30px;
+
+            gap:20px;
+
+        }
+
+        .title-area h1{
+
+            margin:0;
+
+            font-size:58px;
+
+            font-weight:900;
+
+            color:#7c3aed;
+
+            line-height:1.1;
+
+        }
+
+        .title-area p{
+
+            margin-top:12px;
+
+            color:#6b7280;
+
+            font-size:18px;
+
+        }
+
+        /* BUTTON */
+
+        .top-buttons{
+
+            display:flex;
+
+            gap:16px;
+
+            flex-wrap:wrap;
+
+        }
+
+        .btn{
+
+            border:none;
+
+            padding:18px 28px;
+
+            border-radius:20px;
+
+            font-weight:800;
+
+            cursor:pointer;
+
+            font-size:16px;
+
+            transition:.25s;
+
+        }
+
+        .btn:hover{
+
+            transform:translateY(-2px);
+
+        }
+
+        .btn-back{
+
+            background:white;
+
+            color:#374151;
+
+        }
+
+        .btn-save{
+
+            color:white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #9333ea,
+                    #ec4899
+                );
+
+        }
+
+        /* CONTENT */
+
+        .content{
+
+            display:grid;
+
+            grid-template-columns:2fr 1fr;
+
+            gap:30px;
+
+        }
+
+        .card{
+
+            background:white;
+
+            border-radius:35px;
+
+            padding:35px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,.03);
+
+        }
+
+        .label{
+
+            display:block;
+
+            margin-bottom:12px;
+
+            font-size:17px;
+
+            font-weight:800;
+
+            color:#1f2937;
+
+        }
+
+        .input{
+
+            width:100%;
+
+            border:1px solid #e5e7eb;
+
+            border-radius:18px;
+
+            padding:18px 20px;
+
+            outline:none;
+
+            font-size:16px;
+
+            background:white;
+
+            transition:.25s;
+
+        }
+
+        .input:focus{
+
+            border-color:#8b5cf6;
+
+            box-shadow:
+                0 0 0 4px rgba(139,92,246,.1);
+
+        }
+
+        textarea.input{
+
+            min-height:180px;
+
+            resize:none;
+
+        }
+
+        .grid-2{
+
+            display:grid;
+
+            grid-template-columns:1fr 1fr;
+
+            gap:24px;
+
+            margin-top:28px;
+
+        }
+
+        .section{
+
+            margin-top:28px;
+
+        }
+
+        /* STATUS */
+
+        .status-card{
+
+            background:#f0fdf4;
+
+            border:1px solid #dcfce7;
+
+            border-radius:24px;
+
+            padding:24px;
+
+        }
+
+        .status-card h3{
+
+            margin:12px 0 0;
+
+            color:#16a34a;
+
+            font-size:30px;
+
+            font-weight:900;
+
+        }
+
+        .progress-card{
+
+            margin-top:24px;
+
+            background:#faf5ff;
+
+            border-radius:24px;
+
+            padding:24px;
+
+        }
+
+        .progress-number{
+
+            font-size:52px;
+
+            color:#9333ea;
+
+            font-weight:900;
+
+            margin-top:10px;
+
+        }
+
+        /* NOTE */
+
+        .note-box{
+
+            width:100%;
+
+            height:170px;
+
+            border:1px solid #e5e7eb;
+
+            border-radius:20px;
+
+            padding:20px;
+
+            outline:none;
+
+            resize:none;
+
+            margin-top:18px;
+
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:1100px){
+
+            .content{
+                grid-template-columns:1fr;
+            }
+
+        }
+
+        @media(max-width:900px){
+
+            .sidebar{
+                display:none;
+            }
+
+            .main{
+                margin-left:0;
+            }
+
+            .topbar{
+                flex-direction:column;
+            }
+
+            .grid-2{
+                grid-template-columns:1fr;
+            }
+
+            .title-area h1{
+                font-size:42px;
+            }
 
         }
 
     </style>
 
-    @vite(['resources/js/app.js'])
-
 </head>
 
 <body>
 
-<!-- FLOATING BG -->
-<div class="floating
-            top-[-120px]
-            left-[-100px]
-            w-[320px]
-            h-[320px]
-            bg-purple-500">
-</div>
+<!-- SIDEBAR -->
+<div class="sidebar">
 
-<div class="floating
-            bottom-[-120px]
-            right-[-100px]
-            w-[320px]
-            h-[320px]
-            bg-pink-500">
-</div>
+    <div>
 
-<!-- MAIN -->
-<div class="min-h-screen
-            flex
-            items-center
-            justify-center
-            p-5
-            lg:p-10">
+        <!-- LOGO -->
+        <div class="logo">
 
-    <div class="w-full max-w-5xl">
+            <div class="logo-icon">
+                🚀
+            </div>
 
-        <!-- TOP -->
-        <div class="flex flex-col lg:flex-row
-                    justify-between
-                    gap-5
-                    items-center
-                    mb-8">
+            <div class="logo-text">
 
-            <div>
-
-                <p class="text-purple-300 font-bold">
-                    🚀 RUNPRO MISSION
-                </p>
-
-                <h1 class="text-5xl lg:text-6xl
-                           font-black
-                           text-white
-                           mt-3">
-
-                    Edit Mission
-
+                <h1>
+                    RunPro
                 </h1>
 
-                <p class="text-slate-300 mt-4 text-lg">
-
-                    Upgrade dan ubah mission kamu
-                    biar makin produktif ⚡
-
+                <p>
+                    Productivity App
                 </p>
 
             </div>
 
-            <a href="/dashboard"
-               class="glass smooth
-                      px-7 py-4
-                      rounded-2xl
-                      text-white
-                      font-bold">
+        </div>
 
-                ← Kembali Dashboard
+        <!-- MENU -->
+        <div class="menu">
 
+            <a href="/dashboard">
+                🏠 Dashboard
+            </a>
+
+            <a href="/mission-center" class="active">
+                🎯 Mission Center
+            </a>
+
+            <a href="/calendar">
+                📅 Kalender
+            </a>
+
+            <a href="/statistics">
+                📊 Statistik
+            </a>
+
+            <a href="/profile">
+                👤 Profil
             </a>
 
         </div>
 
-        <!-- CARD -->
-        <div class="glass
-                    rounded-[40px]
-                    overflow-hidden">
+        <!-- ROCKET -->
+        <div class="rocket">
+            🚀
+        </div>
 
-            <!-- HEADER -->
-            <div class="p-8 lg:p-10
-                        border-b
-                        border-white/10">
+    </div>
 
-                <div class="flex items-center gap-5">
+    <!-- LOGOUT -->
+    <form action="{{ route('logout') }}"
+          method="POST">
 
-                    <div class="w-24 h-24
-                                rounded-[30px]
-                                bg-gradient-to-r
-                                from-purple-500
-                                to-pink-500
-                                flex
-                                items-center
-                                justify-center
-                                text-5xl">
+        @csrf
 
-                        ✏️
+        <button class="logout">
+            Logout 🚪
+        </button>
+
+    </form>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+        <div class="title-area">
+
+            <h1>
+                Edit Task ✏️
+            </h1>
+
+            <p>
+                Perbarui detail tugas produktifmu.
+            </p>
+
+        </div>
+
+        <div class="top-buttons">
+
+            <a href="/mission-center"
+               class="btn btn-back">
+
+                ← Kembali
+
+            </a>
+
+            <button
+                form="editForm"
+                type="submit"
+                class="btn btn-save">
+
+                ✔ Simpan Perubahan
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- LEFT -->
+        <div class="card">
+
+            <form id="editForm"
+                  action="{{ route('todo.update', $todo->id) }}"
+                  method="POST">
+
+                @csrf
+                @method('PUT')
+
+                <!-- TITLE -->
+                <div>
+
+                    <label class="label">
+                        Nama Task
+                    </label>
+
+                    <input
+                        type="text"
+                        name="title"
+                        value="{{ $todo->title }}"
+                        required
+                        class="input"
+                    >
+
+                </div>
+
+                <!-- PRIORITY -->
+                <div class="grid-2">
+
+                    <div>
+
+                        <label class="label">
+                            Prioritas
+                        </label>
+
+                        <select
+                            name="priority"
+                            class="input">
+
+                            <option value="low"
+                                {{ $todo->priority == 'low' ? 'selected' : '' }}>
+                                🟢 Low
+                            </option>
+
+                            <option value="medium"
+                                {{ $todo->priority == 'medium' ? 'selected' : '' }}>
+                                🟡 Medium
+                            </option>
+
+                            <option value="high"
+                                {{ $todo->priority == 'high' ? 'selected' : '' }}>
+                                🔴 High
+                            </option>
+
+                        </select>
 
                     </div>
 
                     <div>
 
-                        <h2 class="text-4xl
-                                   font-black
-                                   text-white">
+                        <label class="label">
+                            XP Reward
+                        </label>
 
-                            {{ $todo->title }}
+                        <input
+                            type="number"
+                            name="xp"
+                            value="{{ $todo->xp }}"
+                            class="input"
+                        >
 
-                        </h2>
+                    </div>
 
-                        <p class="text-slate-300 mt-2">
+                </div>
 
-                            Edit detail mission dengan
-                            tampilan modern ✨
+                <!-- DATE -->
+                <div class="grid-2">
 
-                        </p>
+                    <div>
+
+                        <label class="label">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="start_date"
+                            value="{{ $todo->start_date }}"
+                            class="input"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label class="label">
+                            Deadline
+                        </label>
+
+                        <input
+                            type="date"
+                            name="end_date"
+                            value="{{ $todo->end_date }}"
+                            class="input"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- TIME -->
+                <div class="grid-2">
+
+                    <div>
+
+                        <label class="label">
+                            Start Time
+                        </label>
+
+                        <input
+                            type="time"
+                            name="start_time"
+                            value="{{ $todo->start_time }}"
+                            class="input"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label class="label">
+                            End Time
+                        </label>
+
+                        <input
+                            type="time"
+                            name="end_time"
+                            value="{{ $todo->end_time }}"
+                            class="input"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="section">
+
+                    <label class="label">
+                        Deskripsi
+                    </label>
+
+                    <textarea
+                        name="description"
+                        class="input"
+                    >{{ $todo->description }}</textarea>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div>
+
+            <!-- STATUS -->
+            <div class="card">
+
+                <h2 style="
+                    margin-top:0;
+                    font-size:34px;
+                    color:#1f2937;
+                ">
+                    🚀 Status Task
+                </h2>
+
+                <div class="status-card">
+
+                    <p style="
+                        margin:0;
+                        color:#6b7280;
+                        font-weight:700;
+                    ">
+                        Status
+                    </p>
+
+                    <h3>
+
+                        @if($todo->completed)
+                            Completed ✅
+                        @else
+                            Sedang Dikerjakan 🔥
+                        @endif
+
+                    </h3>
+
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="progress-card">
+
+                    <p style="
+                        margin:0;
+                        color:#6b7280;
+                        font-weight:700;
+                    ">
+                        Progress
+                    </p>
+
+                    <div class="progress-number">
+
+                        @if($todo->completed)
+                            100%
+                        @else
+                            75%
+                        @endif
 
                     </div>
 
@@ -299,273 +871,50 @@
 
             </div>
 
-            <!-- FORM -->
-            <div class="p-8 lg:p-10">
+            <!-- NOTE -->
+            <div class="card"
+                 style="margin-top:30px;">
 
-                <form action="/todo/edit/{{ $todo->id }}"
-                      method="POST"
-                      class="space-y-8">
+                <h2 style="
+                    margin-top:0;
+                    font-size:34px;
+                    color:#1f2937;
+                ">
+                    📝 Catatan
+                </h2>
 
-                    @csrf
-                    @method('PUT')
+                <textarea
+                    class="note-box"
+                    placeholder="Tambahkan catatan..."
+                >{{ $todo->description }}</textarea>
 
-                    <!-- TITLE -->
+                <div style="
+                    display:flex;
+                    justify-content:space-between;
+                    margin-top:24px;
+                    color:#6b7280;
+                    font-size:14px;
+                    gap:20px;
+                    flex-wrap:wrap;
+                ">
+
                     <div>
 
-                        <label class="label">
-                            Nama Mission
-                        </label>
+                        <strong>Dibuat:</strong><br>
 
-                        <input
-                            type="text"
-                            name="title"
-                            value="{{ $todo->title }}"
-                            required
-                            class="input-modern"
-                            placeholder="Masukkan nama mission..."
-                        >
+                        {{ $todo->created_at }}
 
                     </div>
 
-                    <!-- DESC -->
                     <div>
 
-                        <label class="label">
-                            Deskripsi Mission
-                        </label>
+                        <strong>Diupdate:</strong><br>
 
-                        <textarea
-                            name="description"
-                            rows="5"
-                            class="input-modern"
-                            placeholder="Masukkan deskripsi mission..."
-                        >{{ $todo->description }}</textarea>
+                        {{ $todo->updated_at }}
 
                     </div>
 
-                    <!-- PRIORITY -->
-                    <div>
-
-                        <label class="label">
-                            Tingkat Kesulitan
-                        </label>
-
-                        <select
-                            name="priority"
-                            required
-                            class="input-modern"
-                        >
-
-                            <option
-                                value="low"
-                                {{ $todo->priority == 'low' ? 'selected' : '' }}>
-
-                                🟢 Mudah
-
-                            </option>
-
-                            <option
-                                value="medium"
-                                {{ $todo->priority == 'medium' ? 'selected' : '' }}>
-
-                                🟡 Sedang
-
-                            </option>
-
-                            <option
-                                value="high"
-                                {{ $todo->priority == 'high' ? 'selected' : '' }}>
-
-                                🔴 Sulit
-
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <!-- DATE -->
-                    <div class="grid lg:grid-cols-2 gap-6">
-
-                        <div>
-
-                            <label class="label">
-                                Tanggal Mulai
-                            </label>
-
-                            <input
-                                type="date"
-                                name="start_date"
-                                value="{{ $todo->start_date }}"
-                                required
-                                class="input-modern"
-                            >
-
-                        </div>
-
-                        <div>
-
-                            <label class="label">
-                                Jam Mulai
-                            </label>
-
-                            <input
-                                type="time"
-                                name="start_time"
-                                value="{{ $todo->start_time }}"
-                                required
-                                class="input-modern"
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <!-- END -->
-                    <div class="grid lg:grid-cols-2 gap-6">
-
-                        <div>
-
-                            <label class="label">
-                                Deadline Tanggal
-                            </label>
-
-                            <input
-                                type="date"
-                                name="end_date"
-                                value="{{ $todo->end_date }}"
-                                required
-                                class="input-modern"
-                            >
-
-                        </div>
-
-                        <div>
-
-                            <label class="label">
-                                Deadline Jam
-                            </label>
-
-                            <input
-                                type="time"
-                                name="end_time"
-                                value="{{ $todo->end_time }}"
-                                required
-                                class="input-modern"
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <!-- INFO -->
-                    <div class="grid md:grid-cols-3 gap-5">
-
-                        <div class="glass smooth
-                                    rounded-3xl
-                                    p-6">
-
-                            <div class="text-4xl">
-                                🚀
-                            </div>
-
-                            <h3 class="text-white
-                                       text-2xl
-                                       font-black
-                                       mt-4">
-
-                                Productivity
-
-                            </h3>
-
-                            <p class="text-slate-300 mt-2">
-
-                                Keep grinding every day
-
-                            </p>
-
-                        </div>
-
-                        <div class="glass smooth
-                                    rounded-3xl
-                                    p-6">
-
-                            <div class="text-4xl">
-                                ⚡
-                            </div>
-
-                            <h3 class="text-white
-                                       text-2xl
-                                       font-black
-                                       mt-4">
-
-                                Focus Mode
-
-                            </h3>
-
-                            <p class="text-slate-300 mt-2">
-
-                                Stay locked in mission
-
-                            </p>
-
-                        </div>
-
-                        <div class="glass smooth
-                                    rounded-3xl
-                                    p-6">
-
-                            <div class="text-4xl">
-                                🏆
-                            </div>
-
-                            <h3 class="text-white
-                                       text-2xl
-                                       font-black
-                                       mt-4">
-
-                                Level Up
-
-                            </h3>
-
-                            <p class="text-slate-300 mt-2">
-
-                                Complete missions for XP
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <!-- BUTTON -->
-                    <div class="grid md:grid-cols-2 gap-5 pt-5">
-
-                        <a href="/dashboard"
-                           class="btn-secondary
-                                  smooth
-                                  rounded-2xl
-                                  py-5
-                                  font-black">
-
-                            Batal
-
-                        </a>
-
-                        <button
-                            class="btn-main
-                                   smooth
-                                   rounded-2xl
-                                   py-5
-                                   text-xl">
-
-                            Simpan Perubahan ✨
-
-                        </button>
-
-                    </div>
-
-                </form>
+                </div>
 
             </div>
 
@@ -574,51 +923,6 @@
     </div>
 
 </div>
-
-<!-- SCRIPT -->
-<script>
-
-window.addEventListener('DOMContentLoaded', ()=>{
-
-    document.body.classList.add('loaded');
-
-    document.querySelectorAll('.smooth').forEach((el,index)=>{
-
-        el.animate(
-
-            [
-
-                {
-                    opacity:0,
-                    transform:'translateY(20px)'
-                },
-
-                {
-                    opacity:1,
-                    transform:'translateY(0)'
-                }
-
-            ],
-
-            {
-
-                duration:500,
-
-                delay:index * 40,
-
-                easing:'cubic-bezier(.22,1,.36,1)',
-
-                fill:'forwards'
-
-            }
-
-        );
-
-    });
-
-});
-
-</script>
 
 </body>
 </html>
