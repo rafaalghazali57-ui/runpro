@@ -894,11 +894,19 @@ let currentDate = new Date();
 let selectedDate =
     formatDate(currentDate);
 
-function formatDate(date){
+function formatDate(date)
+{
+    const year = date.getFullYear();
 
-    return date.toISOString()
-        .split('T')[0];
+    const month = String(
+        date.getMonth() + 1
+    ).padStart(2,'0');
 
+    const day = String(
+        date.getDate()
+    ).padStart(2,'0');
+
+    return `${year}-${month}-${day}`;
 }
 
 function renderCalendar(){
@@ -938,8 +946,15 @@ function renderCalendar(){
 
     for(let i = 1; i <= daysInMonth; i++){
 
-        const date =
-            new Date(year, month, i);
+const date =
+    new Date(
+        year,
+        month,
+        i,
+        12,
+        0,
+        0
+    );
 
         const fullDate =
             formatDate(date);
@@ -1021,12 +1036,21 @@ function renderCalendar(){
 
 function showMission(date){
 
-    const day =
-        new Date(date).getDate();
+const dateObj = new Date(date);
 
-    document.getElementById(
-        'selectedDate'
-    ).innerText = day;
+const formattedDate =
+    dateObj.toLocaleDateString(
+        'id-ID',
+        {
+            day:'numeric',
+            month:'long',
+            year:'numeric'
+        }
+    );
+
+document.getElementById(
+    'selectedDate'
+).innerText = formattedDate;
 
     const items =
         document.querySelectorAll(
