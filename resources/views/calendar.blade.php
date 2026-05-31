@@ -58,73 +58,21 @@
             width:100% !important;
         }
 
-        .sidebar-menu{
-
-            display:flex;
-            align-items:center;
-            gap:16px;
-
-            padding:16px 18px;
-
-            border-radius:20px;
-
-            font-weight:800;
-
-            color:#4b5563;
-
-            text-decoration:none;
-
-            transition:.25s ease;
-        }
-
-        .sidebar-menu:hover{
-
-            background:#f5f3ff;
-
-            transform:translateX(3px);
-        }
-
-        .sidebar-icon{
-
-            width:45px;
-            height:45px;
-
-            border-radius:16px;
-
-            background:#f3f4f6;
-
-            display:flex;
-            align-items:center;
-            justify-content:center;
-
-            font-size:22px;
-        }
-
-        .active-menu{
-
-            background:linear-gradient(
-                90deg,
-                #a855f7,
-                #ec4899
-            );
-
-            color:white;
-        }
-
-        .active-menu .sidebar-icon{
-
-            background:rgba(255,255,255,.2);
-        }
-
         /* MAIN */
+.main{
+    margin-left:290px;
+    padding:30px;
+    min-height:100vh;
+}
 
-        .main{
+@media(max-width:900px){
 
-            margin-left:290px;
+    .main{
+        margin-left:0;
+        padding:20px;
+    }
 
-            padding:30px;
-
-        }
+}
 
         /* TOPBAR */
 
@@ -469,6 +417,81 @@
 
         }
 
+        .sidebar-menu{
+
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    padding:16px 18px;
+
+    border-radius:18px;
+
+    font-size:15px;
+    font-weight:800;
+
+    color:#4b5563;
+
+    transition:.25s ease;
+}
+
+.sidebar-menu:hover{
+
+    transform:translateX(4px);
+}
+
+.sidebar-icon{
+
+    width:auto;
+    height:auto;
+
+    background:transparent !important;
+
+    border-radius:0;
+
+    font-size:24px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.active-menu{
+
+    background:linear-gradient(
+        90deg,
+        #a855f7,
+        #ec4899
+    );
+
+    color:white;
+}
+
+.active-menu .sidebar-icon{
+
+    background:transparent !important;
+}
+
+.logout-btn{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:#ef4444;
+
+    color:white;
+
+    font-size:18px;
+    font-weight:800;
+
+    cursor:pointer;
+}
+
     </style>
 
 </head>
@@ -483,15 +506,17 @@
 ></div>
 
 <!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
 <div
     id="sidebar"
     class="fixed top-0 left-[-320px] lg:left-0
-           w-[290px] h-full bg-white
+           w-[290px] h-full
            border-r border-gray-100
-           z-50 transition-all duration-500 flex flex-col"
+           z-50 transition-all duration-500"
+    style="background:#f3f4f6;"
 >
 
-    <!-- TOP -->
     <div class="p-7">
 
         <!-- LOGO -->
@@ -503,16 +528,11 @@
 
             <div>
 
-                <h1 class="text-3xl font-black
-                           bg-gradient-to-r
-                           from-purple-600 to-pink-500
-                           bg-clip-text text-transparent">
-
+                <h1 class="text-3xl font-black text-purple-600">
                     RunPro
-
                 </h1>
 
-                <p class="text-gray-400 text-sm font-medium">
+                <p class="text-gray-400 text-sm">
                     Productivity App
                 </p>
 
@@ -521,75 +541,57 @@
         </div>
 
         <!-- MENU -->
-        <div class="space-y-4">
+        <div class="space-y-3">
 
-            <!-- DASHBOARD -->
             <a href="/dashboard"
-               class="sidebar-menu">
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
 
-                <div class="sidebar-icon">
-                    🏠
-                </div>
-
-                <span>
-                    Dashboard
-                </span>
+                🏠 Dashboard
 
             </a>
 
-            <!-- MISSION -->
             <a href="/mission-center"
-               class="sidebar-menu">
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
 
-                <div class="sidebar-icon">
-                    🎯
-                </div>
-
-                <span>
-                    Mission Center
-                </span>
+                🎯 Mission Center
 
             </a>
 
-            <!-- CALENDAR -->
             <a href="/calendar"
-               class="sidebar-menu active-menu">
+               class="flex items-center gap-4
+                      bg-gradient-to-r
+                      from-purple-500 to-pink-500
+                      text-white
+                      p-4 rounded-2xl
+                      font-bold smooth">
 
-                <div class="sidebar-icon">
-                    📅
-                </div>
-
-                <span>
-                    Kalender
-                </span>
+                📅 Kalender
 
             </a>
 
-            <!-- STATISTIC -->
             <a href="/statistics"
-               class="sidebar-menu">
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
 
-                <div class="sidebar-icon">
-                    📊
-                </div>
-
-                <span>
-                    Statistik
-                </span>
+                📊 Statistik
 
             </a>
 
-            <!-- PROFILE -->
             <a href="/profile"
-               class="sidebar-menu">
+               class="flex items-center gap-4
+                      hover:bg-gray-100
+                      p-4 rounded-2xl
+                      font-bold text-gray-700 smooth">
 
-                <div class="sidebar-icon">
-                    👤
-                </div>
-
-                <span>
-                    Profil
-                </span>
+                👤 Profil
 
             </a>
 
@@ -597,79 +599,22 @@
 
     </div>
 
-    <!-- USER -->
-    <div class="mt-auto p-7">
+    <!-- LOGOUT -->
+    <div class="p-7">
 
-        <div class="bg-[#f6f7fb]
-                    rounded-3xl
-                    p-4 mb-5">
-
-            <div class="flex items-center gap-3">
-
-                @if(auth()->user()->photo)
-
-                    <img
-                        src="{{ asset('storage/' . auth()->user()->photo) }}"
-                        class="w-14 h-14 rounded-2xl object-cover"
-                    >
-
-                @else
-
-                    <div class="w-14 h-14
-                                rounded-2xl
-                                bg-gradient-to-r
-                                from-purple-500 to-pink-500
-                                flex items-center
-                                justify-center
-                                text-white text-xl font-black">
-
-                        {{ strtoupper(substr(auth()->user()->name,0,1)) }}
-
-                    </div>
-
-                @endif
-
-                <div class="flex-1 overflow-hidden">
-
-                    <h2 class="font-black
-                               text-gray-800
-                               truncate">
-
-                        {{ auth()->user()->name }}
-
-                    </h2>
-
-                    <p class="text-sm text-gray-400 truncate">
-
-                        Productivity User
-
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- LOGOUT -->
         <form action="{{ route('logout') }}"
               method="POST">
 
             @csrf
 
             <button
-                class="w-full
-                       bg-gradient-to-r
-                       from-red-500 to-red-400
-                       hover:scale-[1.02]
+                class="w-full bg-red-500
+                       hover:bg-red-600
                        text-white py-4
                        rounded-2xl
-                       font-black
-                       transition-all duration-300"
+                       font-bold smooth"
             >
-
                 Logout 🚪
-
             </button>
 
         </form>
