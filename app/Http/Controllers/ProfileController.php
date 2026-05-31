@@ -3,89 +3,110 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Todo;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use App\Models\User; // Pastikan model User di-import
 
 class ProfileController extends Controller
 {
+    /**
+     * Menampilkan halaman profil utama
+     */
     public function index()
     {
-        $todos = Todo::where(
-            'user_id',
-            auth()->id()
-        )->get();
+        $user = Auth::user();
+        
+        // Mengambil data todos milik user yang sedang login
+        $todos = $user->todos ?? collect(); 
+        
+        // Mengambil data XP dan kalkulasi Level (sesuaikan dengan struktur DB kamu)
+        $xp = $user->xp ?? 0;
+        $level = $user->level ?? 1;
 
-        $xp = $todos
-            ->where('completed', true)
-            ->sum('xp');
-
-        $level = floor($xp / 500) + 1;
-
-        return view(
-            'profile',
-            compact(
-                'todos',
-                'xp',
-                'level'
-            )
-        );
+        return view('profile', compact('todos', 'xp', 'level'));
     }
 
+    /**
+     * Menampilkan halaman edit profil
+     */
     public function edit()
     {
-        return view('edit-profile');
+        return view('profile.edit', ['user' => Auth::user()]);
     }
 
+    /**
+     * Memperbarui data profil (Username/Email)
+     */
     public function update(Request $request)
     {
+        $user = Auth::user();
+
         $request->validate([
-            'name' => 'required|max:255',
-            'username' => 'required|max:255|unique:users,username,' . auth()->id(),
-            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
-        $user = auth()->user();
+        $user->update([
+            'username' => $request->username,
+            'email' => $request->email,
+        ]);
 
-        $user->name = $request->name;
-        $user->username = $request->username;
-        $user->email = $request->email;
-
-        $user->save();
-
-        return redirect('/profile')
-            ->with(
-                'success',
-                'Profil berhasil diperbarui'
-            );
+        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
     }
 
+    /**
+     * Mengunggah foto profil (Avatar)
+     */
     public function uploadAvatar(Request $request)
     {
         $request->validate([
-            'avatar' => 'required|image|max:5048'
+            'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         if ($request->hasFile('avatar')) {
+            $avatarName = time() . '.' . $request->avatar->extension();
+            $request->avatar->storeAs('public/avatars', $avatarName);
 
-            $file = $request->file('avatar');
+            // Hapus avatar lama jika ada
+            if ($user->avatar && file_exists(storage_path('app/public/avatars/' . $user->avatar))) {
+                unlink(storage_path('app/public/avatars/' . $user->avatar));
+            }
 
-            $filename =
-                time() .
-                '.' .
-                $file->getClientOriginalExtension();
-
-            $file->storeAs(
-                'avatars',
-                $filename,
-                'public'
-            );
-
-            $user->avatar = $filename;
-
+            $user->avatar = $avatarName;
             $user->save();
         }
 
-        return back();
+        return redirect()->route('profile')->with('success', 'Foto profil berhasil diperbarui!');
+    }
+
+    /**
+     * FUNGSI BARU: Memproses perubahan password dari pop-up modal
+     */
+    public function changePassword(Request $request)
+    {
+        // 1. Validasi input form
+        $request->validate([
+            'old_password' => 'required',
+            'password' => ['required', 'string', 'confirmed', Password::min(8)],
+        ], [
+            'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+            'password.min' => 'Password baru harus minimal 8 karakter.',
+        ]);
+
+        $user = Auth::user();
+
+        // 2. Periksa apakah password lama sesuai dengan di database
+        if (!Hash::check($request->old_password, $user->password)) {
+            return redirect()->back()->with('error', 'Password lama yang kamu masukkan salah.');
+        }
+
+        // 3. Update password baru (otomatis di-brypt oleh Laravel di model, atau manual dengan Hash::make)
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('profile')->with('success', 'Password akun kamu berhasil diubah! 🚀');
     }
 }

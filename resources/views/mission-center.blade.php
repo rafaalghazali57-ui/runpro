@@ -17,7 +17,6 @@
             background: #f6f7fb;
             font-family: sans-serif;
             overflow-x: hidden;
-            /* Mengubah opacity default ke 1 agar tidak terjebak blank putih jika JS lambat */
             visibility: visible;
             opacity: 1;
         }
@@ -234,6 +233,9 @@ function toggleMenu(){
 function openModal(){
     alert('Modal tambah mission bisa kamu sambungkan di sini 🚀');
 }
+
+// Pastikan skrip kalender kamu (di file terpisah atau jika disatukan) menggunakan pencocokan status berikut:
+// const isCompleted = todo.completed === true || todo.completed == 1;
 </script>
 
 </body>

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ProfileController;
 
@@ -10,17 +9,33 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE MANAGEMENT
+    |--------------------------------------------------------------------------
+    */
     Route::get('/profile/edit', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
     Route::post('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update');
+
+    Route::get('/profile', [ProfileController::class, 'index'])
+        ->name('profile');
+
+    Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])
+        ->name('profile.avatar.upload');
+
+    // FIX: Rute baru untuk memproses perubahan password dari pop-up modal
+    Route::post('/change-password', [ProfileController::class, 'changePassword'])
+        ->name('profile.password.change');
+
     /*
     |--------------------------------------------------------------------------
     | DASHBOARD
     |--------------------------------------------------------------------------
     */
-
     Route::get('/dashboard', [TodoController::class, 'index'])
         ->name('dashboard');
 
@@ -29,7 +44,6 @@ Route::middleware(['auth'])->group(function () {
     | MISSION CENTER
     |--------------------------------------------------------------------------
     */
-
     Route::get('/mission-center', [TodoController::class, 'missionCenter'])
         ->name('mission.center');
 
@@ -53,7 +67,6 @@ Route::middleware(['auth'])->group(function () {
     | CALENDAR
     |--------------------------------------------------------------------------
     */
-
     Route::get('/calendar', [TodoController::class, 'calendar'])
         ->name('calendar');
 
@@ -62,32 +75,8 @@ Route::middleware(['auth'])->group(function () {
     | STATISTICS
     |--------------------------------------------------------------------------
     */
-
     Route::get('/statistics', [TodoController::class, 'statistics'])
         ->name('statistics');
-
-    /*
-    |--------------------------------------------------------------------------
-    | PROFILE
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/profile', [ProfileController::class, 'index'])
-        ->name('profile');
-
-});
-
-Route::middleware(['auth'])->group(function () {
-
-    Route::get(
-        '/profile',
-        [ProfileController::class, 'index']
-    );
-
-    Route::post(
-        '/profile/upload-avatar',
-        [ProfileController::class, 'uploadAvatar']
-    );
 
 });
 

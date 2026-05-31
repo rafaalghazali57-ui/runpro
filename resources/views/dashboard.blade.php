@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>RunPro Dashboard</title>
 
     <style>
-
         html{
             background:#f6f7fb;
         }
@@ -37,63 +33,47 @@
         }
 
         .smooth-card{
-
             border:1px solid rgba(255,255,255,.8);
-
             transition:
                 transform .35s cubic-bezier(.22,1,.36,1),
                 background .25s ease;
-
         }
 
         .smooth-card:hover{
-
             transform:translateY(-3px);
-
         }
 
         button,
         a{
-
             transition:
                 transform .25s ease,
                 background .25s ease;
-
         }
 
         button:active,
         a:active{
-
             transform:scale(.97);
-
         }
 
         .profile-img{
-
             width:70px;
             height:70px;
             border-radius:50%;
             object-fit:cover;
             border:4px solid white;
-
         }
-
     </style>
 
     @vite(['resources/js/app.js'])
-
 </head>
-
 <body class="bg-[#f6f7fb]">
 
-<!-- OVERLAY -->
 <div
     id="overlay"
     onclick="toggleMenu()"
     class="hidden fixed inset-0 bg-white/5 backdrop-blur-[1px] z-40"
 ></div>
 
-<!-- SIDEBAR -->
 <div
     id="sidebar"
     class="fixed top-0 left-[-320px] lg:left-0
@@ -101,653 +81,284 @@
            backdrop-blur-xl border-r border-gray-100
            z-50 transition-all duration-500"
 >
-
     <div class="p-7">
-
-        <!-- LOGO -->
         <div class="flex items-center gap-3 mb-14">
-
-            <div class="text-5xl">
-                🚀
-            </div>
-
+            <div class="text-5xl">🚀</div>
             <div>
-
-                <h1 class="text-3xl font-black text-purple-600">
-                    RunPro
-                </h1>
-
-                <p class="text-gray-400 text-sm">
-                    Productivity App
-                </p>
-
+                <h1 class="text-3xl font-black text-purple-600">RunPro</h1>
+                <p class="text-gray-400 text-sm">Productivity App</p>
             </div>
-
         </div>
 
-        <!-- MENU -->
         <div class="space-y-3">
-
-            <a href="/dashboard"
-               class="flex items-center gap-4
-                      bg-gradient-to-r from-purple-500 to-pink-500
-                      text-white p-4 rounded-2xl font-bold">
-
+            <a href="/dashboard" class="flex items-center gap-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-2xl font-bold">
                 🏠 Dashboard
-
             </a>
-
-            <a href="/mission-center"
-               class="flex items-center gap-4
-                      hover:bg-gray-100 p-4 rounded-2xl
-                      font-bold text-gray-600">
-
+            <a href="/mission-center" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-600">
                 🎯 Mission Center
-
             </a>
-
-            <a href="/calendar"
-               class="flex items-center gap-4
-                      hover:bg-gray-100 p-4 rounded-2xl
-                      font-bold text-gray-600">
-
+            <a href="/calendar" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-600">
                 📅 Kalender
-
             </a>
-
-            <a href="/statistics"
-               class="flex items-center gap-4
-                      hover:bg-gray-100 p-4 rounded-2xl
-                      font-bold text-gray-600">
-
+            <a href="/statistics" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-600">
                 📊 Statistik
-
             </a>
-
-            <a href="/profile"
-               class="flex items-center gap-4
-                      hover:bg-gray-100 p-4 rounded-2xl
-                      font-bold text-gray-600">
-
+            <a href="/profile" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-600">
                 👤 Profil
-
             </a>
-
         </div>
-
     </div>
 
-    <!-- LOGOUT -->
     <div class="p-7">
-
         <form action="{{ route('logout') }}" method="POST">
-
             @csrf
-
-            <button
-                class="w-full bg-red-500 hover:bg-red-600
-                       text-white py-4 rounded-2xl font-bold"
-            >
+            <button class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-bold">
                 Logout 🚪
             </button>
-
         </form>
-
     </div>
-
 </div>
 
-<!-- MAIN -->
 <div class="lg:ml-[290px] transition-all duration-500">
 
-    <!-- HEADER -->
     <div class="p-5 lg:p-8">
+        <div class="bg-gradient-to-r from-[#ede9fe] to-[#fdf2f8] rounded-[35px] p-6 lg:p-10 relative overflow-hidden smooth-card">
+            <div class="absolute right-[-20px] top-[-20px] opacity-10 text-[220px]">🚀</div>
 
-        <div class="bg-gradient-to-r from-[#ede9fe] to-[#fdf2f8]
-                    rounded-[35px] p-6 lg:p-10
-                    relative overflow-hidden smooth-card">
-
-            <!-- BG ICON -->
-            <div class="absolute right-[-20px] top-[-20px]
-                        opacity-10 text-[220px]">
-
-                🚀
-
-            </div>
-
-            <!-- TOP -->
             <div class="flex justify-between items-start flex-wrap gap-5">
-
                 <div class="flex items-center gap-4">
+                    <button onclick="toggleMenu()" class="lg:hidden w-14 h-14 rounded-2xl bg-white text-2xl">☰</button>
 
-                    <!-- MENU -->
-                    <button
-                        onclick="toggleMenu()"
-                        class="lg:hidden w-14 h-14 rounded-2xl
-                               bg-white text-2xl"
-                    >
-                        ☰
-                    </button>
-
-                    <!-- FOTO PROFIL -->
                     @if(auth()->user()->photo)
-
-                        <img
-                            src="{{ asset('storage/' . auth()->user()->photo) }}"
-                            class="profile-img"
-                        >
-
+                        <img src="{{ asset('storage/' . auth()->user()->photo) }}" class="profile-img">
                     @else
-
-                        <img
-                            src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->username) }}&background=8b5cf6&color=fff&size=256"
-                            class="profile-img"
-                        >
-
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->username) }}&background=8b5cf6&color=fff&size=256" class="profile-img">
                     @endif
 
                     <div>
-
-                        <p class="text-gray-500 text-sm md:text-base">
-                            Selamat datang kembali,
-                        </p>
-
-                        <h1 class="text-4xl lg:text-5xl
-                                   font-black text-gray-800 mt-1">
-
+                        <p class="text-gray-500 text-sm md:text-base">Selamat datang kembali,</p>
+                        <h1 class="text-4xl lg:text-5xl font-black text-gray-800 mt-1">
                             {{ auth()->user()?->username ?? 'Guest' }} 👋
-
                         </h1>
-
-                        <p class="text-gray-500 mt-2 text-sm">
-
-                            Tetap produktif hari ini 🚀
-
-                        </p>
-
+                        <p class="text-gray-500 mt-2 text-sm">Tetap produktif hari ini 🚀</p>
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- STATS -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
-
                 <div class="bg-white p-6 rounded-3xl smooth-card">
-
-                    <div class="text-4xl mb-2">
-                        ⭐
-                    </div>
-
-                    <h2 class="text-3xl font-black">
-                        {{ $xp }}
-                    </h2>
-
-                    <p class="text-gray-500">
-                        Total XP
-                    </p>
-
+                    <div class="text-4xl mb-2">⭐</div>
+                    <h2 class="text-3xl font-black">{{ $xp }}</h2>
+                    <p class="text-gray-500">Total XP</p>
                 </div>
-
                 <div class="bg-white p-6 rounded-3xl smooth-card">
-
-                    <div class="text-4xl mb-2">
-                        🏆
-                    </div>
-
-                    <h2 class="text-3xl font-black">
-                        {{ $level }}
-                    </h2>
-
-                    <p class="text-gray-500">
-                        Level
-                    </p>
-
+                    <div class="text-4xl mb-2">🏆</div>
+                    <h2 class="text-3xl font-black">{{ $level }}</h2>
+                    <p class="text-gray-500">Level</p>
                 </div>
-
                 <div class="bg-white p-6 rounded-3xl smooth-card">
-
-                    <div class="text-4xl mb-2">
-                        🔥
-                    </div>
-
-                    <h2 class="text-3xl font-black">
-                        {{ $todos->where('completed', true)->count() }}
-                    </h2>
-
-                    <p class="text-gray-500">
-                        Mission Complete
-                    </p>
-
+                    <div class="text-4xl mb-2">🔥</div>
+                    <h2 class="text-3xl font-black">{{ $todos->where('completed', true)->count() }}</h2>
+                    <p class="text-gray-500">Mission Complete</p>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
-    <!-- CONTENT -->
     <div class="px-5 lg:px-8 pb-20">
 
-        <!-- FORM -->
-        <div class="bg-white rounded-[35px]
-                    p-6 lg:p-8 mb-10 smooth-card">
-
-            <h2 class="text-3xl font-black
-                       text-purple-600 mb-6">
-
-                Tambah Misi Baru 🎯
-
-            </h2>
-
-            <form action="/todo/store"
-                  method="POST"
-                  class="space-y-5">
-
+        <div class="bg-white rounded-[35px] p-6 lg:p-8 mb-10 smooth-card">
+            <h2 class="text-3xl font-black text-purple-600 mb-6">Tambah Misi Baru 🎯</h2>
+            <form action="/todo/store" method="POST" class="space-y-5">
                 @csrf
+                <input type="text" name="title" placeholder="Nama misi..." required class="w-full p-5 rounded-2xl border border-gray-200 focus:outline-none">
 
-                <!-- TITLE -->
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="Nama misi..."
-                    required
-                    class="w-full p-5 rounded-2xl
-                           border border-gray-200
-                           focus:outline-none"
-                >
+                <textarea name="description" rows="4" placeholder="Deskripsi misi..." class="w-full p-5 rounded-2xl border border-gray-200 focus:outline-none"></textarea>
 
-                <!-- DESCRIPTION -->
-                <textarea
-                    name="description"
-                    rows="4"
-                    placeholder="Deskripsi misi..."
-                    class="w-full p-5 rounded-2xl
-                           border border-gray-200
-                           focus:outline-none"
-                ></textarea>
-
-                <!-- PRIORITY -->
-                <select
-                    name="priority"
-                    required
-                    class="w-full p-5 rounded-2xl
-                           border border-gray-200"
-                >
-
+                <select name="priority" required class="w-full p-5 rounded-2xl border border-gray-200">
                     <option value="low">🟢 Mudah</option>
                     <option value="medium">🟡 Sedang</option>
                     <option value="high">🔴 Sulit</option>
-
                 </select>
 
-                <!-- START -->
                 <div class="grid md:grid-cols-2 gap-5">
-
                     <div>
-
-                        <label class="font-bold text-gray-600 mb-2 block">
-                            Tanggal Mulai
-                        </label>
-
-                        <input
-                            type="date"
-                            name="start_date"
-                            required
-                            class="w-full p-5 rounded-2xl border border-gray-200"
-                        >
-
+                        <label class="font-bold text-gray-600 mb-2 block">Tanggal Mulai</label>
+                        <input type="date" name="start_date" required class="w-full p-5 rounded-2xl border border-gray-200">
                     </div>
-
                     <div>
-
-                        <label class="font-bold text-gray-600 mb-2 block">
-                            Jam Mulai
-                        </label>
-
-                        <input
-                            type="time"
-                            name="start_time"
-                            required
-                            class="w-full p-5 rounded-2xl border border-gray-200"
-                        >
-
+                        <label class="font-bold text-gray-600 mb-2 block">Jam Mulai</label>
+                        <input type="time" name="start_time" required class="w-full p-5 rounded-2xl border border-gray-200">
                     </div>
-
                 </div>
 
-                <!-- END -->
                 <div class="grid md:grid-cols-2 gap-5">
-
                     <div>
-
-                        <label class="font-bold text-gray-600 mb-2 block">
-                            Deadline
-                        </label>
-
-                        <input
-                            type="date"
-                            name="end_date"
-                            required
-                            class="w-full p-5 rounded-2xl border border-gray-200"
-                        >
-
+                        <label class="font-bold text-gray-600 mb-2 block">Deadline</label>
+                        <input type="date" name="end_date" required class="w-full p-5 rounded-2xl border border-gray-200">
                     </div>
-
                     <div>
-
-                        <label class="font-bold text-gray-600 mb-2 block">
-                            Jam Selesai
-                        </label>
-
-                        <input
-                            type="time"
-                            name="end_time"
-                            required
-                            class="w-full p-5 rounded-2xl border border-gray-200"
-                        >
-
+                        <label class="font-bold text-gray-600 mb-2 block">Jam Selesai</label>
+                        <input type="time" name="end_time" required class="w-full p-5 rounded-2xl border border-gray-200">
                     </div>
-
                 </div>
 
-                <!-- XP -->
-                <input
-                    type="number"
-                    name="xp"
-                    value="10"
-                    placeholder="XP"
-                    class="w-full p-5 rounded-2xl border border-gray-200"
-                >
+                <input type="number" name="xp" value="10" placeholder="XP" class="w-full p-5 rounded-2xl border border-gray-200">
 
-                <!-- BUTTON -->
-                <button
-                    class="w-full bg-gradient-to-r
-                           from-purple-600 to-pink-500
-                           text-white py-5 rounded-2xl
-                           font-black"
-                >
+                <button class="w-full bg-gradient-to-r from-purple-600 to-pink-500 text-white py-5 rounded-2xl font-black">
                     + Tambah Misi
                 </button>
-
             </form>
-
         </div>
 
-        <!-- TASK -->
-        <div class="space-y-6">
+        <div class="relative max-w-3xl mx-auto py-10 px-4">
+            
+            @if($todos->count() > 0)
+                <div class="absolute top-4 bottom-4 left-1/2 w-3 bg-gradient-to-b from-purple-300 via-pink-300 to-purple-400 -translate-x-1/2 z-0 rounded-full hidden md:block"></div>
+            @endif
 
-            @forelse($todos as $todo)
+            <div class="space-y-12 relative z-10">
+                @forelse($todos as $todo)
+                    @php
+                        $startDateTime = \Carbon\Carbon::parse($todo->start_date . ' ' . $todo->start_time);
+                        $now = now();
+                        $canComplete = $now >= $startDateTime;
 
-                @php
+                        // Mengatur posisi meliuk (Zat-Zit) berdasarkan indeks perulangan
+                        $alignment = 'md:mx-auto'; // Default tengah untuk layar kecil
+                        if ($loop->index % 3 == 0) {
+                            $alignment = 'md:mr-auto md:ml-0 lg:ml-12'; // Belok Kiri
+                        } elseif ($loop->index % 3 == 2) {
+                            $alignment = 'md:ml-auto md:mr-0 lg:mr-12'; // Belok Kanan
+                        }
+                    @endphp
 
-                    $startDateTime =
-                        \Carbon\Carbon::parse(
-                            $todo->start_date . ' ' . $todo->start_time
-                        );
-
-                    $now = now();
-
-                    $canComplete =
-                        $now >= $startDateTime;
-
-                @endphp
-
-                <div class="bg-white rounded-[30px]
-                            p-6 smooth-card">
-
-                    <div class="flex flex-col lg:flex-row
-                                justify-between gap-5">
-
-                        <!-- LEFT -->
-                        <div class="flex-1">
-
-                            <h2 class="text-2xl font-black
-                                {{ $todo->completed
-                                    ? 'line-through opacity-50 text-gray-400'
-                                    : 'text-gray-800'
-                                }}">
-
-                                {{ $todo->title }}
-
-                            </h2>
-
-                            <p class="text-gray-500 mt-2">
-
-                                {{ $todo->description }}
-
-                            </p>
-
-                            <!-- STATUS -->
-                            <div class="mt-4 flex flex-wrap gap-3">
-
-                                @if($todo->completed)
-
-                                    <div class="inline-flex items-center gap-2
-                                                bg-green-100 text-green-700
-                                                px-4 py-2 rounded-2xl
-                                                font-bold text-sm">
-
-                                        ✅ Mission Selesai
-
-                                    </div>
-
-                                @elseif(!$canComplete)
-
-                                    <div class="inline-flex items-center gap-2
-                                                bg-red-100 text-red-700
-                                                px-4 py-2 rounded-2xl
-                                                font-bold text-sm">
-
-                                        🔒 Belum Waktunya
-
-                                    </div>
-
-                                @else
-
-                                    <div class="inline-flex items-center gap-2
-                                                bg-orange-100 text-orange-700
-                                                px-4 py-2 rounded-2xl
-                                                font-bold text-sm">
-
-                                        ⏳ Bisa Dikerjakan
-
-                                    </div>
-
-                                @endif
-
+                    <div class="w-full md:max-w-md {{ $alignment }} transition-all duration-300">
+                        
+                        <div class="bg-white rounded-[32px] p-6 smooth-card w-full border-4 {{ $todo->completed ? 'border-green-400' : 'border-purple-400' }} shadow-xl relative overflow-hidden">
+                            
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center font-black text-lg text-white shadow-md transform rotate-3
+                                    {{ $todo->completed ? 'bg-green-500' : (!$canComplete ? 'bg-red-400' : 'bg-purple-600') }}">
+                                    {{ $loop->iteration }}
+                                </div>
+                                <div>
+                                    <span class="font-black text-xs text-gray-400 uppercase tracking-widest block">Langkah Misi</span>
+                                    <span class="font-bold text-sm {{ $todo->completed ? 'text-green-600' : 'text-purple-600' }}">
+                                        {{ $todo->completed ? 'Selesai ✨' : 'Tersedia' }}
+                                    </span>
+                                </div>
                             </div>
 
-                            <!-- TAG -->
-                            <div class="flex flex-wrap gap-3 mt-5">
+                            <div class="flex flex-col justify-between gap-5">
+                                <div class="flex-1">
+                                    <h2 class="text-2xl font-black {{ $todo->completed ? 'line-through opacity-50 text-gray-400' : 'text-gray-800' }}">
+                                        {{ $todo->title }}
+                                    </h2>
+                                    <p class="text-gray-500 mt-2 text-sm leading-relaxed">
+                                        {{ $todo->description }}
+                                    </p>
 
-                                <div class="bg-blue-100 text-blue-700
-                                            px-4 py-2 rounded-2xl
-                                            font-bold text-sm">
+                                    <div class="mt-4 flex flex-wrap gap-2">
+                                        @if($todo->completed)
+                                            <div class="inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                                ✅ Mission Selesai
+                                            </div>
+                                        @elseif(!$canComplete)
+                                            <div class="inline-flex items-center gap-2 bg-red-100 text-red-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                                🔒 Belum Waktunya
+                                            </div>
+                                        @else
+                                            <div class="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                                ⏳ Bisa Dikerjakan
+                                            </div>
+                                        @endif
+                                    </div>
 
-                                    📅 {{ $todo->start_date }}
-
+                                    <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+                                        <div class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                            📅 {{ $todo->start_date }}
+                                        </div>
+                                        <div class="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                            🕒 {{ $todo->start_time }}
+                                        </div>
+                                        <div class="bg-red-50 text-red-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                            🏁 {{ $todo->end_date }}
+                                        </div>
+                                        <div class="bg-pink-50 text-pink-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                            ⏰ {{ $todo->end_time }}
+                                        </div>
+                                        <div class="bg-yellow-50 text-yellow-700 px-3 py-1.5 rounded-xl font-bold text-xs">
+                                            ⭐ +{{ $todo->xp }} XP
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="bg-purple-100 text-purple-700
-                                            px-4 py-2 rounded-2xl
-                                            font-bold text-sm">
+                                <div class="flex items-center justify-end gap-2 mt-2">
+                                    @if($todo->completed)
+                                        <button disabled class="w-12 h-12 rounded-xl bg-gray-300 text-white text-lg cursor-not-allowed">
+                                            ✔
+                                        </button>
+                                    @elseif(!$canComplete)
+                                        <button disabled class="w-12 h-12 rounded-xl bg-red-200 text-white text-lg cursor-not-allowed">
+                                            🔒
+                                        </button>
+                                    @else
+                                        <form action="/todo/complete/{{ $todo->id }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="w-12 h-12 rounded-xl bg-green-500 hover:bg-green-600 text-white text-lg flex items-center justify-center font-bold">
+                                                ✓
+                                            </button>
+                                        </form>
+                                    @endif
 
-                                    🕒 {{ $todo->start_time }}
+                                    <a href="/todo/edit/{{ $todo->id }}" class="w-12 h-12 rounded-xl bg-blue-500 hover:bg-blue-600 flex items-center justify-center text-white text-lg">
+                                        ✏️
+                                    </a>
 
+                                    <form action="/todo/delete/{{ $todo->id }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="w-12 h-12 rounded-xl bg-red-500 hover:bg-red-600 text-white text-lg flex items-center justify-center font-bold">
+                                            ✖
+                                        </button>
+                                    </form>
                                 </div>
-
-                                <div class="bg-red-100 text-red-700
-                                            px-4 py-2 rounded-2xl
-                                            font-bold text-sm">
-
-                                    🏁 {{ $todo->end_date }}
-
-                                </div>
-
-                                <div class="bg-pink-100 text-pink-700
-                                            px-4 py-2 rounded-2xl
-                                            font-bold text-sm">
-
-                                    ⏰ {{ $todo->end_time }}
-
-                                </div>
-
-                                <div class="bg-yellow-100 text-yellow-700
-                                            px-4 py-2 rounded-2xl
-                                            font-bold text-sm">
-
-                                    ⭐ +{{ $todo->xp }} XP
-
-                                </div>
-
                             </div>
 
                         </div>
-
-                        <!-- ACTION -->
-                        <div class="flex items-center gap-3">
-
-                            <!-- COMPLETE -->
-                            @if($todo->completed)
-
-                                <button
-                                    disabled
-                                    class="w-16 h-16 rounded-2xl
-                                           bg-gray-400
-                                           text-white text-2xl
-                                           cursor-not-allowed"
-                                >
-                                    ✔
-                                </button>
-
-                            @elseif(!$canComplete)
-
-                                <button
-                                    disabled
-                                    class="w-16 h-16 rounded-2xl
-                                           bg-red-300
-                                           text-white text-2xl
-                                           cursor-not-allowed"
-                                >
-                                    🔒
-                                </button>
-
-                            @else
-
-                                <form action="/todo/complete/{{ $todo->id }}"
-                                      method="POST">
-
-                                    @csrf
-
-                                    <button
-                                        type="submit"
-                                        class="w-16 h-16 rounded-2xl
-                                               bg-green-500 hover:bg-green-600
-                                               text-white text-2xl"
-                                    >
-                                        ✓
-                                    </button>
-
-                                </form>
-
-                            @endif
-
-                            <!-- EDIT -->
-                            <a
-                                href="/todo/edit/{{ $todo->id }}"
-                                class="w-16 h-16 rounded-2xl
-                                       bg-blue-500 hover:bg-blue-600
-                                       flex items-center justify-center
-                                       text-white text-2xl"
-                            >
-                                ✏️
-                            </a>
-
-                            <!-- DELETE -->
-                            <form action="/todo/delete/{{ $todo->id }}"
-                                  method="POST">
-
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    class="w-16 h-16 rounded-2xl
-                                           bg-red-500 hover:bg-red-600
-                                           text-white text-2xl"
-                                >
-                                    ✖
-                                </button>
-
-                            </form>
-
-                        </div>
-
                     </div>
-
-                </div>
-
-            @empty
-
-                <div class="bg-white rounded-[35px]
-                            p-16 text-center smooth-card">
-
-                    <div class="text-8xl mb-5">
-                        📭
+                @empty
+                    <div class="bg-white rounded-[35px] p-16 text-center smooth-card max-w-xl mx-auto">
+                        <div class="text-8xl mb-5">📭</div>
+                        <h1 class="text-4xl font-black text-gray-700">Belum Ada Misi</h1>
+                        <p class="text-gray-500 mt-3">Tambahkan misi pertamamu 🚀</p>
                     </div>
-
-                    <h1 class="text-4xl font-black text-gray-700">
-                        Belum Ada Misi
-                    </h1>
-
-                    <p class="text-gray-500 mt-3">
-                        Tambahkan misi pertamamu 🚀
-                    </p>
-
-                </div>
-
-            @endforelse
+                @endforelse
+            </div>
 
         </div>
 
     </div>
-
 </div>
 
 <script>
-
 function toggleMenu(){
-
-    const sidebar =
-        document.getElementById('sidebar');
-
-    const overlay =
-        document.getElementById('overlay');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
 
     if(sidebar.style.left === '0px'){
-
         sidebar.style.left = '-320px';
-
         overlay.classList.add('hidden');
-
     }else{
-
         sidebar.style.left = '0px';
-
         overlay.classList.remove('hidden');
-
     }
-
 }
 
 window.addEventListener('DOMContentLoaded', ()=>{
-
     document.body.classList.add('loaded');
-
 });
-
 </script>
 
 </body>
