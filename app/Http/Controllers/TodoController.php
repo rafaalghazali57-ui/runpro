@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Todo;
+use Carbon\Carbon;
 
 class TodoController extends Controller
 {
@@ -14,14 +15,39 @@ class TodoController extends Controller
     */
     public function index()
     {
-        $todos = Todo::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $todos = Todo::where('user_id', auth()->id())->latest()->get();
 
         $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
         $level = floor($xp / 100) + 1;
 
-        return view('dashboard', compact('todos', 'xp', 'level'));
+        $completedMissions = $todos->where('completed', true);
+        $accuracy = 75.0; 
+
+        if ($completedMissions->count() > 0) {
+            $totalMinutes = 0;
+
+            foreach ($completedMissions as $todo) {
+                $createdAt = Carbon::parse($todo->created_at);
+                $completedAt = Carbon::parse($todo->updated_at);
+                
+                $diffInMinutes = $createdAt->diffInMinutes($completedAt);
+                $totalMinutes += $diffInMinutes > 0 ? $diffInMinutes : 1;
+            }
+
+            $averageMinutes = $totalMinutes / $completedMissions->count();
+
+            if ($averageMinutes <= 30) {
+                $accuracy = 99.0 - ($averageMinutes * 0.1);
+            } elseif ($averageMinutes <= 120) {
+                $accuracy = 94.0 - (($averageMinutes - 30) * 0.1);
+            } else {
+                $accuracy = max(70.0, 84.0 - (($averageMinutes - 120) * 0.02));
+            }
+        }
+
+        $accuracy = round($accuracy, 1);
+
+        return view('dashboard', compact('todos', 'xp', 'level', 'accuracy'));
     }
 
     /*
@@ -31,15 +57,8 @@ class TodoController extends Controller
     */
     public function missionCenter()
     {
-        // Ambil semua misi milik user yang login
-        $todos = Todo::where('user_id', auth()->id())
-            ->latest()
-            ->get();
-
-        // Hitung total XP akumulasi dari seluruh misi yang BERHASIL DI-CHECKLIST
+        $todos = Todo::where('user_id', auth()->id())->latest()->get();
         $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
-
-        // Tentukan level berdasarkan total XP (tiap 100 XP naik 1 level)
         $level = floor($xp / 100) + 1;
 
         return view('mission-center', compact('todos', 'xp', 'level'));
@@ -52,10 +71,7 @@ class TodoController extends Controller
     */
     public function calendar()
     {
-        $todos = Todo::where('user_id', auth()->id())
-            ->latest()
-            ->get();
-
+        $todos = Todo::where('user_id', auth()->id())->latest()->get();
         $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
         $level = floor($xp / 100) + 1;
 
@@ -69,9 +85,7 @@ class TodoController extends Controller
     */
     public function statistics()
     {
-        $todos = Todo::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $todos = Todo::where('user_id', auth()->id())->latest()->get();
 
         $totalMission = $todos->count();
         $completed = $todos->where('completed', true)->count();
@@ -110,7 +124,7 @@ class TodoController extends Controller
             'completed'   => false,
         ]);
 
-        return redirect('/mission-center')->with('success', 'Mission berhasil ditambahkan! 🚀');
+        return redirect()->route('mission-center')->with('success', 'Mission berhasil ditambahkan! 🚀');
     }
 
     /*
@@ -142,7 +156,7 @@ class TodoController extends Controller
             'xp'          => $request->xp,
         ]);
 
-        return redirect('/mission-center')->with('success', 'Mission berhasil diupdate! ✨');
+        return redirect()->route('mission-center')->with('success', 'Mission berhasil diupdate! ✨');
     }
 
     /*
@@ -154,9 +168,9 @@ class TodoController extends Controller
     {
         $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         $todo->completed = true;
-        $todo->save();
+        $todo->save(); 
 
-        return redirect('/mission-center')->with('success', 'Selamat! Mission selesai dan XP bertambah! 🎉');
+        return redirect()->route('mission-center')->with('success', 'Selamat! Mission selesai dan XP bertambah! 🎉');
     }
 
     /*
@@ -169,6 +183,6 @@ class TodoController extends Controller
         $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         $todo->delete();
 
-        return redirect('/mission-center')->with('success', 'Mission berhasil dihapus!');
+        return redirect()->route('mission-center')->with('success', 'Mission berhasil dihapus!');
     }
 }
