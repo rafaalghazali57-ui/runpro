@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RunPro Kalender</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         html {
-            background: #f6f7fb;
+            background: #f1f3f9;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background: #f6f7fb;
-            font-family: sans-serif;
+            background: #f1f3f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
             visibility: hidden;
             opacity: 0;
@@ -49,12 +52,12 @@
 
         /* MAIN AREA */
         .main {
-            margin-left: 290px;
+            margin-left: 256px; 
             padding: 30px;
             min-height: 100vh;
         }
 
-        @media(max-width:900px) {
+        @media(max-width:1024px) {
             .main {
                 margin-left: 0;
                 padding: 20px;
@@ -71,15 +74,16 @@
         }
 
         .title h1 {
-            font-size: 65px;
-            color: #7c3aed;
-            font-weight: 900;
+            font-size: 45px;
+            color: #1e293b;
+            font-weight: 800;
+            letter-spacing: -0.025em;
         }
 
         .title p {
             color: #6b7280;
-            margin-top: 10px;
-            font-size: 19px;
+            margin-top: 5px;
+            font-size: 16px;
         }
 
         .top-actions {
@@ -90,36 +94,51 @@
         }
 
         .nav-btn {
-            width: 55px;
-            height: 55px;
-            border: none;
-            border-radius: 18px;
+            width: 50px;
+            height: 50px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
             background: white;
             cursor: pointer;
-            font-size: 20px;
-            font-weight: 900;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
         }
 
         .month-box {
             background: white;
-            padding: 16px 24px;
-            border-radius: 18px;
-            font-size: 22px;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 800;
-            color: #4b5563;
-            min-width: 220px;
+            color: #374151;
+            min-width: 180px;
             text-align: center;
+            border: 1px solid #e5e7eb;
         }
 
         .add-btn {
             border: none;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
             color: white;
-            padding: 18px 28px;
-            border-radius: 20px;
-            font-size: 18px;
-            font-weight: 800;
+            padding: 14px 24px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .add-btn:hover {
+            opacity: 0.95;
         }
 
         /* LAYOUT CONTENT */
@@ -138,6 +157,7 @@
             padding: 0; 
             overflow: hidden;
             border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.01);
         }
 
         .calendar-grid-wrapper {
@@ -162,7 +182,7 @@
             text-align: center;
             font-weight: 800;
             color: #1e293b; 
-            font-size: 16px;
+            font-size: 15px;
             padding: 15px 10px;
             border-right: 1px solid #e2e8f0;
             background: #f8fafc;
@@ -196,7 +216,7 @@
             justify-content: center;
             font-weight: 700;
             color: #64748b;
-            font-size: 14px;
+            font-size: 13px;
             border-right: 1px solid #e2e8f0;
             position: sticky;
             left: 0;
@@ -259,15 +279,15 @@
 
         /* STYLE REDUP UNTUK MISI SELESAI */
         .task.completed {
-            background-color: #f1f5f9 !important; 
-            border-left: 5px solid #cbd5e1 !important;  
-            color: #94a3b8 !important;                  
-            opacity: 0.6 !important;                                                      
+            background-color: #e2e8f0 !important; 
+            border-left: 5px solid #94a3b8 !important;  
+            color: #64748b !important;                  
+            opacity: 0.65 !important;                                                                                                                                                                                                                                                                                                                               
         }
         
         .task.completed .task-title {
             text-decoration: line-through !important;              
-            color: #94a3b8 !important;
+            color: #64748b !important;
         }
 
         /* ZOOM / EXPAND EFFECT SAAT DIKLIK */
@@ -294,7 +314,7 @@
         }
         
         .task.completed small {
-            color: #94a3b8 !important;
+            color: #64748b !important;
         }
 
         /* RIGHT SIDEBAR CARDS */
@@ -306,13 +326,16 @@
 
         .card {
             background: white;
-            border-radius: 30px;
+            border-radius: 24px;
             padding: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.01);
         }
 
         .card h2 {
-            color: #7c3aed;
-            font-size: 22px;
+            color: #1e293b;
+            font-size: 18px;
+            font-weight: 800;
             margin-bottom: 20px;
         }
 
@@ -324,11 +347,19 @@
         }
 
         .mini-day {
-            padding: 10px 0;
+            padding: 6px 0;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 700;
             transition: .2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 42px;
+            font-size: 14px;
+            color: #4b5563;
         }
 
         .mini-day:hover {
@@ -337,7 +368,29 @@
 
         .mini-active {
             background: #8b5cf6;
-            color: white;
+            color: white !important;
+        }
+
+        /* CONTAINER TITIK KECIL DI KALENDER KECIL */
+        .mini-dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 3px;
+            height: 4px;
+            width: 100%;
+        }
+
+        .mini-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* SINKRONISASI WARNA JIKA TANGGAL AKTIF DIKLIK (BIAR TETAP KELIHATAN JELAS) */
+        .mini-active .mini-dot {
+            background-color: #ffffff !important;
         }
 
         .agenda-item {
@@ -346,7 +399,11 @@
             align-items: center;
             gap: 10px;
             padding: 14px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .agenda-item:last-child {
+            border-bottom: none;
         }
 
         .agenda-left {
@@ -356,19 +413,21 @@
         }
 
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 999px;
         }
 
         .week-info {
             margin-top: 15px;
-            background: #f3f4f6;
+            background: #f8fafc;
             padding: 15px;
-            border-radius: 18px;
+            border-radius: 14px;
             font-weight: 700;
             color: #4b5563;
             line-height: 1.7;
+            font-size: 14px;
+            border: 1px solid #f1f5f9;
         }
 
         @media(max-width:1100px) {
@@ -377,16 +436,13 @@
             }
         }
 
-        @media(max-width:900px) {
-            #sidebar {
-                left: -320px;
-            }
+        @media(max-width:1024px) {
             .main {
                 margin-left: 0;
                 padding: 20px;
             }
             .title h1 {
-                font-size: 45px;
+                font-size: 36px;
             }
             .calendar-header,
             .calendar-grid {
@@ -395,42 +451,99 @@
         }
     </style>
 </head>
-<body>
+<body class="text-gray-800 antialiased">
 
 <div id="overlay" onclick="toggleMenu()" class="hidden fixed inset-0 bg-black/20 backdrop-blur-[2px] z-40"></div>
 
-<div id="sidebar" class="fixed top-0 left-[-320px] lg:left-0 w-[290px] h-full border-r border-gray-100 z-50 transition-all duration-500" style="background:#f3f4f6;">
+<div
+    id="sidebar"
+    class="fixed top-0 left-[-320px] lg:left-0
+           w-[290px] h-full bg-white
+           border-r border-gray-100
+           z-50 transition-all duration-500"
+>
+
     <div class="p-7">
+
         <div class="flex items-center gap-3 mb-14">
-            <div class="text-5xl">🚀</div>
-            <div>
-                <h1 class="text-3xl font-black text-purple-600">RunPro</h1>
-                <p class="text-gray-400 text-sm">Productivity App</p>
+
+            <div class="text-5xl">
+                🚀
             </div>
+
+            <div>
+
+                <h1 class="text-3xl font-black text-purple-600">
+                    RunPro
+                </h1>
+
+                <p class="text-gray-400 text-sm">
+                    Productivity App
+                </p>
+
+            </div>
+
         </div>
 
         <div class="space-y-3">
-            <a href="/dashboard" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-700 smooth">🏠 Dashboard</a>
-            <a href="/mission-center" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-700 smooth">🎯 Mission Center</a>
-            <a href="/calendar" class="flex items-center gap-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-2xl font-bold smooth">📅 Kalender</a>
-            <a href="/statistics" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-700 smooth">📊 Statistik</a>
-            <a href="/profile" class="flex items-center gap-4 hover:bg-gray-100 p-4 rounded-2xl font-bold text-gray-700 smooth">👤 Profil</a>
+
+            <a href="{{ url('/dashboard') }}"
+               class="flex items-center gap-4 p-4 rounded-2xl font-bold text-gray-700 smooth hover:bg-gray-100">
+                🏠 Dashboard
+            </a>
+
+            <a href="{{ url('/mission-center') }}"
+               class="flex items-center gap-4 p-4 rounded-2xl font-bold text-gray-700 smooth hover:bg-gray-100">
+                🎯 Mission Center
+            </a>
+
+            <a href="{{ url('/calendar') }}"
+               class="flex items-center gap-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-2xl font-bold smooth">
+                📅 Kalender
+            </a>
+
+            <a href="{{ url('/statistics') }}"
+               class="flex items-center gap-4 p-4 rounded-2xl font-bold text-gray-700 smooth hover:bg-gray-100">
+                📊 Statistik
+            </a>
+
+            <a href="{{ url('/profile') }}"
+               class="flex items-center gap-4 p-4 rounded-2xl font-bold text-gray-700 smooth hover:bg-gray-100">
+                👤 Profil
+            </a>
+
         </div>
+
     </div>
 
     <div class="p-7">
-        <form action="{{ route('logout') }}" method="POST">
+
+        <form action="{{ route('logout') }}"
+              method="POST">
+
             @csrf
-            <button class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl font-bold smooth">Logout 🚪</button>
+
+            <button
+                class="w-full bg-red-500
+                       hover:bg-red-600
+                       text-white py-4
+                       rounded-2xl
+                       font-bold smooth"
+            >
+                Logout 🚪
+            </button>
+
         </form>
+
     </div>
+
 </div>
 
 <div class="main">
     <div class="topbar">
         <div class="title">
-            <div class="flex items-center gap-4 mb-3">
-                <button onclick="toggleMenu()" class="lg:hidden w-14 h-14 rounded-2xl bg-white text-2xl smooth">☰</button>
+            <div class="flex items-center gap-4 mb-1">
+                <button onclick="toggleMenu()" class="lg:hidden w-12 h-12 rounded-xl bg-white border border-gray-200 text-xl smooth flex items-center justify-center">☰</button>
                 <h1>Kalender</h1>
             </div>
             <p>Kelola jadwal dan mission produktifmu.</p>
@@ -440,8 +553,8 @@
             <button class="nav-btn" onclick="prevWeek()">←</button>
             <button class="nav-btn" onclick="nextWeek()">→</button>
             <div class="month-box" id="monthText"></div>
-            <a href="/dashboard">
-                <button class="add-btn">+ Tambah Jadwal</button>
+            <a href="{{ route('mission-center') }}">
+                <button class="add-btn cursor-pointer">+ Tambah Jadwal</button>
             </a>
         </div>
     </div>
@@ -456,7 +569,7 @@
 
         <div class="right">
             <div class="card">
-                <h2>Kalender</h2>
+                <h2>Kalender Mini</h2>
                 <div class="mini-calendar" id="miniCalendar"></div>
                 <div class="week-info" id="weekInfo"></div>
             </div>
@@ -486,11 +599,19 @@ window.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.task.expanded').forEach(el => {
                 el.classList.remove('expanded');
                 
+                const checkMark = el.dataset.status === 'completed' ? '✅ ' : '';
+                const lineThroughStyle = el.dataset.status === 'completed' ? 'text-decoration: line-through; color: #64748b;' : '';
+                
                 if (el.dataset.overlapping === 'true') {
-                    const checkMark = el.dataset.status === 'completed' ? '✅ ' : '';
-                    // Ditambahkan class task-title dan style text-decoration jika completed saat ditutup kembali
-                    const lineThroughStyle = el.dataset.status === 'completed' ? 'text-decoration: line-through; color: #94a3b8;' : '';
                     el.innerHTML = `<div class="task-title" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:800; ${lineThroughStyle}">${checkMark}${el.dataset.title}</div>`;
+                } else {
+                    el.innerHTML = `
+                        <div class="task-title" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:800; ${lineThroughStyle}">${checkMark}${el.dataset.title}</div>
+                        <div class="task-details-mini" style="margin-top: 2px;">
+                            <small>${el.dataset.time}</small>
+                            <small>${el.dataset.xp}</small>
+                        </div>
+                    `;
                 }
             });
         }
@@ -501,11 +622,13 @@ function toggleMenu(){
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
 
-    if(sidebar.style.left === '0px'){
-        sidebar.style.left = '-320px';
+    if(sidebar.classList.contains('left-0')){
+        sidebar.classList.remove('left-0');
+        sidebar.classList.add('-left-64');
         overlay.classList.add('hidden');
     } else {
-        sidebar.style.left = '0px';
+        sidebar.classList.remove('-left-64');
+        sidebar.classList.add('left-0');
         overlay.classList.remove('hidden');
     }
 }
@@ -568,7 +691,7 @@ function renderCalendar() {
             header.innerHTML += `
                 <div onclick="selectDate('${formatDate(date)}')" style="cursor:pointer;">
                     ${days[index]}<br>
-                    <span style="font-size: 20px; display:inline-block; margin-top:4px;">${date.getDate()}</span>
+                    <span style="font-size: 18px; display:inline-block; margin-top:4px;">${date.getDate()}</span>
                 </div>
             `;
         }
@@ -599,16 +722,7 @@ function renderCalendar() {
     todos.forEach(todo => {
         if (!todo.start_date || !todo.start_time) return;
 
-        // DETEKSI STATUS MISI SELESAI
-        const isMissionCompleted = (
-            todo.status === 'completed' || 
-            todo.status === 'selesai' || 
-            todo.is_completed == 1 || 
-            todo.is_completed === true ||
-            todo.is_done == 1 ||
-            todo.is_done === true ||
-            (todo.completed_at !== null && todo.completed_at !== undefined && todo.completed_at !== '')
-        );
+        const isMissionCompleted = (todo.completed === true || todo.completed == 1);
 
         const startDec = timeToDecimal(todo.start_time);
         let endDec = todo.end_time ? timeToDecimal(todo.end_time) : startDec + 1;
@@ -675,9 +789,8 @@ function renderCalendar() {
                 taskDiv.dataset.xp = `⭐ ${todo.xp} XP`;
 
                 const checkMark = isMissionCompleted ? '✅ ' : '';
-                const lineThroughStyle = isMissionCompleted ? 'text-decoration: line-through; color: #94a3b8;' : '';
+                const lineThroughStyle = isMissionCompleted ? 'text-decoration: line-through; color: #64748b;' : '';
 
-                // APLIKASIKAN STYLE BERDASARKAN STATUS SELESAI / BELUM
                 if (isMissionCompleted) {
                     taskDiv.classList.add('completed');
                     taskDiv.style.backgroundColor = '';
@@ -708,9 +821,17 @@ function renderCalendar() {
                     document.querySelectorAll('.task.expanded').forEach(el => {
                         el.classList.remove('expanded');
                         const innerCheck = el.dataset.status === 'completed' ? '✅ ' : '';
-                        const innerLineThrough = el.dataset.status === 'completed' ? 'text-decoration: line-through; color: #94a3b8;' : '';
+                        const innerLineThrough = el.dataset.status === 'completed' ? 'text-decoration: line-through; color: #64748b;' : '';
                         if (el.dataset.overlapping === 'true') {
                             el.innerHTML = `<div class="task-title" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:800; ${innerLineThrough}">${innerCheck}${el.dataset.title}</div>`;
+                        } else {
+                            el.innerHTML = `
+                                <div class="task-title" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight:800; ${innerLineThrough}">${innerCheck}${el.dataset.title}</div>
+                                <div class="task-details-mini" style="margin-top: 2px;">
+                                    <small>${el.dataset.time}</small>
+                                    <small>${el.dataset.xp}</small>
+                                </div>
+                            `;
                         }
                     });
 
@@ -760,7 +881,7 @@ function renderMiniCalendar(){
     const days = ['S','S','R','K','J','S','M'];
 
     days.forEach(day => {
-        mini.innerHTML += `<div style="font-weight:900">${day}</div>`;
+        mini.innerHTML += `<div style="font-weight:900; color:#94a3b8; font-size:12px;">${day}</div>`;
     });
 
     const year = currentDate.getFullYear();
@@ -770,10 +891,34 @@ function renderMiniCalendar(){
     for(let i=1; i<=totalDays; i++){
         const d = new Date(year, month, i);
         const fullDate = formatDate(d);
+        const isCurrentActive = formatDate(currentDate) === fullDate;
+
+        let dayTasks = todos.filter(todo => {
+            if (!todo.start_date) return false;
+            const dayStart = todo.start_date.substring(0, 10);
+            const dayEnd = todo.end_date ? todo.end_date.substring(0, 10) : dayStart;
+            return fullDate >= dayStart && fullDate <= dayEnd;
+        });
+
+        let dotsHTML = '';
+        if (dayTasks.length > 0) {
+            dotsHTML = '<div class="mini-dots-container">';
+            const priorities = [...new Set(dayTasks.map(t => String(t.priority).toLowerCase()))];
+            
+            priorities.forEach(prio => {
+                let dotColor = '#22c55e'; 
+                if (prio === 'high') dotColor = '#ef4444';     
+                if (prio === 'medium') dotColor = '#f59e0b';   
+
+                dotsHTML += `<span class="mini-dot" style="background-color: ${dotColor};"></span>`;
+            });
+            dotsHTML += '</div>';
+        }
 
         mini.innerHTML += `
-            <div onclick="selectDate('${fullDate}')" class="mini-day ${formatDate(currentDate) === fullDate ? 'mini-active' : ''}">
-                ${i}
+            <div onclick="selectDate('${fullDate}')" class="mini-day ${isCurrentActive ? 'mini-active' : ''}">
+                <span>${i}</span>
+                ${dotsHTML}
             </div>
         `;
     }
@@ -796,35 +941,26 @@ function renderAgenda(){
     });
 
     if(todayTasks.length <= 0){
-        agenda.innerHTML = `<p style="color:#9ca3af; font-weight:700;">Tidak ada agenda</p>`;
+        agenda.innerHTML = `<p style="color:#9ca3af; font-weight:700; font-size:14px; padding-top:5px;">Tidak ada agenda</p>`;
         return;
     }
 
     todayTasks.forEach(todo => {
         const styles = getPriorityStyles(todo.priority);
-        const isComp = (
-            todo.status === 'completed' || 
-            todo.status === 'selesai' || 
-            todo.is_completed == 1 || 
-            todo.is_completed === true ||
-            todo.is_done == 1 ||
-            todo.is_done === true ||
-            (todo.completed_at !== null && todo.completed_at !== undefined && todo.completed_at !== '')
-        );
-        
+        const isComp = (todo.completed === true || todo.completed == 1);
         const textDecoration = isComp ? 'style="text-decoration: line-through; color: #94a3b8;"' : '';
         const checkMark = isComp ? '✅ ' : '';
 
         agenda.innerHTML += `
-            <div class="agenda-item" ${isComp ? 'style="opacity: 0.5;"' : ''}>
+            <div class="agenda-item" ${isComp ? 'style="opacity: 0.55;"' : ''}>
                 <div class="agenda-left">
                     <div class="dot" style="background: ${isComp ? '#cbd5e1' : styles.border};"></div>
                     <div>
-                        <div ${textDecoration} style="font-weight:800;">${checkMark}${todo.title}</div>
-                        <div style="color:#9ca3af; font-size:13px; margin-top:4px;">⏰ ${todo.start_time.substring(0, 5)} - ${todo.end_time ? todo.end_time.substring(0, 5) : ''}</div>
+                        <div ${textDecoration} style="font-weight:800; font-size:14px;">${checkMark}${todo.title}</div>
+                        <div style="color:#9ca3af; font-size:12px; margin-top:2px;">⏰ ${todo.start_time.substring(0, 5)} - ${todo.end_time ? todo.end_time.substring(0, 5) : ''}</div>
                     </div>
                 </div>
-                <div style="font-size:13px; color:#9ca3af; font-weight:700;">⭐ ${todo.xp}</div>
+                <div style="font-size:12px; color:#9ca3af; font-weight:700;">⭐ ${todo.xp}</div>
             </div>
         `;
     });

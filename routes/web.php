@@ -1,83 +1,52 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TodoController;
+use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes - RunPro Productivity App
+|--------------------------------------------------------------------------
+*/
+
+// Halaman Landing Utama
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return view('welcome');
 });
 
-Route::middleware(['auth'])->group(function () {
-    
-    /*
-    |--------------------------------------------------------------------------
-    | PROFILE MANAGEMENT
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+// Group Route yang Wajib Login
+Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::post('/profile/update', [ProfileController::class, 'update'])
-        ->name('profile.update');
+    // 1. Dashboard (Dialihkan ke TodoController agar kalkulasi XP akurat)
+    Route::get('/dashboard', [TodoController::class, 'index'])->name('dashboard');
 
-    Route::get('/profile', [ProfileController::class, 'index'])
-        ->name('profile');
+    // 2. Mission Center (Dialihkan ke TodoController agar kalkulasi XP akurat)
+    Route::get('/mission-center', [TodoController::class, 'missionCenter'])->name('mission-center');
 
-    Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])
-        ->name('profile.avatar.upload');
+    // 3. Kalender (Dialihkan ke TodoController agar kalkulasi XP akurat)
+    Route::get('/calendar', [TodoController::class, 'calendar'])->name('calendar');
 
-    // FIX: Rute baru untuk memproses perubahan password dari pop-up modal
-    Route::post('/change-password', [ProfileController::class, 'changePassword'])
-        ->name('profile.password.change');
+    // 4. Statistik (Dialihkan ke TodoController agar kalkulasi XP akurat)
+    Route::get('/statistics', [TodoController::class, 'statistics'])->name('statistics');
 
-    /*
-    |--------------------------------------------------------------------------
-    | DASHBOARD
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/dashboard', [TodoController::class, 'index'])
-        ->name('dashboard');
+    // ==========================================================
+    // MANAJEMEN MISI / TODO (Menggunakan Fungsi di TodoController)
+    // ==========================================================
+    Route::post('/todo/store', [TodoController::class, 'store'])->name('todos.store');
+    Route::get('/todo/edit/{id}', [TodoController::class, 'edit'])->name('todos.edit');
+    Route::put('/todo/update/{id}', [TodoController::class, 'update'])->name('todo.update');
+    Route::post('/todo/complete/{id}', [TodoController::class, 'complete'])->name('todos.complete');
+    Route::delete('/todo/delete/{id}', [TodoController::class, 'destroy'])->name('todos.destroy');
 
-    /*
-    |--------------------------------------------------------------------------
-    | MISSION CENTER
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/mission-center', [TodoController::class, 'missionCenter'])
-        ->name('mission.center');
-
-    Route::post('/todo/store', [TodoController::class, 'store'])
-        ->name('todo.store');
-
-    Route::get('/todo/edit/{id}', [TodoController::class, 'edit'])
-        ->name('todo.edit');
-
-    Route::put('/todo/update/{id}', [TodoController::class, 'update'])
-        ->name('todo.update');
-
-    Route::delete('/todo/delete/{id}', [TodoController::class, 'destroy'])
-        ->name('todo.delete');
-
-    Route::post('/todo/complete/{id}', [TodoController::class, 'complete'])
-        ->name('todo.complete');
-
-    /*
-    |--------------------------------------------------------------------------
-    | CALENDAR
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/calendar', [TodoController::class, 'calendar'])
-        ->name('calendar');
-
-    /*
-    |--------------------------------------------------------------------------
-    | STATISTICS
-    |--------------------------------------------------------------------------
-    */
-    Route::get('/statistics', [TodoController::class, 'statistics'])
-        ->name('statistics');
-
+    // ==========================================================
+    // PROFILE MANAGEMENT (Tetap Mengarah ke ProfileController)
+    // ==========================================================
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/change-password', [ProfileController::class, 'password'])->name('profile.change-password');
+    Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

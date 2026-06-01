@@ -7,28 +7,21 @@ use App\Models\Todo;
 
 class TodoController extends Controller
 {
-
     /*
     |--------------------------------------------------------------------------
     | DASHBOARD
     |--------------------------------------------------------------------------
     */
-
     public function index()
     {
         $todos = Todo::where('user_id', auth()->id())
             ->latest()
             ->get();
 
-        $xp = $todos->where('completed', true)->sum('xp');
-
+        $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
         $level = floor($xp / 100) + 1;
 
-        return view('dashboard', compact(
-            'todos',
-            'xp',
-            'level'
-        ));
+        return view('dashboard', compact('todos', 'xp', 'level'));
     }
 
     /*
@@ -36,22 +29,20 @@ class TodoController extends Controller
     | MISSION CENTER
     |--------------------------------------------------------------------------
     */
-
     public function missionCenter()
     {
+        // Ambil semua misi milik user yang login
         $todos = Todo::where('user_id', auth()->id())
             ->latest()
             ->get();
 
-        $xp = $todos->where('completed', true)->sum('xp');
+        // Hitung total XP akumulasi dari seluruh misi yang BERHASIL DI-CHECKLIST
+        $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
 
+        // Tentukan level berdasarkan total XP (tiap 100 XP naik 1 level)
         $level = floor($xp / 100) + 1;
 
-        return view('mission-center', compact(
-            'todos',
-            'xp',
-            'level'
-        ));
+        return view('mission-center', compact('todos', 'xp', 'level'));
     }
 
     /*
@@ -59,22 +50,16 @@ class TodoController extends Controller
     | CALENDAR
     |--------------------------------------------------------------------------
     */
-
     public function calendar()
     {
         $todos = Todo::where('user_id', auth()->id())
             ->latest()
             ->get();
 
-        $xp = $todos->where('completed', true)->sum('xp');
-
+        $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
         $level = floor($xp / 100) + 1;
 
-        return view('calendar', compact(
-            'todos',
-            'xp',
-            'level'
-        ));
+        return view('calendar', compact('todos', 'xp', 'level'));
     }
 
     /*
@@ -82,7 +67,6 @@ class TodoController extends Controller
     | STATISTICS
     |--------------------------------------------------------------------------
     */
-
     public function statistics()
     {
         $todos = Todo::where('user_id', auth()->id())
@@ -90,32 +74,16 @@ class TodoController extends Controller
             ->get();
 
         $totalMission = $todos->count();
-
         $completed = $todos->where('completed', true)->count();
 
-        $progress = $totalMission > 0
-            ? round(($completed / $totalMission) * 100)
-            : 0;
-
+        $progress = $totalMission > 0 ? round(($completed / $totalMission) * 100) : 0;
         $focus = $completed * 2;
+        $streak = $completed > 0 ? $completed + 3 : 0;
 
-        $streak = $completed > 0
-            ? $completed + 3
-            : 0;
-
-        $xp = $todos->where('completed', true)->sum('xp');
-
+        $xp = Todo::where('user_id', auth()->id())->where('completed', true)->sum('xp');
         $level = floor($xp / 100) + 1;
 
-        return view('statistics', compact(
-            'todos',
-            'completed',
-            'progress',
-            'focus',
-            'streak',
-            'xp',
-            'level'
-        ));
+        return view('statistics', compact('todos', 'completed', 'progress', 'focus', 'streak', 'xp', 'level'));
     }
 
     /*
@@ -123,10 +91,8 @@ class TodoController extends Controller
     | STORE
     |--------------------------------------------------------------------------
     */
-
     public function store(Request $request)
     {
-
         $request->validate([
             'title' => 'required|max:255',
         ]);
@@ -144,39 +110,27 @@ class TodoController extends Controller
             'completed'   => false,
         ]);
 
-        return back()->with('success', 'Mission berhasil ditambahkan!');
+        return redirect('/mission-center')->with('success', 'Mission berhasil ditambahkan! 🚀');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | EDIT
+    | EDIT & UPDATE
     |--------------------------------------------------------------------------
     */
-
     public function edit($id)
     {
-        $todo = Todo::where('user_id', auth()->id())
-            ->findOrFail($id);
-
+        $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         return view('edit-task', compact('todo'));
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | UPDATE
-    |--------------------------------------------------------------------------
-    */
-
     public function update(Request $request, $id)
     {
-
         $request->validate([
             'title' => 'required|max:255',
         ]);
 
-        $todo = Todo::where('user_id', auth()->id())
-            ->findOrFail($id);
-
+        $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         $todo->update([
             'title'       => $request->title,
             'description' => $request->description,
@@ -188,8 +142,7 @@ class TodoController extends Controller
             'xp'          => $request->xp,
         ]);
 
-        return redirect('/mission-center')
-            ->with('success', 'Mission berhasil diupdate!');
+        return redirect('/mission-center')->with('success', 'Mission berhasil diupdate! ✨');
     }
 
     /*
@@ -197,17 +150,13 @@ class TodoController extends Controller
     | COMPLETE
     |--------------------------------------------------------------------------
     */
-
     public function complete($id)
     {
-        $todo = Todo::where('user_id', auth()->id())
-            ->findOrFail($id);
-
+        $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         $todo->completed = true;
-
         $todo->save();
 
-        return back()->with('success', 'Mission selesai!');
+        return redirect('/mission-center')->with('success', 'Selamat! Mission selesai dan XP bertambah! 🎉');
     }
 
     /*
@@ -215,15 +164,11 @@ class TodoController extends Controller
     | DELETE
     |--------------------------------------------------------------------------
     */
-
     public function destroy($id)
     {
-        $todo = Todo::where('user_id', auth()->id())
-            ->findOrFail($id);
-
+        $todo = Todo::where('user_id', auth()->id())->findOrFail($id);
         $todo->delete();
 
-        return back()->with('success', 'Mission dihapus!');
+        return redirect('/mission-center')->with('success', 'Mission berhasil dihapus!');
     }
-
 }

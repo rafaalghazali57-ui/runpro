@@ -2,29 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
-use App\Models\User; // Pastikan model User di-import
 
 class ProfileController extends Controller
 {
     /**
-     * Menampilkan halaman profil utama
+     * Menampilkan halaman ringkasan profil utama beserta Progress Level Akurat
      */
     public function index()
     {
         $user = Auth::user();
+        $todos = Todo::where('user_id', $user->id)->get();
         
-        // Mengambil data todos milik user yang sedang login
-        $todos = $user->todos ?? collect(); 
+        // Hitung total XP dinamis dari database misi
+        $totalXp = Todo::where('user_id', $user->id)
+                       ->where('completed', true)
+                       ->sum('xp');
         
-        // Mengambil data XP dan kalkulasi Level (sesuaikan dengan struktur DB kamu)
-        $xp = $user->xp ?? 0;
-        $level = $user->level ?? 1;
+        $xpPerLevel = 100;
+        $level = floor($totalXp / $xpPerLevel) + 1;
+        
+        $currentXpInLevel = $totalXp % $xpPerLevel; 
+        $progressPercentage = ($currentXpInLevel / $xpPerLevel) * 100;
 
-        return view('profile', compact('todos', 'xp', 'level'));
+        return view('profile', [
+            'user' => $user,
+            'todos' => $todos,
+            'totalXp' => $totalXp,
+            'level' => $level,
+            'currentXpInLevel' => $currentXpInLevel,
+            'xpPerLevel' => $xpPerLevel,
+            'progressPercentage' => $progressPercentage
+        ]);
     }
 
     /**
@@ -32,81 +45,95 @@ class ProfileController extends Controller
      */
     public function edit()
     {
-        return view('profile.edit', ['user' => Auth::user()]);
+        $user = Auth::user();
+        return view('profile.edit', ['user' => $user]);
     }
 
     /**
-     * Memperbarui data profil (Username/Email)
+     * Memproses update nama, email, dan upload foto profil hasil Crop
      */
     public function update(Request $request)
     {
         $user = Auth::user();
 
+        // Validasi input dasar
         $request->validate([
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'name'  => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
-        $user->update([
-            'username' => $request->username,
-            'email' => $request->email,
-        ]);
+        // Proses simpan foto jika ada foto baru yang di-crop
+        if ($request->filled('cropped_avatar')) {
+            $imageData = $request->input('cropped_avatar');
 
-        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
-    }
+            if (preg_match('/^data:image\/(\w+);base64,/', $imageData, $type)) {
+                $encodedImg = substr($imageData, strpos($imageData, ',') + 1);
+                $type = strtolower($type[1]);
 
-    /**
-     * Mengunggah foto profil (Avatar)
-     */
-    public function uploadAvatar(Request $request)
-    {
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+                $filename = 'avatars/' . uniqid() . '_cropped.' . $type;
+                $decodedImg = base64_decode($encodedImg);
 
-        $user = Auth::user();
+                Storage::disk('public')->put($filename, $decodedImg);
 
-        if ($request->hasFile('avatar')) {
-            $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->storeAs('public/avatars', $avatarName);
+                if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                    Storage::disk('public')->delete($user->avatar);
+                }
 
-            // Hapus avatar lama jika ada
-            if ($user->avatar && file_exists(storage_path('app/public/avatars/' . $user->avatar))) {
-                unlink(storage_path('app/public/avatars/' . $user->avatar));
+                $user->avatar = $filename;
             }
-
-            $user->avatar = $avatarName;
-            $user->save();
         }
 
-        return redirect()->route('profile')->with('success', 'Foto profil berhasil diperbarui!');
+        // Simpan data ke kolom yang PASTI ADA di database kamu
+        $user->name = $request->name;
+        $user->email = $request->email;
+        
+        // CATATAN: Baris bio dimatikan sementara agar tidak memicu error "Column not found" di database kamu
+        // $user->description = $request->bio; 
+        
+        $user->save();
+
+        // Menggunakan redirect path mentah agar memaksa browser pindah ke halaman /profile
+        return redirect('/profile')->with('success', 'Profil Anda berhasil diperbarui! ✨🚀');
     }
 
     /**
-     * FUNGSI BARU: Memproses perubahan password dari pop-up modal
+     * Memproses penggantian Kata Sandi Akun
      */
-    public function changePassword(Request $request)
+    public function password(Request $request)
     {
-        // 1. Validasi input form
+        $user = Auth::user();
+
         $request->validate([
             'old_password' => 'required',
-            'password' => ['required', 'string', 'confirmed', Password::min(8)],
-        ], [
-            'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
-            'password.min' => 'Password baru harus minimal 8 karakter.',
+            'password'     => 'required|string|min:8',
         ]);
 
-        $user = Auth::user();
-
-        // 2. Periksa apakah password lama sesuai dengan di database
         if (!Hash::check($request->old_password, $user->password)) {
-            return redirect()->back()->with('error', 'Password lama yang kamu masukkan salah.');
+            return redirect()->back()->withErrors(['old_password' => 'Kata sandi lama salah.']);
         }
 
-        // 3. Update password baru (otomatis di-brypt oleh Laravel di model, atau manual dengan Hash::make)
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return redirect()->route('profile')->with('success', 'Password akun kamu berhasil diubah! 🚀');
+        return redirect()->back()->with('success', 'Kata sandi berhasil diperbarui! 🔑');
+    }
+
+    /**
+     * Menghapus Akun Pengguna
+     */
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
+        Auth::logout();
+
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

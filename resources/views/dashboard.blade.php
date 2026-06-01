@@ -129,16 +129,18 @@
                 <div class="flex items-center gap-4">
                     <button onclick="toggleMenu()" class="lg:hidden w-14 h-14 rounded-2xl bg-white text-2xl">☰</button>
 
-                    @if(auth()->user()->photo)
+                    @if(auth()->user()->avatar)
+                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="profile-img">
+                    @elseif(auth()->user()->photo)
                         <img src="{{ asset('storage/' . auth()->user()->photo) }}" class="profile-img">
                     @else
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->username) }}&background=8b5cf6&color=fff&size=256" class="profile-img">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? auth()->user()->username) }}&background=8b5cf6&color=fff&size=256" class="profile-img">
                     @endif
 
                     <div>
                         <p class="text-gray-500 text-sm md:text-base">Selamat datang kembali,</p>
                         <h1 class="text-4xl lg:text-5xl font-black text-gray-800 mt-1">
-                            {{ auth()->user()?->username ?? 'Guest' }} 👋
+                            {{ auth()->user()?->name ?? auth()->user()?->username ?? 'Guest' }} 👋
                         </h1>
                         <p class="text-gray-500 mt-2 text-sm">Tetap produktif hari ini 🚀</p>
                     </div>
@@ -177,7 +179,7 @@
 
                 <select name="priority" required class="w-full p-5 rounded-2xl border border-gray-200">
                     <option value="low">🟢 Mudah</option>
-                    <option value="medium">🟡 Sedang</option>
+                    <option value="medium" selected>🟡 Sedang</option>
                     <option value="high">🔴 Sulit</option>
                 </select>
 
@@ -224,12 +226,11 @@
                         $now = now();
                         $canComplete = $now >= $startDateTime;
 
-                        // Mengatur posisi meliuk (Zat-Zit) berdasarkan indeks perulangan
-                        $alignment = 'md:mx-auto'; // Default tengah untuk layar kecil
+                        $alignment = 'md:mx-auto'; 
                         if ($loop->index % 3 == 0) {
-                            $alignment = 'md:mr-auto md:ml-0 lg:ml-12'; // Belok Kiri
+                            $alignment = 'md:mr-auto md:ml-0 lg:ml-12'; 
                         } elseif ($loop->index % 3 == 2) {
-                            $alignment = 'md:ml-auto md:mr-0 lg:mr-12'; // Belok Kanan
+                            $alignment = 'md:ml-auto md:mr-0 lg:mr-12'; 
                         }
                     @endphp
 
