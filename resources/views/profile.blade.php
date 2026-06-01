@@ -19,6 +19,7 @@
             margin-left: 290px;
             padding: 40px;
             min-height: 100vh;
+            transition: all .35s ease-in-out;
         }
         @media(max-width:1024px) {
             .main { margin-left: 0; padding: 20px; }
@@ -28,14 +29,19 @@
 </head>
 <body class="text-gray-800 antialiased">
 
-<div id="sidebar" class="fixed top-0 left-0 w-[290px] h-full bg-white border-r border-gray-100 z-50 p-7 flex flex-col justify-between">
+<div id="overlay" onclick="toggleMenu()" class="hidden fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-all"></div>
+
+<div id="sidebar" class="fixed top-0 left-[-290px] lg:left-0 w-[290px] h-full bg-white border-r border-gray-100 z-50 p-7 flex flex-col justify-between transition-all duration-300 ease-in-out">
     <div>
-        <div class="flex items-center gap-3 mb-14">
-            <div class="text-5xl">🚀</div>
-            <div>
-                <h1 class="text-3xl font-black text-purple-600">RunPro</h1>
-                <p class="text-gray-400 text-sm">Productivity App</p>
+        <div class="flex items-center justify-between mb-14">
+            <div class="flex items-center gap-3">
+                <div class="text-5xl">🚀</div>
+                <div>
+                    <h1 class="text-3xl font-black text-purple-600">RunPro</h1>
+                    <p class="text-gray-400 text-sm">Productivity App</p>
+                </div>
             </div>
+            <button onclick="toggleMenu()" class="lg:hidden text-gray-400 hover:text-gray-600 text-xl font-bold p-1">✕</button>
         </div>
 
         <div class="space-y-3">
@@ -65,39 +71,47 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-[32px] p-8 border border-gray-200/80 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 w-full lg:w-auto">
-            
-            <div class="relative w-32 h-32 rounded-full overflow-hidden flex items-center justify-center shadow-md bg-gray-100 border-2 border-purple-500/20 flex-shrink-0">
-                @if(auth()->user()->avatar && \Storage::disk('public')->exists(auth()->user()->avatar))
-                    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Foto {{ auth()->user()->name }}" class="w-full h-full object-cover">
-                @else
-                    <div class="w-full h-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-black">
-                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                    </div>
-                @endif
-            </div>
+    <div class="bg-white rounded-[32px] p-6 lg:p-8 border border-gray-200/80 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 relative overflow-hidden">
+        
+        <div class="flex items-start sm:items-center gap-4 w-full lg:w-auto relative z-10">
+            <button onclick="toggleMenu()" class="lg:hidden flex-shrink-0 w-12 h-12 bg-gray-50 text-gray-700 text-xl font-bold rounded-2xl flex items-center justify-center border border-gray-200/40 active:scale-95 transition-all">
+                ☰
+            </button>
 
-            <div class="w-full">
-                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-                    <h2 class="text-4xl font-black text-gray-900">{{ auth()->user()->name }}</h2>
-                    <span class="bg-blue-100 text-blue-600 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Verified</span>
-                    <span class="bg-purple-100 text-purple-700 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">Lv. {{ $level }}</span>
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 w-full">
+                <div class="relative w-32 h-32 rounded-full overflow-hidden flex items-center justify-center shadow-md bg-gray-100 border-2 border-purple-500/20 flex-shrink-0">
+                    @if(auth()->user()->avatar && \Storage::disk('public')->exists(auth()->user()->avatar))
+                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="Foto {{ auth()->user()->name }}" class="w-full h-full object-cover">
+                    @else
+                        <div class="w-full h-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-black">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </div>
+                    @endif
                 </div>
-                
-                <div class="mt-4 max-w-md mx-auto sm:mx-0">
-                    <div class="flex justify-between items-center mb-1.5 text-xs font-bold text-gray-500 uppercase tracking-wide">
-                        <span>Progress Level</span>
-                        <span class="text-purple-600 font-extrabold">{{ $currentXpInLevel }} / {{ $xpPerLevel }} XP</span>
-                    </div>
-                    <div class="w-full h-3 bg-gray-100 border border-gray-200/50 rounded-full overflow-hidden p-0.5 shadow-inner">
-                        <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out" 
-                             style="width: {{ $progressPercentage }}%"></div>
+
+                <div class="w-full text-center sm:text-left">
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                        <h2 class="text-3xl lg:text-4xl font-black text-gray-900 tracking-tight">{{ auth()->user()->name }}</h2>
+                        <div class="flex gap-2">
+                            <span class="bg-blue-100 text-blue-600 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Verified</span>
+                            <span class="bg-purple-100 text-purple-700 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">Lv. {{ $level }}</span>
+                        </div>
                     </div>
                     
-                    <p class="text-sm text-gray-500 italic mt-3 font-semibold text-center sm:text-left">
-                        "Disiplin hari ini adalah awal sukses besar di masa depan 🚀"
-                    </p>
+                    <div class="mt-4 max-w-md mx-auto sm:mx-0">
+                        <div class="flex justify-between items-center mb-1.5 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                            <span>Progress Level</span>
+                            <span class="text-purple-600 font-extrabold">{{ $currentXpInLevel }} / {{ $xpPerLevel }} XP</span>
+                        </div>
+                        <div class="w-full h-3 bg-gray-100 border border-gray-200/50 rounded-full overflow-hidden p-0.5 shadow-inner">
+                            <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out" 
+                                 style="width: {{ $progressPercentage }}%"></div>
+                        </div>
+                        
+                        <p class="text-sm text-gray-500 italic mt-3 font-semibold">
+                            "Disiplin hari ini adalah awal sukses besar di masa depan 🚀"
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,6 +122,7 @@
     </div>
 
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        
         <div class="xl:col-span-2 bg-white rounded-[32px] p-8 border border-gray-200/80 shadow-sm">
             <div class="flex justify-between items-center mb-6">
                 <div>
@@ -171,11 +186,28 @@
                         </div>
                     </div>
                     <span class="text-gray-400 group-hover:text-gray-600 transition-colors">›</span>
-                </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function toggleMenu(){
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    if(sidebar.classList.contains('left-0')){
+        sidebar.classList.remove('left-0');
+        sidebar.classList.add('left-[-290px]');
+        overlay.classList.add('hidden');
+    } else {
+        sidebar.classList.remove('left-[-290px]');
+        sidebar.classList.add('left-0');
+        overlay.classList.remove('hidden');
+    }
+}
+</script>
 
 </body>
 </html>

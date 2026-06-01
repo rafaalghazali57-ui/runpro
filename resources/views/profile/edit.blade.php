@@ -21,6 +21,7 @@
             margin-left: 290px;
             padding: 40px;
             min-height: 100vh;
+            transition: all .35s ease-in-out;
         }
         @media(max-width:1024px) {
             .main { margin-left: 0; padding: 20px; }
@@ -32,14 +33,19 @@
 
 <div id="toast-container" class="fixed top-5 right-5 z-[9999] space-y-3 pointer-events-none"></div>
 
-<div id="sidebar" class="fixed top-0 left-0 w-[290px] h-full bg-white border-r border-gray-100 z-50 p-7 flex flex-col justify-between">
+<div id="overlay" onclick="toggleMenu()" class="hidden fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 transition-all"></div>
+
+<div id="sidebar" class="fixed top-0 left-[-290px] lg:left-0 w-[290px] h-full bg-white border-r border-gray-100 z-50 p-7 flex flex-col justify-between transition-all duration-300 ease-in-out">
     <div>
-        <div class="flex items-center gap-3 mb-14">
-            <div class="text-5xl">🚀</div>
-            <div>
-                <h1 class="text-3xl font-black text-purple-600">RunPro</h1>
-                <p class="text-gray-400 text-sm">Productivity App</p>
+        <div class="flex items-center justify-between mb-14">
+            <div class="flex items-center gap-3">
+                <div class="text-5xl">🚀</div>
+                <div>
+                    <h1 class="text-3xl font-black text-purple-600">RunPro</h1>
+                    <p class="text-gray-400 text-sm">Productivity App</p>
+                </div>
             </div>
+            <button onclick="toggleMenu()" class="lg:hidden text-gray-400 hover:text-gray-600 text-xl font-bold p-1">✕</button>
         </div>
 
         <div class="space-y-3">
@@ -63,8 +69,13 @@
 
 <div class="main">
     
-    <div class="mb-6 flex items-center gap-4">
-        <a href="/profile" class="text-purple-600 font-bold hover:underline smooth">← Kembali ke Profil</a>
+    <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMenu()" class="lg:hidden flex-shrink-0 w-12 h-12 bg-white text-gray-700 text-xl font-bold rounded-2xl flex items-center justify-center border border-gray-200/80 active:scale-95 transition-all shadow-sm">
+                ☰
+            </button>
+            <a href="/profile" class="text-purple-600 font-bold hover:underline smooth">← Kembali ke Profil</a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -174,6 +185,22 @@
 </div>
 
 <script>
+    // System Menu Slide Mobile
+    function toggleMenu(){
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        if(sidebar.classList.contains('left-0')){
+            sidebar.classList.remove('left-0');
+            sidebar.classList.add('left-[-290px]');
+            overlay.classList.add('hidden');
+        } else {
+            sidebar.classList.remove('left-[-290px]');
+            sidebar.classList.add('left-0');
+            overlay.classList.remove('hidden');
+        }
+    }
+
     let cropper;
     const avatarInput = document.getElementById('avatarInput');
     const cropperContainer = document.getElementById('cropperContainer');
@@ -249,7 +276,6 @@
                 }
             }
             
-            // MEMANGGIL NOTIFIKASI MODERN (Menggantikan alert jadul)
             showModernToast('Foto berhasil dipotong! Jangan lupa klik "Simpan Perubahan".');
             cropperContainer.classList.add('hidden');
         }
