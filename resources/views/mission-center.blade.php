@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RunPro - Mission Center Roadmap</title>
 
@@ -157,11 +157,18 @@
                                         <div class="bg-gray-50 border border-gray-200/70 rounded-[24px] p-5 space-y-3 opacity-65 shadow-sm transition-all">
                                             <div class="flex justify-between items-center">
                                                 <span class="text-[9px] font-black bg-gray-200 text-gray-500 px-2.5 py-0.5 rounded-lg tracking-wider">DONE</span>
-                                                <span class="text-xs font-bold text-gray-400">⏱️ {{ $todo->start_time ? date('H:i', strtotime($todo->start_time)) : '12:00' }} WIB</span>
+                                                <div class="text-right">
+                                                    <p class="text-[10px] font-bold text-gray-400">🏁 Selesai</p>
+                                                </div>
                                             </div>
                                             <h3 class="text-base font-bold text-gray-400 line-through tracking-tight">{{ $todo->title }}</h3>
                                             <p class="text-xs text-gray-400 font-medium line-clamp-2 leading-relaxed">{{ $todo->description ?? 'Target misi telah berhasil ditaklukkan.' }}</p>
                                             
+                                            <div class="bg-gray-100/50 rounded-xl p-2.5 space-y-1 text-[11px] font-medium text-gray-400">
+                                                <div>📅 <span class="font-bold">Mulai:</span> {{ $todo->start_date ? date('d-m-Y', strtotime($todo->start_date)) : date('d-m-Y') }} | {{ $todo->start_time ? date('H:i', strtotime($todo->start_time)) : '12:00' }} WIB</div>
+                                                <div>⌛ <span class="font-bold">Akhir:</span> {{ $todo->end_date ? date('d-m-Y', strtotime($todo->end_date)) : date('d-m-Y') }} | {{ $todo->end_time ? date('H:i', strtotime($todo->end_time)) : '13:00' }} WIB</div>
+                                            </div>
+
                                             <div class="pt-2 flex items-center justify-end border-t border-gray-200/40">
                                                 <form action="{{ route('todos.destroy', $todo->id) }}" method="POST" class="m-0">
                                                     @csrf
@@ -185,11 +192,23 @@
                                                     @endif
                                                     <span class="text-[9px] font-black text-purple-600 bg-purple-50 px-2.5 py-0.5 rounded-lg border border-purple-100/40">+{{ $todo->xp ?? 20 }} XP</span>
                                                 </div>
-                                                <span class="text-xs font-bold text-gray-400 bg-gray-50 px-2.5 py-0.5 rounded-lg">⏱️ {{ $todo->start_time ? date('H:i', strtotime($todo->start_time)) : '12:00' }} WIB</span>
                                             </div>
 
                                             <h3 class="text-base font-black text-gray-800 tracking-tight group-hover:text-purple-600 transition-colors">{{ $todo->title }}</h3>
-                                            <p class="text-xs text-gray-400 font-medium line-clamp-3 leading-relaxed">{{ $todo->description ?? 'Tidak ada instruksi operasional tambahan harian.' }}</p>
+                                            <p class="text-xs text-gray-500 font-medium line-clamp-3 leading-relaxed">{{ $todo->description ?? 'Tidak ada instruksi operasional tambahan harian.' }}</p>
+
+                                            <div class="bg-slate-50 border border-slate-100/80 rounded-xl p-3 space-y-1.5 text-xs font-semibold text-slate-600">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-emerald-500">🟢</span> 
+                                                    <span>Mulai:</span> 
+                                                    <span class="text-gray-400 font-normal ml-auto">{{ $todo->start_date ? date('d-m-Y', strtotime($todo->start_date)) : date('d-m-Y') }} — <span class="text-slate-700 font-bold">{{ $todo->start_time ? date('H:i', strtotime($todo->start_time)) : '12:00' }}</span></span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-red-400">🔴</span> 
+                                                    <span>Akhir:</span> 
+                                                    <span class="text-gray-400 font-normal ml-auto">{{ $todo->end_date ? date('d-m-Y', strtotime($todo->end_date)) : date('d-m-Y') }} — <span class="text-slate-700 font-bold">{{ $todo->end_time ? date('H:i', strtotime($todo->end_time)) : '13:00' }}</span></span>
+                                                </div>
+                                            </div>
 
                                             <div class="pt-3 flex items-center justify-end gap-1.5 border-t border-gray-50">
                                                 <form action="{{ route('todos.complete', $todo->id) }}" method="POST" class="m-0">
@@ -258,9 +277,27 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-[11px] font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Jam Mulai</label>
-                            <input type="time" name="start_time" class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
+                            <label class="text-[11px] font-bold text-purple-500 block mb-1.5 uppercase tracking-wider">Tanggal Mulai</label>
+                            <input type="date" name="start_date" required class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
                         </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-purple-500 block mb-1.5 uppercase tracking-wider">Jam Mulai</label>
+                            <input type="time" name="start_time" required class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[11px] font-bold text-red-500 block mb-1.5 uppercase tracking-wider">Tanggal Berakhir</label>
+                            <input type="date" name="end_date" required class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-red-500 block mb-1.5 uppercase tracking-wider">Jam Berakhir</label>
+                            <input type="time" name="end_time" required class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-[11px] font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Skala Prioritas</label>
                             <select name="priority" class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
@@ -269,15 +306,14 @@
                                 <option value="Low">Rendah (Low)</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="text-[11px] font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Beban Reward Target (XP)</label>
-                        <select name="xp" class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
-                            <option value="20">+20 XP (Tingkat Dasar)</option>
-                            <option value="50">+50 XP (Tingkat Menengah)</option>
-                            <option value="90">+90 XP (Tingkat Tinggi)</option>
-                        </select>
+                        <div>
+                            <label class="text-[11px] font-bold text-gray-400 block mb-1.5 uppercase tracking-wider">Reward Target</label>
+                            <select name="xp" class="w-full bg-gray-50 border border-gray-200 focus:border-purple-400 focus:bg-white p-2.5 rounded-xl text-xs font-bold text-gray-600 outline-none">
+                                <option value="20">+20 XP</option>
+                                <option value="50">+50 XP</option>
+                                <option value="90">+90 XP</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-95 text-white py-4 rounded-xl font-bold text-xs tracking-wide transition-all mt-2 active:scale-95 shadow-lg shadow-purple-500/10">
